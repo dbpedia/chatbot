@@ -1,0 +1,11 @@
+chatbot:
+  fb:
+    appSecret: 4a81b267a9f7324cdfe0f4a86afc91e7
+    verifyToken: secret
+    pageAccessToken: EAAPEwY6gHucBAFWLLMoZAPhuy4mS48VZAPHI2zqRRviPZCl4OkFFq8JZCDLeugpvyeEoZALhRA94p0ixUy3zLYzQ9EDOc1HGb1l4lqKXm7B3AQTtWWjbGUU43wPGjoP9nncJCy85JmbydCLFdWc8135utaxH7tokIjfLK5pqhQwZDZD
+
+logging:
+  level:
+    com:
+      github:
+        messenger4j: DEBUG
