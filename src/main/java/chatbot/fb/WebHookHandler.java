@@ -1,5 +1,6 @@
 package chatbot.fb;
 
+import chatbot.rivescript.RiveScriptBot;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.exceptions.MessengerApiException;
 import com.github.messenger4j.exceptions.MessengerIOException;
@@ -11,6 +12,7 @@ import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.NotificationType;
 import com.github.messenger4j.send.Recipient;
 import com.github.messenger4j.send.SenderAction;
+import com.github.messenger4j.user.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +20,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 
 
-// https://aboullaite.me/my-first-java-bot/
-
 /**
- * Created by rgathrey on 5/10/17.
+ * Created by ramgathreya on 5/10/17.
  */
 @RestController
 @RequestMapping("/fbwebhook")
@@ -33,23 +34,37 @@ public class WebHookHandler {
     private static final Logger logger = LoggerFactory.getLogger(WebHookHandler.class);
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
+    private final RiveScriptBot riveScriptBot;
+
+    private final String appSecret;
+    private final String verifyToken;
+    private final String pageAccessToken;
 
     @Autowired
-    WebHookHandler(@Value("${chatbot.fb.appSecret}") final String appSecret, @Value("${chatbot.fb.verifyToken}") final String verifyToken, final MessengerSendClient sendClient) {
+    WebHookHandler(@Value("${chatbot.fb.appSecret}") final String appSecret,
+                   @Value("${chatbot.fb.verifyToken}") final String verifyToken,
+                   @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
+                   final MessengerSendClient sendClient,
+                   final RiveScriptBot riveScriptBot) {
         logger.debug("App Secret is " + appSecret);
         logger.debug("Verification Token is " + verifyToken);
 
-        this.receiveClient = MessengerPlatform.newReceiveClientBuilder(appSecret, verifyToken)
+        this.appSecret = appSecret;
+        this.verifyToken = verifyToken;
+        this.pageAccessToken = pageAccessToken;
+
+        this.receiveClient = MessengerPlatform.newReceiveClientBuilder(this.appSecret, this.verifyToken)
                 .onTextMessageEvent(textMessageEventHandler())
                 .build();
 
         this.sendClient = sendClient;
+        this.riveScriptBot = riveScriptBot;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> verifyWebHook(@RequestParam("hub.mode") final String mode,
-                                                @RequestParam("hub.verify_token") final String verifyToken,
-                                                @RequestParam("hub.challenge") final String challenge) {
+    public ResponseEntity<String> verifyWebHook(@RequestParam(MessengerPlatform.MODE_REQUEST_PARAM_NAME) final String mode,
+                                                @RequestParam(MessengerPlatform.VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
+                                                @RequestParam(MessengerPlatform.CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
 
         logger.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode, verifyToken, challenge);
         try {
@@ -62,7 +77,7 @@ public class WebHookHandler {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload,
-                                               @RequestHeader("X-Hub-Signature") final String signature) {
+                                               @RequestHeader(MessengerPlatform.SIGNATURE_HEADER_NAME) final String signature) {
         logger.info("Received Messenger Platform cFallback - payload: {} | signature: {}", payload, signature);
         try {
             this.receiveClient.processCallbackPayload(payload, signature);
@@ -73,6 +88,16 @@ public class WebHookHandler {
             logger.warn("Processing of callback payload failed: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    private UserProfile getGraphData(String userId) throws MessengerApiException, MessengerIOException {
+        return MessengerPlatform.newUserProfileClientBuilder(this.pageAccessToken)
+                .build()
+                .queryUserProfile(userId);
+    }
+
+    private String getFirstName(String userId) throws MessengerApiException, MessengerIOException {
+        return getGraphData(userId).getFirstName();
     }
 
     private TextMessageEventHandler textMessageEventHandler() {
@@ -89,7 +114,7 @@ public class WebHookHandler {
             try {
                 sendReadReceipt(senderId);
                 sendTypingOn(senderId);
-                sendTextMessage(senderId, messageText);
+                sendTextMessage(senderId, this.riveScriptBot.reply("FB_" + senderId, messageText));
                 sendTypingOff(senderId);
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
@@ -101,9 +126,8 @@ public class WebHookHandler {
         try {
             final Recipient recipient = Recipient.newBuilder().recipientId(recipientId).build();
             final NotificationType notificationType = NotificationType.REGULAR;
-            final String metadata = "DEVELOPER_DEFINED_METADATA";
 
-            this.sendClient.sendTextMessage(recipient, notificationType, text, metadata);
+            this.sendClient.sendTextMessage(recipient, notificationType, text);
         } catch (MessengerApiException | MessengerIOException e) {
             handleSendException(e);
         }

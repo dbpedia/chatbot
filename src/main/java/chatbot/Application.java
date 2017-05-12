@@ -1,7 +1,9 @@
 package chatbot;
 
+import chatbot.rivescript.RiveScriptBot;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.send.MessengerSendClient;
+import com.rivescript.RiveScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,14 +12,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Created by rgathrey on 5/10/17.
+ * Created by ramgathreya on 5/10/17.
  */
 @SpringBootApplication
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     @Bean
-    public MessengerSendClient messengerSendClient(@Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
+    public RiveScriptBot initializeRiveScriptBot() {
+        return new RiveScriptBot();
+    }
+
+    @Bean
+    public MessengerSendClient initializeFBMessengerSendClient(@Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
         logger.info("Initializing MessengerSendClient - pageAccessToken: {}", pageAccessToken);
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
     }

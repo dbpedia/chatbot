@@ -1,0 +1,12 @@
+! version = 2.0
+
+// Greeting
++ (hi|hey|hello|yo)
+- Hi to you too !
+- Hello there
+
++ who are you
+- I am the <bot name>
+
++ *
+- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.

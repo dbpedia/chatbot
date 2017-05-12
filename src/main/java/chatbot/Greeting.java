@@ -1,7 +1,7 @@
 package chatbot;
 
 /**
- * Created by rgathrey on 5/10/17.
+ * Created by ramgathreya on 5/10/17.
  */
 public class Greeting {
 

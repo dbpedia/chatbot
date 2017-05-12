@@ -5,3 +5,4 @@ build
 gradlew
 gradlew.bat
 *.yaml
+src/main/resources/application.properties
