@@ -2,11 +2,31 @@
 
 // Greeting
 + (hi|hey|hello|yo)
-- Hi to you too !
+- Hi to you too!
 - Hello there
 
 + who are you
 - I am the <bot name>
+
+// Added for testing
++ my name is *
+- <set name=<formal>> I will remember to call you <get name>
+
+// Added for testing
++ what is my name
+- Your name is <get name>.
+
++ (yes|no|maybe)
+- Alright
+- Gotcha
+
++ [*] (fuck|fucker|shit|damn|wtf|shut up|bitch) [*]
+- Does it make you feel strong to use that kind of language?
+- Are you venting your feelings now?
+- Are you angry?
+- Does this topic make you feel angry?
+- Is something making you feel angry?
+- Does using that kind of language make you feel better?
 
 + *
 - I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.
