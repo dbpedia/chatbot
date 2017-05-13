@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes Application
+web: mvn spring-boot:run
