@@ -6,3 +6,8 @@ gradlew
 gradlew.bat
 *.yaml
 src/main/resources/application.properties
+node
+node_modules
+bower_components
+npm-debug.log
+target
