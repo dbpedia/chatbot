@@ -12,7 +12,7 @@ public class AssetsConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/bower_components/**").addResourceLocations("file:bower_components/");
+        registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/");
         super.addResourceHandlers(registry);
     }
 }

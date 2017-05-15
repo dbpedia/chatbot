@@ -4,9 +4,21 @@
   "version": "0.0.1",
   "repository": "https://github.com/dbpedia/chatbot.git",
   "dependencies": {
-    "bower": "1.8.0"
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "bootstrap": "3.3.7",
+    "grunt": "^1.0.1",
+    "grunt-webpack": "^3.0.0",
+    "material-ui": "^0.16.4",
+    "react": "15.4.1",
+    "react-dom": "15.4.1",
+    "react-tap-event-plugin": "2.0.1",
+    "webpack": "^2.5.1"
   },
   "scripts": {
-    "postinstall": "./node/node ./node_modules/bower/bin/bower install"
+    "postinstall": "./node/node ./node_modules/.bin/grunt"
   }
 }
