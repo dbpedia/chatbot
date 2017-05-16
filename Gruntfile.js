@@ -6,7 +6,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-bower-install');
     grunt.loadNpmTasks('grunt-bower-seamless-install');
 
     grunt.initConfig({
