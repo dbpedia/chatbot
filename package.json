@@ -14,8 +14,7 @@
     "grunt-contrib-less": "^1.4.1",
     "grunt-webpack": "^3.0.0",
     "react": "^15.2.1",
-    "react-dom": "^15.2.1",
-    "react-tap-event-plugin": "2.0.1",
+    "react-dom": "^15.2.1"
     "webpack": "^2.5.1"
   },
   "devDependencies": {
