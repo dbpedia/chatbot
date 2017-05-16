@@ -1,6 +1,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.jsx'
+import ChatApp from './components/ChatApp.jsx';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<ChatApp />, document.getElementById('chat-container'));

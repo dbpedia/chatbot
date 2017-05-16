@@ -11,5 +11,5 @@ node_modules
 bower_components
 npm-debug.log
 target
-src/main/resources/static/js
-src/main/resources/static/css
+src/main/webapp
+*.iml

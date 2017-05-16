@@ -4,50 +4,34 @@
 module.exports = function(grunt) {
     var webpackConfig = require('./webpack.config');
     grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-//        babel: {
-//            options: {
-//                presets: ['es2015', 'react']
-//            },
-//            dist: {
-//                files: [
-//                {
-//                    'expand': true,
-//                    'cwd': 'app/src/js',
-//                    'src': '',
-//                    'dest': 'src/main/resources/static/js/'
-//                }
-//                ]
-//            }
-//        },
         webpack: {
             prod: webpackConfig,
             dev: webpackConfig
-//              build: {
-//                entry: ['./app/src/js/scripts.js'],
-//                output: {
-//                  path: './app/src/js/',
-//                  filename: 'build.js'
-//                },
-//                stats: {
-//                  colors: false,
-//                  modules: true,
-//                  reasons: true
-//                },
-//                storeStatsTo: 'webpackStats',
-//                progress: true,
-//                failOnError: true,
-//                watch: true,
-//                module: {
-//                  loaders: [
-//                    { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
-//                  ]
-//                }
-//              }
+        },
+        less: {
+            production: {
+                options: {
+                    compress: true
+                },
+                files: {
+                    './src/main/webapp/css/app.css': './app/src/less/app.less'
+                }
+            }
+        },
+        watch: {
+            files: './app/src/less/**/*.less',
+            tasks: ['less']
         }
     });
 
-    grunt.registerTask('default', ['webpack']);
+    grunt.registerTask('default', ['webpack', 'less']);
+
+    // Primarily Used for Development
+    grunt.registerTask('js', ['webpack']);
+    grunt.registerTask('css', ['watch']);
 };

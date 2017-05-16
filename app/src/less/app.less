@@ -1,0 +1,94 @@
+@import "../../../bower_components/bootstrap-material-design/less/bootstrap-material-design.less";
+
+@import "./_variables.less";
+@import "./bubbles.less";
+
+html, body {
+  height: 100%;
+  background: #70b8d9;
+}
+
+.form-control {
+  border: 0;
+  box-shadow: none !important;
+}
+
+.full-height {
+  height: 100%;
+  min-height: 100%;
+}
+
+#chat-container {
+  padding: 0 !important;
+  .card {
+    min-height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+#messages-container {
+  flex-grow: 1;
+  background: @brand-primary;
+  overflow: auto;
+  padding: 5px;
+}
+
+.message {
+  height: 500px;
+}
+
+/** Deprecated for now **/
+.send-message-container {
+  background-color: #f5f1ee ;
+  height: 60px;
+  fieldset {
+    margin-top: 5px;
+  }
+  div {
+    padding-left: 10px;
+    padding-right: 0;
+  }
+}
+
+.send-message-textbox {
+  background: #ffffff ;
+  padding: 5px;
+  border-radius: 5px;
+  height: 50px;
+}
+
+
+
+.from-them {
+  position: relative;
+  padding: 10px 20px;
+  background: #E5E5EA;
+  border-radius: 25px;
+  color: black;
+  float: left;
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    bottom: -2px;
+    left: -7px;
+    height: 20px;
+    border-left: 20px solid #E5E5EA;
+    border-bottom-right-radius: 16px 14px;
+    -webkit-transform: translate(0, -2px);
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    bottom: -2px;
+    left: 4px;
+    width: 26px;
+    height: 20px;
+    background: white;
+    border-bottom-right-radius: 10px;
+    -webkit-transform: translate(-30px, -2px);
+  }
+}
