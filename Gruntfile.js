@@ -14,7 +14,7 @@ module.exports = function(grunt) {
             dev: webpackConfig
         },
         less: {
-            production: {
+            default: {
                 options: {
                     compress: true
                 },
