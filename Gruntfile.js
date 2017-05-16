@@ -6,6 +6,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-bower-install');
+    grunt.loadNpmTasks('grunt-bower-seamless-install');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -29,7 +31,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['webpack', 'less']);
+    grunt.registerTask('default', ['bower-install', 'webpack', 'less']);
 
     // Primarily Used for Development
     grunt.registerTask('js', ['webpack']);
