@@ -2,8 +2,7 @@ import React from 'react';
 
 class Message extends React.Component {
     render() {
-        const fromMe = this.props.fromMe ? 'pull-right' : '';
-
+        const fromMe = this.props.fromMe ? 'pull-right' : 'pull-left';
         return(
             <div className="container-fluid">
                 <div className={`bubble ${fromMe}`}>

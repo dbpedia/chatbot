@@ -3,6 +3,8 @@ import React from 'react';
 import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
 
+
+
 class ChatApp extends React.Component {
     constructor(props) {
         super();
@@ -13,16 +15,37 @@ class ChatApp extends React.Component {
     sendHandler(message) {
         const messageObject = {
             username: this.props.username,
-            message
+            message: message
         };
 
         messageObject.fromMe = true;
         this.addMessage(messageObject);
+
+        $.ajax({
+            type: 'POST',
+            url: '/webhook',
+            contentType: 'application/json',
+            dataType: 'text',
+            data: JSON.stringify({
+                messageType: 'text',
+                message: message
+            }),
+            success: (response) => {
+                this.addMessage({
+                    username: 'bot',
+                    fromMe: false,
+                    message: response
+                });
+            }
+        });
     }
 
     addMessage(message) {
         // Append the message to the component state
         let messages = this.state.messages;
+
+        console.log("ADDING MESSAGE", message);
+
         messages.push(message);
         this.setState({ messages });
     }

@@ -29,9 +29,9 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/fbwebhook")
-public class WebHookHandler {
+public class FBHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebHookHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(FBHandler.class);
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
     private final RiveScriptBot riveScriptBot;
@@ -41,11 +41,11 @@ public class WebHookHandler {
     private final String pageAccessToken;
 
     @Autowired
-    WebHookHandler(@Value("${chatbot.fb.appSecret}") final String appSecret,
-                   @Value("${chatbot.fb.verifyToken}") final String verifyToken,
-                   @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
-                   final MessengerSendClient sendClient,
-                   final RiveScriptBot riveScriptBot) {
+    FBHandler(@Value("${chatbot.fb.appSecret}") final String appSecret,
+              @Value("${chatbot.fb.verifyToken}") final String verifyToken,
+              @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
+              final MessengerSendClient sendClient,
+              final RiveScriptBot riveScriptBot) {
         logger.debug("App Secret is " + appSecret);
         logger.debug("Verification Token is " + verifyToken);
 
@@ -76,7 +76,7 @@ public class WebHookHandler {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> handleCallback(@RequestBody final String payload,
+    public ResponseEntity<Void> handleRequest(@RequestBody final String payload,
                                                @RequestHeader(MessengerPlatform.SIGNATURE_HEADER_NAME) final String signature) {
         logger.info("Received Messenger Platform cFallback - payload: {} | signature: {}", payload, signature);
         try {
