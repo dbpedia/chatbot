@@ -1,7 +1,0 @@
-{
-  "name": "dbpedia-chatbot",
-  "version": "0.0.1",
-  "dependencies": {
-    "bootstrap-material-design": "0.5.10"
-  }
-}

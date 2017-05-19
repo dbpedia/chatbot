@@ -6,7 +6,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-exec');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -27,15 +26,10 @@ module.exports = function(grunt) {
         watch: {
             files: './app/src/less/**/*.less',
             tasks: ['less']
-        },
-        exec: {
-            bower: {
-                command: './node/node ./node_modules/.bin/bower install'
-            }
         }
     });
 
-    grunt.registerTask('default', ['exec:bower', 'webpack', 'less']);
+    grunt.registerTask('default', ['webpack', 'less']);
 
     // Primarily Used for Development
     grunt.registerTask('js', ['webpack']);
