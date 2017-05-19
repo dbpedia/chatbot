@@ -1,4 +1,5 @@
 @import "../../../node_modules/bootstrap-material-design/less/bootstrap-material-design.less";
+@import "./animations.less";
 
 @import "./_variables.less";
 @import "./bubbles.less";
@@ -6,6 +7,7 @@
 html, body {
   height: 100%;
   background: #70b8d9;
+  font-family: 'Roboto', sans-serif;
 }
 
 .form-control {
@@ -30,9 +32,36 @@ html, body {
 
 #messages-container {
   flex-grow: 1;
-  background: @brand-primary;
+  background: #ffffff;
   overflow: auto;
   padding: 5px;
+  padding-bottom: 15px;
+
+  .container-fluid {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .bot-icon {
+    margin-top: 5px;
+    margin-right: 5px;
+    visibility: hidden;
+
+    animation-duration: 0.25s;
+    -webkit-animation-duration: 0.25s;
+
+    img {
+        margin-top: 5px;
+    }
+  }
+}
+
+#chat-input-container {
+  background: #f5f1ee;
+  border-top: #eeeeee;
+  .form-group {
+    margin-top: 10px;
+  }
 }
 
 .message {
@@ -58,8 +87,6 @@ html, body {
   border-radius: 5px;
   height: 50px;
 }
-
-
 
 .from-them {
   position: relative;

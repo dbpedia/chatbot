@@ -31,9 +31,6 @@ public class AppHandler {
                 response = this.riveScriptBot.reply("USER", messageData.getMessage()); // need to use a unique identifier instead
                 break;
         }
-
-        logger.info(response);
-
         return response;
     }
 }

@@ -23,7 +23,7 @@ class ChatInput extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.submitHandler} style={{padding: 5}}>
+            <form onSubmit={this.submitHandler} style={{padding: 5}} id="chat-input-container">
                 <fieldset>
                     <div className="form-group">
                         <input type="text"
