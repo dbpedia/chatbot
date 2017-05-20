@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                     compress: true
                 },
                 files: {
-                    './src/main/webapp/css/app.css': './app/src/less/app.less'
+                    './src/main/app/css/app.css': './app/src/less/app.less'
                 }
             }
         },

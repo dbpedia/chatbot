@@ -4,7 +4,7 @@ module.exports = {
 //  watch: './app/src/js/**/*.js',
   output: {
     // path: path.resolve('./src/main/resources/static/js/'),
-    path: path.resolve('./src/main/webapp/js/'),
+    path: path.resolve('./src/main/app/js/'),
     filename: 'app.js'
   },
   module: {
