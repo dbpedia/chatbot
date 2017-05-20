@@ -3,7 +3,7 @@ import React from 'react';
 class ChatInput extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {chatInput: ''};
+        this.state = {chatInput: '', sendDisabled: true};
 
         this.submitHandler = this.submitHandler.bind(this);
         this.textChangeHandler = this.textChangeHandler.bind(this);
@@ -12,16 +12,18 @@ class ChatInput extends React.Component {
     submitHandler(event) {
         event.preventDefault();
         if(this.state.chatInput != '') {
-            this.setState({chatInput: ''});
+            this.setState({chatInput: '', sendDisabled: true});
             this.props.onSend(this.state.chatInput);
         }
     }
 
     textChangeHandler(event) {
-        this.setState({chatInput: event.target.value});
+        let value = event.target.value;
+        this.setState({chatInput: value, sendDisabled: value == ''});
     }
 
     render() {
+        let sendButtonClass = 'btn btn-primary btn-fab btn-fab send-button' + (this.state.sendDisabled ? ' disabled' : '');
         return (
             <form onSubmit={this.submitHandler} style={{padding: 5}} id="chat-input-container">
                 <fieldset>
@@ -33,6 +35,9 @@ class ChatInput extends React.Component {
                                value={this.state.chatInput}
                                placeholder="Write a message"
                                />
+                               <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
+                                    <img src="/images/icon-send-32.png" />
+                               </a>
                     </div>
                 </fieldset>
             </form>
@@ -41,7 +46,8 @@ class ChatInput extends React.Component {
 }
 
 ChatInput.defaultProps = {
-    chatInput: ''
+    chatInput: '',
+    sendDisabled: true
 };
 
 export default ChatInput;

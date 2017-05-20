@@ -15,8 +15,8 @@ public class AssetsConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/");
-        registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/webapp/js/");
-        registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/webapp/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/");
+        registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/");
         super.addResourceHandlers(registry);
     }
 
