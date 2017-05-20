@@ -36,7 +36,7 @@ class ChatInput extends React.Component {
                                placeholder="Write a message"
                                />
                                <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
-                                    <img src="/images/icon-send-32.jpg" />
+                                    <img src="/images/icon-send-32.png" />
                                </a>
                     </div>
                 </fieldset>

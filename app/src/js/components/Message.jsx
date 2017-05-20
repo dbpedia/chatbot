@@ -8,7 +8,7 @@ class Message extends React.Component {
         if (!this.props.fromMe) {
             botDiv = (
                 <div className="btn btn-default btn-fab pull-left fadeIn bot-icon">
-                    <img src="/images/icon-45.jpg" />
+                    <img src="/images/icon-dbpedia-45.png" />
                 </div>
             )
         }
