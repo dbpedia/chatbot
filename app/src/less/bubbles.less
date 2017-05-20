@@ -1,10 +1,10 @@
 .bubble {
   height: auto;
-  max-width: 60%;
+  max-width: 50%;
   width: fit-content;
   color: #fff;
   margin: 5px 0;
-  padding: 10px 20px;
+  padding: 5px 10px;
 
   animation-duration: 0.5s;
   -webkit-animation-duration: 0.5s;
@@ -14,10 +14,30 @@
   }
 }
 
+.bubble:after{
+  border: solid transparent;
+  content: " ";
+  position: absolute;
+  pointer-events: none;
+  border-width: 6px;
+  margin-top: 1px;
+  top: 0%;
+}
+
 .bubble-user {
   background-color: @brand-secondary;
 }
 
+.bubble-user:after {
+  left: 100%;
+  border-left-color: @brand-secondary;
+}
+
 .bubble-bot {
   background-color: @brand-primary;
+}
+
+.bubble-bot:after {
+  right: 100%;
+  border-right-color: @brand-primary;
 }
