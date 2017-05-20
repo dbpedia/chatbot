@@ -11,19 +11,18 @@
     "babel-preset-react": "^6.24.1",
     "bootstrap": "3.3.7",
     "bootstrap-material-design": "0.5.10",
-    "grunt": "^1.0.1",
-    "grunt-contrib-less": "^1.4.1",
-    "grunt-webpack": "^3.0.0",
+    "css-loader": "^0.28.1",
     "jquery": "3.2.1",
     "less-loader": "^4.0.3",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "style-loader": "^0.17.0",
     "webpack": "^2.5.1"
   },
   "devDependencies": {
-    "grunt-contrib-watch": "^1.0.0"
+
   },
   "scripts": {
-    "postinstall": "./node/node ./node_modules/.bin/grunt"
+    "postinstall": "./node/node ./node_modules/.bin/webpack -p"
   }
 }
