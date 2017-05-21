@@ -19,9 +19,7 @@
     "style-loader": "^0.17.0",
     "webpack": "^2.5.1"
   },
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "scripts": {
     "postinstall": "./node/node ./node_modules/.bin/webpack -p"
   }

@@ -30,20 +30,25 @@ html, body {
   }
 }
 
+#chat-app-container {
+  animation-duration: 0.5s;
+  -webkit-animation-duration: 0.5s;
+}
+
 #messages-container {
   flex-grow: 1;
-  background: #ffffff;
+  background: #f5f1ee;
   overflow: auto;
   padding: 5px;
   padding-bottom: 15px;
 
   .container-fluid {
-    padding-right: 5px;
-    padding-left: 5px;
+    padding: 5px 0 5px 10px;
   }
 
   .bot-icon {
-    margin-right: 10px;
+    background: #ffffff;
+    margin-right: 5px;
     visibility: hidden;
 
     animation-duration: 0.25s;
@@ -56,8 +61,7 @@ html, body {
 }
 
 #chat-input-container {
-  background: #f5f1ee;
-  border-top: #eeeeee;
+  background: #ffffff;
   .form-group {
     margin-top: 10px;
     display: flex;

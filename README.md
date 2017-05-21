@@ -16,5 +16,4 @@
      java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar // $PORT is the port number you want the server to run in for example 8080         
  
 ## Development
-     node/node node_modules/.bin/webpack --watch
-     node/node node_modules/.bin/grunt css
+     node/node node_modules/.bin/webpack --watch     
