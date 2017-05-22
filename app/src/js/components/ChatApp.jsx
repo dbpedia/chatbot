@@ -22,18 +22,21 @@ class ChatApp extends React.Component {
         $.ajax({
             type: 'POST',
             url: '/webhook',
-            contentType: 'application/json',
+            headers: {
+                'Accept': 'application/json; charset=utf-8',
+                'Content-Type': 'application/json; charset=utf-8'
+            },
             dataType: 'text',
-            data: JSON.stringify({
-                messageType: 'text',
-                message: message
-            }),
+            data: JSON.stringify(message),
             success: (response) => {
-                this.addMessage({
-                    username: 'bot',
-                    fromMe: false,
-                    message: response
-                });
+                response = JSON.parse(response);
+                for (let index in response) {
+                    this.addMessage({
+                        username: 'bot',
+                        fromMe: false,
+                        message: response[index]
+                    });
+                }
             }
         });
     }

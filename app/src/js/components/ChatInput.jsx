@@ -13,7 +13,10 @@ class ChatInput extends React.Component {
         event.preventDefault();
         if(this.state.chatInput != '') {
             this.setState({chatInput: '', sendDisabled: true});
-            this.props.onSend(this.state.chatInput);
+            this.props.onSend({
+                messageType: 'text',
+                messageData: [{text: this.state.chatInput}]
+            });
         }
     }
 

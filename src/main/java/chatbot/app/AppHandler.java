@@ -1,11 +1,18 @@
 package chatbot.app;
 
+import chatbot.app.request.Request;
+import chatbot.app.request.RequestHandler;
+import chatbot.lib.response.Response;
 import chatbot.rivescript.RiveScriptBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ramgathreya on 5/19/17.
@@ -22,15 +29,9 @@ public class AppHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody String handleRequest(@RequestBody final Request messageData) {
-        String response = "";
-
-        switch(messageData.getMessageType()) {
-            case RequestType.TEXT_MESSAGE:
-                response = this.riveScriptBot.reply("USER", messageData.getMessage()); // need to use a unique identifier instead
-                break;
-        }
-        return response;
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody
+    List<Response> handleRequest(@RequestBody final Request request) {
+        return (List<Response>) new RequestHandler(request, riveScriptBot).handleRequest();
     }
 }

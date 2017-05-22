@@ -1,4 +1,4 @@
-package chatbot.app;
+package chatbot.lib.request;
 
 /**
  * Created by ramgathreya on 5/19/17.
