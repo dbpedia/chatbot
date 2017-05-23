@@ -10,15 +10,7 @@ class ChatApp extends React.Component {
         this.sendHandler = this.sendHandler.bind(this);
     }
 
-    sendHandler(message) {
-        const messageObject = {
-            username: this.props.username,
-            message: message
-        };
-
-        messageObject.fromMe = true;
-        this.addMessage(messageObject);
-
+    makeRequest(data) {
         $.ajax({
             type: 'POST',
             url: '/webhook',
@@ -27,18 +19,45 @@ class ChatApp extends React.Component {
                 'Content-Type': 'application/json; charset=utf-8'
             },
             dataType: 'text',
-            data: JSON.stringify(message),
+            data: JSON.stringify(data),
             success: (response) => {
-                response = JSON.parse(response);
-                for (let index in response) {
-                    this.addMessage({
-                        username: 'bot',
-                        fromMe: false,
-                        message: response[index]
-                    });
-                }
+                this.renderMessages(JSON.parse(response));
             }
         });
+    }
+
+    renderMessages(messages) {
+        for (let index in messages) {
+            setTimeout(() => {
+                this.addMessage({
+                    username: 'bot',
+                    fromMe: false,
+                    message: messages[index]
+                });
+            }, 500 * index);
+        }
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.makeRequest({
+                messageType: 'parameter',
+                messageData: [{
+                    payload: 'start'
+                }]
+            });
+        }, 500);
+    }
+
+    sendHandler(message) {
+        const messageObject = {
+            username: this.props.username,
+            message: message
+        };
+
+        messageObject.fromMe = true;
+        this.addMessage(messageObject);
+        this.makeRequest(message);
     }
 
     addMessage(message) {

@@ -27,6 +27,13 @@ public class Response {
         return this;
     }
 
+    public Response addData(ResponseData[] responseDatas) {
+        for(ResponseData data : responseDatas) {
+            this.addData(data);
+        }
+        return this;
+    }
+
     public Response addData(ResponseData responseData) {
         this.messageData.add(responseData);
         return this;

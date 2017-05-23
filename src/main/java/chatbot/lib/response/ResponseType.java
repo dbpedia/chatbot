@@ -5,4 +5,5 @@ package chatbot.lib.response;
  */
 public interface ResponseType {
     String TEXT = "text"; // Text only response
+    String CAROUSEL = "carousel"; // Carousel of Cards
 }

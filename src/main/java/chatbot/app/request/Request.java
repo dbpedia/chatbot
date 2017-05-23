@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class Request {
     private static final Logger logger = LoggerFactory.getLogger(Request.class);
-
     private String messageType;
     private List<MessageData> messageData = new ArrayList<>();
 
@@ -31,16 +30,30 @@ public class Request {
 
     public String getMessageType() {
         return this.messageType;
-
     }
 
-    public String getMessage() {
-        logger.info("MESSAGE DATA SIZE: " + messageData.size());
-        return messageData.get(0).getText();
+    // Written for convenience
+    public String getText() {
+        return this.getMessageData().get(0).getText();
+    }
+
+    // Written for convenience
+    public String getPayload() {
+        return this.getMessageData().get(0).getPayload();
     }
 
     static class MessageData {
-        public String text;
+        private String text;
+        private String payload;
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public MessageData setPayload(String payload) {
+            this.payload = payload;
+            return this;
+        }
 
         public String getText() {
             return text;

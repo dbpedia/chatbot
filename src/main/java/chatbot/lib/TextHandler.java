@@ -1,6 +1,7 @@
 package chatbot.lib;
 
 import chatbot.lib.response.Response;
+import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.rivescript.RiveScriptBot;
 
@@ -22,7 +23,7 @@ public class TextHandler {
 
     public List<Response> handleTextMessage() {
         return new ResponseGenerator()
-                .addTextResponse(this.riveScriptBot.reply(userId, textMessage))
+                .addTextResponse(new ResponseData(this.riveScriptBot.reply(userId, textMessage)))
                 .getResponse();
     }
 }

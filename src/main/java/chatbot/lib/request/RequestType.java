@@ -5,4 +5,5 @@ package chatbot.lib.request;
  */
 public interface RequestType {
     String TEXT_MESSAGE = "text";
+    String PARAMETER_MESSAGE = "parameter";
 }

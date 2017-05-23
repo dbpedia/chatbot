@@ -13,9 +13,16 @@ public class ResponseGenerator {
         return this;
     }
 
-    public ResponseGenerator addTextResponse(String text) {
-        this.response.add(new Response().setMessageType(ResponseType.TEXT)
-                .addData(new ResponseData(text))
+    public ResponseGenerator addTextResponse(ResponseData data) {
+        this.addResponse(new Response().setMessageType(ResponseType.TEXT)
+                .addData(data)
+        );
+        return this;
+    }
+
+    public ResponseGenerator addCarouselResponse(ResponseData[] data) {
+        this.addResponse(new Response().setMessageType(ResponseType.CAROUSEL)
+                .addData(data)
         );
         return this;
     }
