@@ -35,7 +35,7 @@ public class ParameterHandler {
         switch(this.payload[0]) {
             case ParameterType.START:
                 response.addTextResponse(new ResponseData("Hi I am the DBpedia Bot"))
-                        .addTextResponse(new ResponseData("You can ask me questions like"))
+                        .addTextResponse(new ResponseData("You can ask me questions like:"))
                         .addCarouselResponse(ResponseTemplates.getStarterTemplate());
                 break;
         }
