@@ -42,7 +42,7 @@ public class ResponseData {
 
     // Constructor for Carousel Data
     public ResponseData(String image, String title, String text) {
-        this.image = image; // Need to extend to handle HTTP URLS as well as local images as part of repository
+        this.image = image;
         this.title = title;
         this.text = text;
     }

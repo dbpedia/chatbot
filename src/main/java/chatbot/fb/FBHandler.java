@@ -1,5 +1,9 @@
 package chatbot.fb;
 
+import chatbot.fb.response.ResponseHandler;
+import chatbot.lib.Platform;
+import chatbot.lib.request.*;
+import chatbot.lib.response.Response;
 import chatbot.rivescript.RiveScriptBot;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.exceptions.MessengerApiException;
@@ -7,11 +11,13 @@ import com.github.messenger4j.exceptions.MessengerIOException;
 import com.github.messenger4j.exceptions.MessengerVerificationException;
 import com.github.messenger4j.receive.MessengerReceiveClient;
 import com.github.messenger4j.receive.events.TextMessageEvent;
+import com.github.messenger4j.receive.handlers.PostbackEventHandler;
 import com.github.messenger4j.receive.handlers.TextMessageEventHandler;
 import com.github.messenger4j.send.MessengerSendClient;
-import com.github.messenger4j.send.NotificationType;
-import com.github.messenger4j.send.Recipient;
 import com.github.messenger4j.send.SenderAction;
+import com.github.messenger4j.setup.CallToAction;
+import com.github.messenger4j.setup.CallToActionType;
+import com.github.messenger4j.setup.MessengerSetupClient;
 import com.github.messenger4j.user.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +27,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-
+import java.util.List;
 
 /**
  * Created by ramgathreya on 5/10/17.
@@ -30,7 +40,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("/fbwebhook")
 public class FBHandler {
-
     private static final Logger logger = LoggerFactory.getLogger(FBHandler.class);
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
@@ -40,25 +49,38 @@ public class FBHandler {
     private final String verifyToken;
     private final String pageAccessToken;
 
+    private final String baseUrl;
+
     @Autowired
     FBHandler(@Value("${chatbot.fb.appSecret}") final String appSecret,
               @Value("${chatbot.fb.verifyToken}") final String verifyToken,
               @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
+              @Value("${chatbot.baseUrl}") final String baseUrl,
               final MessengerSendClient sendClient,
-              final RiveScriptBot riveScriptBot) {
+              final RiveScriptBot riveScriptBot) throws MessengerApiException, MessengerIOException, MalformedURLException {
         logger.debug("App Secret is " + appSecret);
         logger.debug("Verification Token is " + verifyToken);
 
         this.appSecret = appSecret;
         this.verifyToken = verifyToken;
         this.pageAccessToken = pageAccessToken;
+        this.baseUrl = baseUrl;
 
         this.receiveClient = MessengerPlatform.newReceiveClientBuilder(this.appSecret, this.verifyToken)
                 .onTextMessageEvent(textMessageEventHandler())
+                .onPostbackEvent(newPostbackEventHandler())
                 .build();
 
         this.sendClient = sendClient;
         this.riveScriptBot = riveScriptBot;
+
+        MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
+
+        setupClient.setupStartButton(ParameterType.START);
+        setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
+                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(ParameterType.START).build(),
+                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build()
+        )));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -100,6 +122,38 @@ public class FBHandler {
         return getGraphData(userId).getFirstName();
     }
 
+    private PostbackEventHandler newPostbackEventHandler() {
+        return event -> {
+            logger.debug("Received PostbackEvent: {}", event);
+
+            final String senderId = event.getSender().getId();
+            final String recipientId = event.getRecipient().getId();
+            final String payload = event.getPayload();
+            final Date timestamp = event.getTimestamp();
+
+            logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'",
+                    senderId, recipientId, payload, timestamp);
+
+            try {
+                sendReadReceipt(senderId);
+                sendTypingOn(senderId);
+
+                Request request = new Request(senderId, RequestType.PARAMETER_MESSAGE, Platform.FB)
+                        .setMessageData(new ArrayList<>(
+                                Arrays.asList(new MessageData().setPayload(payload))
+                        ));
+                List<Response> responseList = new RequestHandler(request, riveScriptBot).handleRequest();
+                new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
+
+                sendTypingOff(senderId);
+            } catch (MessengerApiException e) {
+                e.printStackTrace();
+            } catch (MessengerIOException e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
     private TextMessageEventHandler textMessageEventHandler() {
         return (TextMessageEvent event) -> {
             logger.debug("Received TextMessageEvent: {}", event);
@@ -114,7 +168,14 @@ public class FBHandler {
             try {
                 sendReadReceipt(senderId);
                 sendTypingOn(senderId);
-                sendTextMessage(senderId, this.riveScriptBot.reply("FB_" + senderId, messageText));
+
+                Request request = new Request(senderId, RequestType.TEXT_MESSAGE, Platform.FB) // Creating Request Object
+                        .setMessageData(new ArrayList<>(
+                                Arrays.asList(new MessageData().setText(messageText))
+                        ));
+                List<Response> responseList = new RequestHandler(request, riveScriptBot).handleRequest(); // Get Generic Response List
+                new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse(); // Translate for FB
+
                 sendTypingOff(senderId);
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
@@ -122,27 +183,16 @@ public class FBHandler {
         };
     }
 
-    private void sendTextMessage(String recipientId, String text) {
-        try {
-            final Recipient recipient = Recipient.newBuilder().recipientId(recipientId).build();
-            final NotificationType notificationType = NotificationType.REGULAR;
-
-            this.sendClient.sendTextMessage(recipient, notificationType, text);
-        } catch (MessengerApiException | MessengerIOException e) {
-            handleSendException(e);
-        }
-    }
-
     private void sendReadReceipt(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.sendClient.sendSenderAction(recipientId, SenderAction.MARK_SEEN);
+        sendClient.sendSenderAction(recipientId, SenderAction.MARK_SEEN);
     }
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.sendClient.sendSenderAction(recipientId, SenderAction.TYPING_ON);
+        sendClient.sendSenderAction(recipientId, SenderAction.TYPING_ON);
     }
 
     private void sendTypingOff(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.sendClient.sendSenderAction(recipientId, SenderAction.TYPING_OFF);
+        sendClient.sendSenderAction(recipientId, SenderAction.TYPING_OFF);
     }
 
     private void handleSendException(Exception e) {

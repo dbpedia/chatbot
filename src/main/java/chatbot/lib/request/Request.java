@@ -1,4 +1,4 @@
-package chatbot.app.request;
+package chatbot.lib.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,39 @@ import java.util.List;
  */
 public class Request {
     private static final Logger logger = LoggerFactory.getLogger(Request.class);
+    private String userId;
     private String messageType;
     private List<MessageData> messageData = new ArrayList<>();
+    private String platform;
+
+    public Request() {
+
+    }
+
+    // Constructor for FB Messenger
+    public Request(String userId, String messageType, String platform) {
+        this.userId = userId;
+        this.messageType = messageType;
+        this.platform = platform;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public Request setPlatform(String platform) {
+        this.platform = platform;
+        return this;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Request setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
 
     public List<MessageData> getMessageData() {
         return messageData;
@@ -40,28 +71,5 @@ public class Request {
     // Written for convenience
     public String getPayload() {
         return this.getMessageData().get(0).getPayload();
-    }
-
-    static class MessageData {
-        private String text;
-        private String payload;
-
-        public String getPayload() {
-            return payload;
-        }
-
-        public MessageData setPayload(String payload) {
-            this.payload = payload;
-            return this;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public MessageData setText(String text) {
-            this.text = text;
-            return this;
-        }
     }
 }

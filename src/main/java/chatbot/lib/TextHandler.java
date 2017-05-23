@@ -23,7 +23,7 @@ public class TextHandler {
 
     public List<Response> handleTextMessage() {
         return new ResponseGenerator()
-                .addTextResponse(new ResponseData(this.riveScriptBot.reply(userId, textMessage)))
+                .addTextResponse(new ResponseData(riveScriptBot.reply(userId, textMessage)))
                 .getResponse();
     }
 }
