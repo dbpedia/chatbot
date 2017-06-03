@@ -1,4 +1,4 @@
-package chatbot.lib;
+package chatbot.lib.handlers;
 
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.response.Response;

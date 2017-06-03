@@ -1,19 +1,20 @@
 package chatbot.lib.response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ramgathreya on 5/22/17.
  */
 public class Response {
     private String messageType;
-    private ArrayList<ResponseData> messageData = new ArrayList<>();
+    private List<ResponseData> messageData = new ArrayList<>();
 
-    public ArrayList<ResponseData> getMessageData() {
+    public List<ResponseData> getMessageData() {
         return messageData;
     }
 
-    public Response setMessageData(ArrayList<ResponseData> messageData) {
+    public Response setMessageData(List<ResponseData> messageData) {
         this.messageData = messageData;
         return this;
     }

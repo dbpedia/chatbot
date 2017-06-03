@@ -150,6 +150,8 @@ public class FBHandler {
                 e.printStackTrace();
             } catch (MessengerIOException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
     }
@@ -179,6 +181,8 @@ public class FBHandler {
                 sendTypingOff(senderId);
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
     }

@@ -1,5 +1,8 @@
 package chatbot.lib.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ramgathreya on 5/22/17.
  */
@@ -7,6 +10,21 @@ public class ResponseData {
     private String image;
     private String title;
     private String text;
+    private List<ButtonData> buttons = new ArrayList<>();
+
+    public ResponseData addButton(ButtonData buttonData) {
+        this.buttons.add(buttonData);
+        return this;
+    }
+
+    public List<ButtonData> getButtons() {
+        return buttons;
+    }
+
+    public ResponseData setButtons(List<ButtonData> buttons) {
+        this.buttons = buttons;
+        return this;
+    }
 
     public String getImage() {
         return image;
@@ -45,5 +63,48 @@ public class ResponseData {
         this.image = image;
         this.title = title;
         this.text = text;
+    }
+
+    public ResponseData() {
+
+    }
+
+    public static class ButtonData {
+        private String title;
+        private String buttonType;
+        private String uri;
+
+        public ButtonData(String title, String buttonType, String uri) {
+            this.title = title;
+            this.buttonType = buttonType;
+            this.uri = uri;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public ButtonData setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public String getButtonType() {
+            return buttonType;
+        }
+
+        public ButtonData setButtonType(String buttonType) {
+            this.buttonType = buttonType;
+            return this;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public ButtonData setUri(String uri) {
+            this.uri = uri;
+            return this;
+        }
     }
 }

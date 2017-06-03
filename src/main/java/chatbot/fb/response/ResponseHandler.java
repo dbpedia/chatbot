@@ -59,7 +59,7 @@ public class ResponseHandler {
         }
     }
 
-    private void sendGenericMessage(String recipientId, ArrayList<ResponseData> items) throws MessengerApiException, MessengerIOException {
+    private void sendGenericMessage(String recipientId, List<ResponseData> items) throws MessengerApiException, MessengerIOException {
 //        final List<Button> riftButtons = Button.newListBuilder()
 //                .addUrlButton("Open Web URL", "https://www.oculus.com/en-us/rift/").toList()
 //                .addPostbackButton("Call Postback", "Payload for first bubble").toList()

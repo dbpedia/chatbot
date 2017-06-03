@@ -9,16 +9,24 @@
 
 .carousel-item {
     display: inline-block;
-    height: 200px;
-    width: 200px;
     margin-right: 10px;
-    padding: 5px 0;
     vertical-align: top;
+
+    .card {
+        min-height: 200px;
+        width: 200px;
+        .button-group {
+            border-top: 1px solid #eeeeee;
+        }
+        .btn {
+            margin: 0;
+        }
+    }
 
     img {
         display: block;
         margin: auto;
-        max-height: 75px;
+        max-height: 100px;
     }
 
     .content {
@@ -35,5 +43,13 @@
         font-size: 13px;
         color: @brand-secondary;
         line-height: 20px;
+
+        div {
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 80px;
+        }
     }
 }

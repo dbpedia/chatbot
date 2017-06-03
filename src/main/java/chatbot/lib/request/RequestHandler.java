@@ -1,10 +1,8 @@
 package chatbot.lib.request;
 
-import chatbot.lib.ParameterHandler;
-import chatbot.lib.request.Request;
+import chatbot.lib.handlers.ParameterHandler;
 import chatbot.lib.response.Response;
-import chatbot.lib.request.RequestType;
-import chatbot.lib.TextHandler;
+import chatbot.lib.handlers.TextHandler;
 import chatbot.rivescript.RiveScriptBot;
 
 import java.util.List;
@@ -21,7 +19,7 @@ public class RequestHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> handleRequest() {
+    public List<Response> handleRequest() throws Exception {
         List<Response> response = null;
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:
