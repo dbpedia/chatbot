@@ -5,7 +5,7 @@ package chatbot.lib;
  */
 public class Utility {
     public static String generateImageUrl(String baseUrl, String imageUrl) {
-        if(imageUrl.startsWith("http") == true) {
+        if(imageUrl.startsWith("http")) {
             return imageUrl;
         }
         else {
@@ -14,8 +14,9 @@ public class Utility {
     }
 
     public static String[] split(String string) {
+        System.out.println("STRING IS " + string);
         if(string.contains("|")) {
-            return string.split("|");
+            return string.split("\\|");
         }
         else {
             return new String[]{string};
