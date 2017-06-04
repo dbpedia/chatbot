@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.lib.Utility;
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
@@ -20,14 +21,7 @@ public class ParameterHandler {
 
     public ParameterHandler(String userId, String payload) {
         this.userId = userId;
-
-        // Split only when payload contains |
-        if(payload.contains("|")) {
-            this.payload = payload.split("|");
-        }
-        else {
-            this.payload = new String[]{payload};
-        }
+        this.payload = Utility.split(payload);
     }
 
     public List<Response> handleParameterMessage() {

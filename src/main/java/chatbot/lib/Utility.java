@@ -12,4 +12,13 @@ public class Utility {
             return baseUrl + imageUrl;
         }
     }
+
+    public static String[] split(String string) {
+        if(string.contains("|")) {
+            return string.split("|");
+        }
+        else {
+            return new String[]{string};
+        }
+    }
 }

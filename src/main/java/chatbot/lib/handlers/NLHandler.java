@@ -67,7 +67,7 @@ public class NLHandler {
         if (answers != null) {
             JsonNode bindings = answers.get("results").get("bindings");
             List<Data> data = new ArrayList<>();
-            //            JsonNode binding = bindings.get(0);
+
             for(JsonNode binding : bindings) {
                 Iterator<Map.Entry<String, JsonNode>> nodes = binding.getFields();
                 while (nodes.hasNext()) {

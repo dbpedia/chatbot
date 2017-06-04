@@ -22,6 +22,9 @@
 - Alright
 - Gotcha
 
++ what can you do // also add how can you help me
+- I can help you with|TEMPLATE|START
+
 + [*] (fuck|fucker|shit|damn|wtf|shut up|bitch) [*]
 - Does it make you feel strong to use that kind of language?
 - Are you venting your feelings now?
@@ -31,4 +34,4 @@
 - Does using that kind of language make you feel better?
 
 + *
-- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.
+- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.|__FALLBACK__

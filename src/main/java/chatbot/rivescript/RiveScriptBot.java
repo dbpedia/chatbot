@@ -1,5 +1,6 @@
 package chatbot.rivescript;
 
+import chatbot.lib.Utility;
 import com.rivescript.RiveScript;
 
 /**
@@ -10,5 +11,9 @@ public class RiveScriptBot extends RiveScript {
         super();
         this.loadDirectory("src/main/resources/rivescript");
         this.sortReplies();
+    }
+
+    public String[] answer(String userId, String message) {
+        return Utility.split(this.reply(userId, message));
     }
 }
