@@ -43,7 +43,7 @@ class ChatApp extends React.Component {
             this.makeRequest({
                 messageType: 'parameter',
                 messageData: [{
-                    payload: 'start'
+                    payload: '__START__'
                 }]
             });
         }, 500);
