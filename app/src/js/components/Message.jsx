@@ -38,7 +38,7 @@ class Message extends React.Component {
                                     )}
                                     <div className="content">
                                         {message.title && (
-                                            <div className="title">
+                                            <div className="title wrap-word">
                                                 {message.title}
                                             </div>
                                         )}

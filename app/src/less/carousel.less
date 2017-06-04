@@ -14,7 +14,7 @@
 
     .card {
         min-height: 200px;
-        width: 200px;
+        width: 230px;
         .button-group {
             border-top: 1px solid #eeeeee;
         }
@@ -26,7 +26,9 @@
     img {
         display: block;
         margin: auto;
-        max-height: 100px;
+        height: 150px;
+        max-height: 150px;
+        max-width: 100%;
     }
 
     .content {
@@ -34,9 +36,10 @@
     }
 
     .title {
-        font-size: 16px;
+        font-size: 18px;
         color: @brand-primary;
-        line-height: 30px;
+        line-height: 24px;
+        margin-bottom: 5px;
     }
 
     .text {
@@ -45,11 +48,11 @@
         line-height: 20px;
 
         div {
-            -webkit-line-clamp: 4;
+            -webkit-line-clamp: 5;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-height: 80px;
+            max-height: 100px;
         }
     }
 }

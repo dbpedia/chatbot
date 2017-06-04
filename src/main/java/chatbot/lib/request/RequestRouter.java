@@ -10,16 +10,16 @@ import java.util.List;
 /**
  * Created by ramgathreya on 5/22/17.
  */
-public class RequestHandler {
+public class RequestRouter {
     private Request request;
     private RiveScriptBot riveScriptBot;
 
-    public RequestHandler(Request request, RiveScriptBot riveScriptBot) {
+    public RequestRouter(Request request, RiveScriptBot riveScriptBot) {
         this.request = request;
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> handleRequest() throws Exception {
+    public List<Response> routeRequest() throws Exception {
         List<Response> response = null;
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:

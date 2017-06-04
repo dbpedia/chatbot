@@ -142,7 +142,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setPayload(payload))
                         ));
-                List<Response> responseList = new RequestHandler(request, riveScriptBot).handleRequest();
+                List<Response> responseList = new RequestRouter(request, riveScriptBot).routeRequest();
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
 
                 sendTypingOff(senderId);
@@ -175,7 +175,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setText(messageText))
                         ));
-                List<Response> responseList = new RequestHandler(request, riveScriptBot).handleRequest(); // Get Generic Response List
+                List<Response> responseList = new RequestRouter(request, riveScriptBot).routeRequest(); // Get Generic Response List
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse(); // Translate for FB
 
                 sendTypingOff(senderId);

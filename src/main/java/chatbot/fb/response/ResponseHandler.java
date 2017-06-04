@@ -22,6 +22,8 @@ import java.util.List;
  * Created by ramgathreya on 5/23/17.
  */
 public class ResponseHandler {
+    private static final int  MAX_SUBTITLE_LENGTH = 80;
+
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
 
     private Request request;
@@ -59,31 +61,46 @@ public class ResponseHandler {
         }
     }
 
+    private String processSubtitle(String subtitle) {
+        if(subtitle.length() <= MAX_SUBTITLE_LENGTH) {
+            return subtitle;
+        }
+        return subtitle.substring(0, MAX_SUBTITLE_LENGTH - 3) + "...";
+    }
+
     private void sendGenericMessage(String recipientId, List<ResponseData> items) throws MessengerApiException, MessengerIOException {
 //        final List<Button> riftButtons = Button.newListBuilder()
 //                .addUrlButton("Open Web URL", "https://www.oculus.com/en-us/rift/").toList()
 //                .addPostbackButton("Call Postback", "Payload for first bubble").toList()
 //                .build();
 //
-//        final List<Button> touchButtons = Button.newListBuilder()
-//                .addUrlButton("Open Web URL", "https://www.oculus.com/en-us/touch/").toList()
-//                .addPostbackButton("Call Postback", "Payload for second bubble").toList()
-//                .build();
 
         GenericTemplate.Element.ListBuilder genericTemplate = GenericTemplate.newBuilder().addElements();
 
-
         for(ResponseData item : items) {
-            logger.info("IMAGE URL: " + Utility.generateImageUrl(baseUrl, item.getImage()));
+            GenericTemplate.Element.Builder element = genericTemplate.addElement(item.getTitle());
+            element.imageUrl(Utility.generateImageUrl(baseUrl, item.getImage()))
+                .subtitle(processSubtitle(item.getText()));
 
-            genericTemplate.addElement(item.getTitle())
-                .imageUrl(Utility.generateImageUrl(baseUrl, item.getImage()))
-                .subtitle(item.getText())
-                .toList();
+            List<ResponseData.ButtonData> buttons = item.getButtons();
+            if(buttons != null && buttons.size() > 0) {
+                Button.ListBuilder fbButtons = Button.newListBuilder();
+                for(ResponseData.ButtonData button : buttons) {
+                    switch(button.getButtonType()) {
+                        case ResponseType.BUTTON_LINK:
+                            fbButtons.addUrlButton(button.getTitle(), button.getUri()).toList();
+                            break;
+                        case ResponseType.BUTTON_PARAM:
+                            fbButtons.addPostbackButton(button.getTitle(), button.getUri()).toList();
+                            break;
+                    }
+                }
+                element.buttons(fbButtons.build());
+            }
+
+            element.toList();
         }
         sendClient.sendTemplate(recipientId, genericTemplate.done().build());
-
-
 
 
 //        final GenericTemplate genericTemplatez = GenericTemplate.newBuilder()

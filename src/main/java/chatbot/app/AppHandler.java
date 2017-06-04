@@ -2,7 +2,7 @@ package chatbot.app;
 
 import chatbot.lib.Platform;
 import chatbot.lib.request.Request;
-import chatbot.lib.request.RequestHandler;
+import chatbot.lib.request.RequestRouter;
 import chatbot.lib.response.Response;
 import chatbot.rivescript.RiveScriptBot;
 import org.slf4j.Logger;
@@ -32,6 +32,6 @@ public class AppHandler {
     List<Response> handleRequest(@RequestBody final Request request) throws Exception {
         request.setUserId("USER") // This needs to be sent from the client side
                 .setPlatform(Platform.WEB);
-        return (List<Response>) new RequestHandler(request, riveScriptBot).handleRequest();
+        return (List<Response>) new RequestRouter(request, riveScriptBot).routeRequest();
     }
 }
