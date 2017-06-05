@@ -19,7 +19,7 @@ import java.util.List;
 // https://jena.apache.org/documentation/query/app_api.html
 
 public class SPARQL {
-    private static final String ENDPOINT = "https://dbpedia.org/sparql";
+    private static final String ENDPOINT = "http://dbpedia.org/sparql";
     private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
 
     private String select;

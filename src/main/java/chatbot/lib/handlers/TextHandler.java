@@ -24,8 +24,6 @@ public class TextHandler {
 
     public List<Response> handleTextMessage() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        NLHandler nlHandler = new NLHandler(textMessage);
-        List<ResponseData> responseData = nlHandler.answer();
         String[] rivescriptReply = riveScriptBot.answer(userId, textMessage);
 
         // When replies are more than one then the bot was unable to adequately answer and other methods may be needed
@@ -33,6 +31,9 @@ public class TextHandler {
         if(rivescriptReply.length > 1) {
             switch(rivescriptReply[1]) {
                 case RiveScriptScenario.FALLBACK:
+                    NLHandler nlHandler = new NLHandler(textMessage);
+                    List<ResponseData> responseData = nlHandler.answer();
+
                     responseGenerator.addTextResponse(new ResponseData("This is what I found:"));
                     responseGenerator.addCarouselResponse(responseData.toArray(new ResponseData[responseData.size()]));
                     break;

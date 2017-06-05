@@ -14,7 +14,6 @@ public class Utility {
     }
 
     public static String[] split(String string) {
-        System.out.println("STRING IS " + string);
         if(string.contains("|")) {
             return string.split("\\|");
         }
