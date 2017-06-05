@@ -23,7 +23,7 @@
 - Gotcha
 
 + what can you do // also add how can you help me
-- I can help you with|TEMPLATE|START
+- I can help you with|__TEMPLATE__|__START__
 
 + [*] (fuck|fucker|shit|damn|wtf|shut up|bitch) [*]
 - Does it make you feel strong to use that kind of language?
