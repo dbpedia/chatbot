@@ -3,6 +3,9 @@
 // Bot variables
 ! var name = DBpedia Bot
 
+! array statusup = working|up|available|online|live
+! array statusdown = not working|down|not available|offline|dead
+
 // Substitutions
 ! sub i'm     = i am
 ! sub i'd     = i would
@@ -20,3 +23,9 @@
 ! sub what've = what have
 ! sub what'll = what will
 ! sub who's   = who is
+! sub can't   = cannot
+! sub dbpeida = dbpedia
+! sub dbepdia = dbpedia
+! sub dbpedia.org = dbpedia
+! sub dbpediaorg = dbpedia
+! sub workng = working

@@ -1,5 +1,10 @@
 package chatbot.lib;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+
 /**
  * Created by ramgathreya on 5/23/17.
  */
@@ -19,6 +24,17 @@ public class Utility {
         }
         else {
             return new String[]{string};
+        }
+    }
+
+
+    public static boolean isJSONObject(String string) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            mapper.readTree(string);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }

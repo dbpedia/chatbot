@@ -2,8 +2,12 @@ package chatbot.lib.handlers;
 
 import chatbot.lib.api.QAService;
 import chatbot.lib.api.SPARQL;
+import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
+import chatbot.lib.response.ResponseGenerator;
 import chatbot.lib.response.ResponseType;
+import chatbot.rivescript.RiveScriptBot;
+import chatbot.rivescript.RiveScriptReplyType;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -21,19 +25,32 @@ import java.util.Map;
 public class NLHandler {
     private static final Logger logger = LoggerFactory.getLogger(NLHandler.class);
 
+    private static final int MAX_DATA_SIZE = 10;
+
     private String question;
     private QAService qaService;
     private SPARQL sparql;
 
-    public NLHandler(String question) {
+    private String userId;
+    private RiveScriptBot riveScriptBot;
+
+    public NLHandler(String userId, String question, RiveScriptBot riveScriptBot) {
         this.question = question;
         this.qaService = new QAService();
         this.sparql = new SPARQL();
+
+        this.userId = userId;
+        this.riveScriptBot = riveScriptBot;
     }
 
-    public List<ResponseData> answer() throws Exception {
+    public List<Response> answer() throws Exception {
+        ResponseGenerator responseGenerator = new ResponseGenerator();
         List<Data> data = this.invokeQAService(qaService.search(question));
-        return processResponseData(data);
+        List<ResponseData> responseData = processResponseData(data);
+
+        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
+        responseGenerator.addCarouselResponse(responseData.toArray(new ResponseData[responseData.size()]));
+        return responseGenerator.getResponse();
     }
 
     private List<ResponseData> processResponseData(List<Data> data) {
@@ -75,6 +92,9 @@ public class NLHandler {
                     JsonNode value = entry.getValue();
                     data.add(new Data(value.get("type").getTextValue(), value.get("value").getTextValue()));
                 }
+            }
+            if(data.size() > MAX_DATA_SIZE) {
+                data = data.subList(0, MAX_DATA_SIZE);
             }
             return data;
         }

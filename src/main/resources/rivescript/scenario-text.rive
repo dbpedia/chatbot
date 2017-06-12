@@ -1,0 +1,21 @@
+! version = 2.0
+
++ starttext
+@ about
+
++ helptext
+- I can help you with:
+- You can ask me questions like:
+
++ nlanswertext
+- This is what I found:
+
++ statuschecktext yes *
+- <star> is (@statusup) right now|If you are still facing issues reach out to us.
+
++ statuschecktext no *
+- <star> is (@statusdown) right now. We are looking into it.|You can help us by (sending a message|dropping a mail).
+- It looks like <star> is suffering some issues right now. We are looking into it.|You can help us by (sending a message|dropping a mail).
+
++ fallbacktext
+- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.

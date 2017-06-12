@@ -1,0 +1,35 @@
+// General DBpedia related queries
+
++ dbpedia
+- {"type": "template", "templateName": "dbpedia-about"}
+
+/*
+What is DBpedia
+Can you tell me about DBpedia
+*/
++ [*] (is|about) dbpedia
+@ dbpedia
+
+/*
+dbpedia status
+dbpedia down
+dbpedia down right now
+DBPedia down?
+DbPedia is down
+DBpedia down?
+is dbpedia down right now
+check if dbpedia is down
+check if dbpedia is down right now
+How long is DBpedia going to be down ???
+*/
++ dbpedia status
+- {"type": "status_check", "service": "dbpedia"}
+
++ [*] dbpedia [is] (@statusup|@statusdown) [*]
+@ dbpedia status
+
+/*
+Hiya guys, Have been scraping some data from dbpedia but am now getting 504 errors on resource pages: Just wondering if your aware of this issue. Many thanks, Matt
+*/
++ [*] dbpedia [*] # [error|errors] [*]
+@ dbpedia status

@@ -27,7 +27,7 @@ public class RequestRouter {
                     .handleTextMessage();
                 break;
             case RequestType.PARAMETER_MESSAGE:
-                response = new ParameterHandler(request.getUserId(), request.getPayload())
+                response = new ParameterHandler(request.getUserId(), request.getPayload(), riveScriptBot)
                     .handleParameterMessage();
                 break;
         }

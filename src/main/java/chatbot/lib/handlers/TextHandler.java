@@ -1,10 +1,15 @@
 package chatbot.lib.handlers;
 
+import chatbot.lib.Utility;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.rivescript.RiveScriptBot;
-import chatbot.rivescript.RiveScriptScenario;
+import chatbot.rivescript.RiveScriptReplyType;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -12,6 +17,8 @@ import java.util.List;
  * Created by ramgathreya on 5/22/17.
  */
 public class TextHandler {
+    private static final Logger logger = LoggerFactory.getLogger(TextHandler.class);
+
     private String userId;
     private String textMessage;
     private RiveScriptBot riveScriptBot;
@@ -26,25 +33,47 @@ public class TextHandler {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         String[] rivescriptReply = riveScriptBot.answer(userId, textMessage);
 
-        // When replies are more than one then the bot was unable to adequately answer and other methods may be needed
-        // to answer
-        if(rivescriptReply.length > 1) {
-            switch(rivescriptReply[1]) {
-                case RiveScriptScenario.FALLBACK:
-                    NLHandler nlHandler = new NLHandler(textMessage);
-                    List<ResponseData> responseData = nlHandler.answer();
+        for(String reply : rivescriptReply) {
+            if(Utility.isJSONObject(reply) == true) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode rootNode = mapper.readTree(reply);
 
-                    responseGenerator.addTextResponse(new ResponseData("This is what I found:"));
-                    responseGenerator.addCarouselResponse(responseData.toArray(new ResponseData[responseData.size()]));
-                    break;
-                case RiveScriptScenario.TEMPLATE:
-//                    responseGenerator.addTextResponse(new ResponseData(rivescriptReply[0]));
-                    break;
+                switch (rootNode.get("type").getTextValue()) {
+                    case RiveScriptReplyType.TEMPLATE:
+                        List<Response> responses = new ParameterHandler(userId, rootNode.get("templateName").getTextValue(), riveScriptBot)
+                                .handleParameterMessage();
+                        responseGenerator.addResponses(responses);
+                        break;
+                    case RiveScriptReplyType.STATUS_CHECK:
+                        responseGenerator.addResponses(new StatusCheckHandler(userId, rootNode.get("service").getTextValue(), riveScriptBot).handleStatusCheck());
+                        break;
+                    case RiveScriptReplyType.FALLBACK:
+                        responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
+                        break;
+                }
             }
+            else {
+                responseGenerator.addTextResponse(new ResponseData(reply));
+            }
+//            switch (reply) {
+//                case RiveScriptReplyType.FALLBACK:
+//                    responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
+//                    break;
+//                case RiveScriptReplyType.TEMPLATE:
+//                    break;
+//            }
         }
-        else {
-            responseGenerator.addTextResponse(new ResponseData(rivescriptReply[0]));
-        }
+
+//        switch(rivescriptReply[0]) {
+//            case RiveScriptReplyType.FALLBACK:
+//                return new NLHandler(userId, textMessage, riveScriptBot).answer();
+//            case RiveScriptReplyType.TEMPLATE:
+//                return new ParameterHandler(userId, rivescriptReply[1], riveScriptBot).handleParameterMessage();
+//            case RiveScriptReplyType.STATUS_CHECK:
+//                return new StatusCheckHandler(userId, rivescriptReply[1], riveScriptBot).handleStatusCheck();
+//            default:
+//                return responseGenerator.addTextResponses(rivescriptReply).getResponse();
+//        }
 
         return responseGenerator.getResponse();
     }

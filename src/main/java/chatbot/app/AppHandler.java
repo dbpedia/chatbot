@@ -30,8 +30,7 @@ public class AppHandler {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     List<Response> handleRequest(@RequestBody final Request request) throws Exception {
-        request.setUserId("USER") // This needs to be sent from the client side
-                .setPlatform(Platform.WEB);
+        request.setPlatform(Platform.WEB);
         return (List<Response>) new RequestRouter(request, riveScriptBot).routeRequest();
     }
 }

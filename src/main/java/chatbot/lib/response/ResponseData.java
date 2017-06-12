@@ -58,6 +58,12 @@ public class ResponseData {
         this.text = text;
     }
 
+    // Constructor for Button Text Data
+    public ResponseData(String text, ArrayList<ButtonData> buttonData) {
+        this.text = text;
+        this.buttons = buttonData;
+    }
+
     // Constructor for Carousel Data
     public ResponseData(String image, String title, String text) {
         this.image = image;

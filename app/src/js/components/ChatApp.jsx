@@ -4,13 +4,40 @@ import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
 
 class ChatApp extends React.Component {
+
     constructor(props) {
         super();
         this.state = {messages: []};
         this.sendHandler = this.sendHandler.bind(this);
+        this.uuid = this.getUuid();
+    }
+
+    generateUuid() {
+        var d = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    }
+
+    getUuid() {
+        if (localStorage) {
+            var uuid = localStorage.getItem('uuid');
+            if (uuid) {
+                return uuid;
+            }
+
+            uuid = this.generateUuid();
+            localStorage.setItem('uuid', uuid);
+            return uuid;
+        }
+        return this.generateUuid();
     }
 
     makeRequest(data) {
+        data.userId = this.uuid;
         $.ajax({
             type: 'POST',
             url: '/webhook',
@@ -43,7 +70,7 @@ class ChatApp extends React.Component {
             this.makeRequest({
                 messageType: 'parameter',
                 messageData: [{
-                    payload: '__START__'
+                    payload: 'start'
                 }]
             });
         }, 500);

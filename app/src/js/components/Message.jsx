@@ -21,9 +21,28 @@ class Message extends React.Component {
             case 'text':
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromMe}`}>
-                        <div>
-                            {messageData[0].text}
-                        </div>
+                        {messageData[0].text.split('\n').map((line, index) => {
+                            return <div key={index}>{line}</div>;
+                        })}
+                    </div>
+                );
+            break;
+            case 'button_text':
+                var message = messageData[0];
+                msgDiv = (
+                    <div className={`bubble card pullUp ${fromMe}`}>
+                        {message.text.split('\n').map((line, index) => {
+                            return <div key={index}>{line}</div>;
+                        })}
+
+                        { message.buttons.length > 0 && (
+                            <div className="button-group">
+                                {message.buttons.map((button, index) => {
+                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                }
+                                )}
+                            </div>
+                        )}
                     </div>
                 );
             break;
