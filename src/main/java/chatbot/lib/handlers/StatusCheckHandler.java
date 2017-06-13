@@ -27,7 +27,8 @@ public class StatusCheckHandler {
     private RiveScriptBot riveScriptBot;
 
     private static final HashMap<String, String[]> ENDPOINTS = new HashMap<String, String[]>(){{
-        put(DBPEDIA_SERVICE, new String[]{"DBpedia", "http://dbpedia.org/page/DBpedia"});
+        // Service Name, Endpoint URL, Mailing List
+        put(DBPEDIA_SERVICE, new String[]{"DBpedia", "http://dbpedia.org/page/DBpedia", "dbpedia-discussion@lists.sourceforge.net"});
     }};
 
     public StatusCheckHandler(String userId, String service, RiveScriptBot riveScriptBot) {
@@ -54,7 +55,7 @@ public class StatusCheckHandler {
         String [] replies = riveScriptBot.answer(userId, RiveScriptReplyType.STATUS_CHECK_TEXT + " " + status + " " + serviceName);
         responseGenerator.addTextResponse(new ResponseData(replies[0]));
         responseGenerator.addButtonTextResponse(new ResponseData(replies[1], new ArrayList<ResponseData.ButtonData>(){{
-            add(new ResponseData.ButtonData("Contact Us", ResponseType.BUTTON_LINK, "mailto:dbpedia-discussion@lists.sourceforge.net?subject=" + subject));
+            add(new ResponseData.ButtonData("Contact Us", ResponseType.BUTTON_LINK, "mailto:" + service[2] + "?subject=" + subject));
         }}));
         return responseGenerator.getResponse();
     }

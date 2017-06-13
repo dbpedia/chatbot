@@ -1,35 +1,48 @@
 // General DBpedia related queries
 
+// Questions about regarding what is DBpedia
 + dbpedia
-- {"type": "template", "templateName": "dbpedia-about"}
+- {"type": "template", "name": "dbpedia-about"}
 
-/*
-What is DBpedia
-Can you tell me about DBpedia
-*/
 + [*] (is|about) dbpedia
 @ dbpedia
 
-/*
-dbpedia status
-dbpedia down
-dbpedia down right now
-DBPedia down?
-DbPedia is down
-DBpedia down?
-is dbpedia down right now
-check if dbpedia is down
-check if dbpedia is down right now
-How long is DBpedia going to be down ???
-*/
++ [*] (started|starter) [*] dbpedia
+@ dbpedia
+
++ [*] guide [*] dbpedia
+@ dbpedia
+
++ dbpedia tutorial@s
+@ dbpedia
+
++ [*] tutorial@s [*] dbpedia
+@ dbpedia
+
+// Questions regarding DBpedia is online or available
 + dbpedia status
-- {"type": "status_check", "service": "dbpedia"}
+- {"type": "status_check", "name": "dbpedia"}
 
 + [*] dbpedia [is] (@statusup|@statusdown) [*]
 @ dbpedia status
 
-/*
-Hiya guys, Have been scraping some data from dbpedia but am now getting 504 errors on resource pages: Just wondering if your aware of this issue. Many thanks, Matt
-*/
-+ [*] dbpedia [*] # [error|errors] [*]
++ [*] [is] dbpedia [*] (@statusup|@statusdown)
 @ dbpedia status
+
+
+// Contribute to DBpedia
++ [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
+- {"type": "template", "name": "dbpedia-contribute"}
+
+// Language DBpedia - TEST CASE NEEDED
+/*
+
++ dbpedia (@languages) [support]
+- {"type": "language", "name": "<star1>"}
+
++ [*] (@languages) dbpedia [*]
+@ dbpedia <star1>
+
++ [*] dbpedia in (@languages)
+@ dbpedia <star1>
+*/

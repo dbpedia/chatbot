@@ -1,5 +1,5 @@
 + help
-- {"type": "template", "templateName": "help"}
+- {"type": "template", "name": "help"}
 
 + start over
 @ help

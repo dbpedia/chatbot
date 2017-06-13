@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.lib.Utility;
 import chatbot.lib.api.QAService;
 import chatbot.lib.api.SPARQL;
 import chatbot.lib.response.Response;
@@ -46,33 +47,51 @@ public class NLHandler {
     public List<Response> answer() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         List<Data> data = this.invokeQAService(qaService.search(question));
-        List<ResponseData> responseData = processResponseData(data);
+        ProcessedResponse processedResponse = processResponseData(data);
+        List<ResponseData> responseDatas = processedResponse.getResponseData();
 
-        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
-        responseGenerator.addCarouselResponse(responseData.toArray(new ResponseData[responseData.size()]));
+        switch(processedResponse.getResponseType()) {
+            case ProcessedResponse.RESPONSE_TEXT:
+                responseGenerator.addTextResponse(responseDatas.get(0));
+                break;
+            case ProcessedResponse.RESPONSE_CAROUSEL:
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
+                responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
+                break;
+            default:
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.FALLBACK_TEXT)[0]));
+        }
         return responseGenerator.getResponse();
     }
 
-    private List<ResponseData> processResponseData(List<Data> data) {
+    private ProcessedResponse processResponseData(List<Data> data) {
+        ProcessedResponse processedResponse = new ProcessedResponse();
+
         List<ResponseData> responseData = null;
         if(data != null && data.size() > 0) {
-            responseData = new ArrayList<>();
             for(Data item : data) {
                 switch(item.getType()) {
+                    case Data.TYPED_LITERAL:
+                        processedResponse.setResponseType(ProcessedResponse.RESPONSE_TEXT);
+                        processedResponse.setResponseData(new ArrayList<ResponseData>() {{
+                            add(new ResponseData(item.getValue()));
+                        }});
+                        return processedResponse;
                     case Data.URI:
+                        processedResponse.setResponseType(ProcessedResponse.RESPONSE_CAROUSEL);
                         ResponseData _data = sparql.setSelect("DISTINCT ?property ?value")
                                 .setWhere("<" + item.getValue() + "> ?property ?value. filter( (?property = rdfs:label && lang(?value) = 'en' ) || (?property = dbo:abstract && lang(?value) = 'en' ) || ?property=dbo:thumbnail || ?property=foaf:isPrimaryTopicOf) .")
                                 .executeQuery();
                         if (_data != null) {
                             // Adding button to view in DBpedia
                             _data.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, item.getValue()));
-                            responseData.add(_data);
+                            processedResponse.addResponseData(_data);
                         }
                         break;
                 }
             }
         }
-        return responseData;
+        return processedResponse;
     }
 
     // Calls QA Service then returns resulting data as a list of Data Objects. The Data class is defined below as an inner class to be used here locally
@@ -101,11 +120,50 @@ public class NLHandler {
         return null;
     }
 
+    class ProcessedResponse {
+        private static final String RESPONSE_CAROUSEL = "carousel";
+        private static final String RESPONSE_TEXT = "text";
+
+        private List<ResponseData> responseData = new ArrayList<>();
+        private String responseType;
+
+        public List<ResponseData> getResponseData() {
+            return responseData;
+        }
+
+        public ProcessedResponse setResponseData(List<ResponseData> responseData) {
+            this.responseData = responseData;
+            return this;
+        }
+
+        public String getResponseType() {
+            return responseType;
+        }
+
+        public ProcessedResponse setResponseType(String responseType) {
+            this.responseType = responseType;
+            return this;
+        }
+
+        public ProcessedResponse addResponseData(ResponseData responseData) {
+            this.responseData.add(responseData);
+            return this;
+        }
+    }
+
     class Data {
         private static final String URI = "uri";
+        private static final String TYPED_LITERAL = "typed-literal";
 
         private String type;
         private String value;
+
+        private String processValue(String value) {
+            if (Utility.isInteger(value)) {
+                return Utility.formatInteger(value);
+            }
+            return value;
+        }
 
         public String getType() {
             return type;
@@ -121,13 +179,13 @@ public class NLHandler {
         }
 
         public Data setValue(String value) {
-            this.value = value;
+            this.value = processValue(value);
             return this;
         }
 
         public Data(String type, String value) {
             this.type = type;
-            this.value = value;
+            this.value = processValue(value);
         }
     }
 }

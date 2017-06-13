@@ -29,19 +29,23 @@ public class ParameterHandler {
     }
 
     public List<Response> handleParameterMessage() {
-        ResponseGenerator response = new ResponseGenerator();
+        ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(this.payload[0]) {
             case ParameterType.START:
-                response.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.START_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.START_TEXT)[0]));
             case ParameterType.HELP:
-                response.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.HELP_TEXT)[0]));
-                response.addCarouselResponse(ResponseTemplates.getStarterTemplate());
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.HELP_TEXT)[0]));
+                responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
                 break;
             case ParameterType.DBPEDIA_ABOUT:
-                response.addTextResponse(new ResponseData("DBpedia is a crowd-sourced community effort to extract structured information from Wikipedia and make this information available on the Web."));
-                response.addButtonTextResponse(ResponseTemplates.getAboutDBpediaTemplate());
+                responseGenerator.addTextResponse(new ResponseData("DBpedia is a crowd-sourced community effort to extract structured information from Wikipedia and make this information available on the Web."));
+                responseGenerator.addButtonTextResponse(ResponseTemplates.getAboutDBpediaTemplate());
+                break;
+            case ParameterType.DBPEDIA_CONTRIBUTE:
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
+                responseGenerator.addButtonTextResponse(ResponseTemplates.getContributeTemplate());
                 break;
         }
-        return response.getResponse();
+        return responseGenerator.getResponse();
     }
 }

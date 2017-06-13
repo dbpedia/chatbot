@@ -8,4 +8,5 @@ public interface ParameterType {
     String HELP = "help";
 
     String DBPEDIA_ABOUT = "dbpedia-about";
+    String DBPEDIA_CONTRIBUTE = "dbpedia-contribute";
 }

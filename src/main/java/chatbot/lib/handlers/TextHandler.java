@@ -39,15 +39,20 @@ public class TextHandler {
                 JsonNode rootNode = mapper.readTree(reply);
 
                 switch (rootNode.get("type").getTextValue()) {
-                    case RiveScriptReplyType.TEMPLATE:
-                        List<Response> responses = new ParameterHandler(userId, rootNode.get("templateName").getTextValue(), riveScriptBot)
-                                .handleParameterMessage();
-                        responseGenerator.addResponses(responses);
+                    case RiveScriptReplyType.TEMPLATE_SCENARIO:
+                        responseGenerator.addResponses(new ParameterHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot)
+                                .handleParameterMessage()
+                        );
                         break;
-                    case RiveScriptReplyType.STATUS_CHECK:
-                        responseGenerator.addResponses(new StatusCheckHandler(userId, rootNode.get("service").getTextValue(), riveScriptBot).handleStatusCheck());
+//                    case RiveScriptReplyType.LANGUAGE_SCENARIO:
+//                        responseGenerator.addResponses(new LanguageHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot)
+//                                .handleLanguageAbout()
+//                        );
+//                        break;
+                    case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
+                        responseGenerator.addResponses(new StatusCheckHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
                         break;
-                    case RiveScriptReplyType.FALLBACK:
+                    case RiveScriptReplyType.FALLBACK_SCENARIO:
                         responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
                         break;
                 }
@@ -55,26 +60,7 @@ public class TextHandler {
             else {
                 responseGenerator.addTextResponse(new ResponseData(reply));
             }
-//            switch (reply) {
-//                case RiveScriptReplyType.FALLBACK:
-//                    responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
-//                    break;
-//                case RiveScriptReplyType.TEMPLATE:
-//                    break;
-//            }
         }
-
-//        switch(rivescriptReply[0]) {
-//            case RiveScriptReplyType.FALLBACK:
-//                return new NLHandler(userId, textMessage, riveScriptBot).answer();
-//            case RiveScriptReplyType.TEMPLATE:
-//                return new ParameterHandler(userId, rivescriptReply[1], riveScriptBot).handleParameterMessage();
-//            case RiveScriptReplyType.STATUS_CHECK:
-//                return new StatusCheckHandler(userId, rivescriptReply[1], riveScriptBot).handleStatusCheck();
-//            default:
-//                return responseGenerator.addTextResponses(rivescriptReply).getResponse();
-//        }
-
         return responseGenerator.getResponse();
     }
 }

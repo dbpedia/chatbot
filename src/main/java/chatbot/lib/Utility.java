@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 /**
  * Created by ramgathreya on 5/23/17.
@@ -36,5 +37,15 @@ public class Utility {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static boolean isInteger(String s) {
+        return s.matches("\\d+");
+    }
+
+    public static String formatInteger(String s) {
+        int amount = Integer.parseInt(s);
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        return formatter.format(amount);
     }
 }

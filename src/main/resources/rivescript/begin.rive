@@ -3,8 +3,12 @@
 // Bot variables
 ! var name = DBpedia Bot
 
+! array languages = arabic|basque|czech|dutch|english|esperanto|french|greek|german|indonesian|italian|japanese|korean|polish|portuguese|russian|spanish|swedish|ukrainian
+
 ! array statusup = working|up|available|online|live
 ! array statusdown = not working|down|not available|offline|dead
+
+! array s = |s // Plurals
 
 // Substitutions
 ! sub i'm     = i am
