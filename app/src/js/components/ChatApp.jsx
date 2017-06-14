@@ -2,6 +2,7 @@ import React from 'react';
 
 import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
+import * as Constants from './Constants.jsx';
 
 class ChatApp extends React.Component {
 
@@ -68,9 +69,9 @@ class ChatApp extends React.Component {
     componentDidMount() {
         setTimeout(() => {
             this.makeRequest({
-                messageType: 'parameter',
+                messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
                 messageData: [{
-                    payload: 'start'
+                    payload: Constants.request.ParameterType.START
                 }]
             });
         }, 500);

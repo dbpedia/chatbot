@@ -1,7 +1,5 @@
 package chatbot.lib.response;
 
-import chatbot.lib.Utility;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class ResponseGenerator {
     }
 
     public ResponseGenerator addTextResponse(ResponseData data) {
-        this.addResponse(new Response().setMessageType(ResponseType.TEXT)
+        this.addResponse(new Response().setMessageType(ResponseType.TEXT_MESSAGE)
                 .addData(data)
         );
         return this;
@@ -36,14 +34,14 @@ public class ResponseGenerator {
     }
 
     public ResponseGenerator addButtonTextResponse(ResponseData data) {
-        this.addResponse(new Response().setMessageType(ResponseType.BUTTON_TEXT)
+        this.addResponse(new Response().setMessageType(ResponseType.BUTTON_TEXT_MESSAGE)
                 .addData(data)
         );
         return this;
     }
 
     public ResponseGenerator addCarouselResponse(ResponseData[] data) {
-        this.addResponse(new Response().setMessageType(ResponseType.CAROUSEL)
+        this.addResponse(new Response().setMessageType(ResponseType.CAROUSEL_MESSAGE)
                 .addData(data)
         );
         return this;

@@ -1,6 +1,15 @@
 .bubble {
   height: auto;
-  max-width: 65%;
+  max-width: 70%;
+
+  @media (min-width: 576px) {
+    max-width: 55%;
+  }
+
+  @media (min-width: 992px) {
+      max-width: 45%;
+  }
+
   width: fit-content;
   color: #fff;
   margin: 5px 0;

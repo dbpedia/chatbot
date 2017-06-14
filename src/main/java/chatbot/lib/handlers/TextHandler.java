@@ -53,6 +53,7 @@ public class TextHandler {
                         responseGenerator.addResponses(new StatusCheckHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
+                        textMessage = rootNode.get("query").getTextValue(); // Use processed text message
                         responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
                         break;
                 }

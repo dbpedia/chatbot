@@ -10,6 +10,8 @@ import java.text.DecimalFormat;
  * Created by ramgathreya on 5/23/17.
  */
 public class Utility {
+    public static final String STRING_SEPARATOR = "|";
+
     public static String generateImageUrl(String baseUrl, String imageUrl) {
         if(imageUrl.startsWith("http")) {
             return imageUrl;

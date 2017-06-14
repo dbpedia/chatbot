@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Message from './Message.jsx';
 
 class Messages extends React.Component {

@@ -66,8 +66,6 @@ public class NLHandler {
 
     private ProcessedResponse processResponseData(List<Data> data) {
         ProcessedResponse processedResponse = new ProcessedResponse();
-
-        List<ResponseData> responseData = null;
         if(data != null && data.size() > 0) {
             for(Data item : data) {
                 switch(item.getType()) {
@@ -79,12 +77,8 @@ public class NLHandler {
                         return processedResponse;
                     case Data.URI:
                         processedResponse.setResponseType(ProcessedResponse.RESPONSE_CAROUSEL);
-                        ResponseData _data = sparql.setSelect("DISTINCT ?property ?value")
-                                .setWhere("<" + item.getValue() + "> ?property ?value. filter( (?property = rdfs:label && lang(?value) = 'en' ) || (?property = dbo:abstract && lang(?value) = 'en' ) || ?property=dbo:thumbnail || ?property=foaf:isPrimaryTopicOf) .")
-                                .executeQuery();
+                        ResponseData _data = sparql.getEntityInformation(item.getValue());
                         if (_data != null) {
-                            // Adding button to view in DBpedia
-                            _data.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, item.getValue()));
                             processedResponse.addResponseData(_data);
                         }
                         break;

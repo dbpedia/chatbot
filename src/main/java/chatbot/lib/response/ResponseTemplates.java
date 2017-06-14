@@ -8,9 +8,10 @@ import java.util.ArrayList;
 public class ResponseTemplates {
     public static ResponseData[] getHelperTemplate() {
         return new ResponseData[]{
-                new ResponseData("/images/icon-user-64.png", "Who ?", "Albert Einstein\nTell me about Barack Obama"),
-                new ResponseData("/images/icon-help-64.png", "What ?", "What is a planet?\nWhat is GST?"),
-                new ResponseData("/images/icon-compass-64.png", "Where ?", "Where is the Eiffel Tower?\nWhere is Germany's capital?")
+                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia", "What is DBpedia?\nHow can I contribute to DBpedia?"),
+                new ResponseData("/images/icon-user-92.png", "Who ?", "Albert Einstein\nTell me about Barack Obama"),
+                new ResponseData("/images/icon-help-92.png", "What ?", "What is a planet?\nWhat is Mathematics?"),
+                new ResponseData("/images/icon-compass-92.png", "Where ?", "Where is the Eiffel Tower?\nWhere is Germany's capital?")
         };
     }
 

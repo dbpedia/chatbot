@@ -1,5 +1,8 @@
 package chatbot.lib.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,13 +14,19 @@ import java.util.HashMap;
 
 // Checks if specific service is working
 public class StatusCheckService {
-    // http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+distinct+%3FConcept+where+%7B%5B%5D+a+%3FConcept%7D+LIMIT+100&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on
+    private static final Logger logger = LoggerFactory.getLogger(StatusCheckService.class);
+
     private static final int TIMEOUT = 50000;
 
     private String url;
 
-    public StatusCheckService(String url) {
+    public String getUrl() {
+        return url;
+    }
+
+    public StatusCheckService setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public boolean isOnline() {

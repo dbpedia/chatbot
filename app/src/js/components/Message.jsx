@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Constants from './Constants.jsx';
 
 class Message extends React.Component {
 
@@ -7,10 +8,15 @@ class Message extends React.Component {
         if (!this.props.fromMe && this.props.message.messageType.indexOf(['carousel']) == -1) {
             return (
                 <div className="btn btn-default btn-fab btn-fab-mini pull-left fadeIn bot-icon">
-                    <img src="/images/icon-bot-35.jpg" />
+                    <img src="/images/icon-dbpedia-35.jpg" />
                 </div>
             );
         }
+    }
+
+    onParamButtonClick(event, uri) {
+        event.preventDefault();
+
     }
 
     render() {
@@ -18,7 +24,7 @@ class Message extends React.Component {
         const messageData = this.props.message.messageData;
         let msgDiv = '';
         switch(this.props.message.messageType) {
-            case 'text':
+            case Constants.response.ResponseType.TEXT_MESSAGE:
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromMe}`}>
                         {messageData[0].text.split('\n').map((line, index) => {
@@ -27,7 +33,7 @@ class Message extends React.Component {
                     </div>
                 );
             break;
-            case 'button_text':
+            case Constants.response.ResponseType.BUTTON_TEXT_MESSAGE:
                 var message = messageData[0];
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromMe}`}>
@@ -38,7 +44,12 @@ class Message extends React.Component {
                         { message.buttons.length > 0 && (
                             <div className="button-group">
                                 {message.buttons.map((button, index) => {
-                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                    switch(button.buttonType) {
+                                        case Constants.response.ResponseType.BUTTON_LINK:
+                                            return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                        case Constants.response.ResponseType.BUTTON_PARAM:
+                                            return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri)} className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                    }
                                 }
                                 )}
                             </div>
@@ -46,14 +57,16 @@ class Message extends React.Component {
                     </div>
                 );
             break;
-            case 'carousel':
+            case Constants.response.ResponseType.CAROUSEL_MESSAGE:
                 msgDiv = (
                     <div className="carousel-container slideLeft">
                         {messageData.map((message, index) => {
                             return <div key={index} className="carousel-item">
                                 <div className="card">
                                     {message.image && (
-                                        <img src={message.image} />
+                                        <div className="img-wrapper">
+                                            <img src={message.image} />
+                                        </div>
                                     )}
                                     <div className="content">
                                         {message.title && (
@@ -74,7 +87,12 @@ class Message extends React.Component {
                                     { message.buttons.length > 0 && (
                                     <div className="button-group">
                                         {message.buttons.map((button, index) => {
-                                            return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
+                                            switch(button.buttonType) {
+                                                case Constants.response.ResponseType.BUTTON_LINK:
+                                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
+                                                case Constants.response.ResponseType.BUTTON_PARAM:
+                                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
+                                            }
                                         }
                                         )}
                                     </div>

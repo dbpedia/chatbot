@@ -34,6 +34,9 @@
 + [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
 - {"type": "template", "name": "dbpedia-contribute"}
 
++ how (can i|to) contribute
+@ how can i contribute to dbpedia
+
 // Language DBpedia - TEST CASE NEEDED
 /*
 

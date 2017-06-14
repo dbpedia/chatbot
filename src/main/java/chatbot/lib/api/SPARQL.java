@@ -19,7 +19,7 @@ import java.util.List;
 // https://jena.apache.org/documentation/query/app_api.html
 
 public class SPARQL {
-    private static final String ENDPOINT = "http://dbpedia.org/sparql";
+    private static final String ENDPOINT = "https://dbpedia.org/sparql";
     private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
 
     private String select;
@@ -88,17 +88,14 @@ public class SPARQL {
         return query;
     }
 
-    public ResponseData executeQuery() {
-        ResponseData responseData = null;
-        String queryString = buildQuery();
-        logger.info("SPARQL Query is:\n" + queryString);
-
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(ENDPOINT, query);
+    public ResponseData getEntityInformation(String uri) {
+        QueryExecution queryExecution = setSelect("DISTINCT ?property ?value")
+                .setWhere("<" + uri + "> ?property ?value. filter( (?property = rdfs:label && lang(?value) = 'en' ) || (?property = dbo:abstract && lang(?value) = 'en' ) || ?property=dbo:thumbnail || ?property=foaf:isPrimaryTopicOf) .")
+                .executeQuery();
         try {
-            Iterator<QuerySolution> results = qexec.execSelect();
+            Iterator<QuerySolution> results = queryExecution.execSelect();
             if(results != null) {
-                responseData = new ResponseData();
+                ResponseData responseData = new ResponseData();
                 while(results.hasNext()) {
                     QuerySolution result = results.next();
                     String value = result.get("value").toString()
@@ -119,15 +116,26 @@ public class SPARQL {
                             responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, value));
                             break;
                         default:
-                            System.out.println("PROPERTY: " + result.get("property").toString());
-                            System.out.println("VALUE: " + result.get("value").toString());
+                            logger.debug("PROPERTY: " + result.get("property").toString());
+                            logger.debug("VALUE: " + result.get("value").toString());
                     }
                 }
+                responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
+                return responseData;
             }
         }
         finally {
-            qexec.close();
+            queryExecution.close();
         }
-        return responseData;
+        return null;
+    }
+
+    public QueryExecution executeQuery() {
+        Iterator<QuerySolution> results = null;
+        String queryString = buildQuery();
+        logger.info("SPARQL Query is:\n" + queryString);
+
+        Query query = QueryFactory.create(queryString);
+        return QueryExecutionFactory.sparqlService(ENDPOINT, query);
     }
 }

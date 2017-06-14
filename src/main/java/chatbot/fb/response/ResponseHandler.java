@@ -15,7 +15,6 @@ import com.github.messenger4j.send.templates.GenericTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,12 +40,13 @@ public class ResponseHandler {
     public void generateResponse() throws MessengerApiException, MessengerIOException {
         for(Response response : responseList) {
             switch(response.getMessageType()) {
-                case ResponseType.TEXT:
+                case ResponseType.TEXT_MESSAGE:
                     sendTextMessage(request.getUserId(), response.getMessageData().get(0).getText());
                     break;
-                case ResponseType.CAROUSEL:
+                case ResponseType.CAROUSEL_MESSAGE:
                     sendGenericMessage(request.getUserId(), response.getMessageData());
                     break;
+                default: // This case needs to be separately handled probably send a text message or something saying the bot could not understand the query
             }
         }
     }
@@ -69,12 +69,6 @@ public class ResponseHandler {
     }
 
     private void sendGenericMessage(String recipientId, List<ResponseData> items) throws MessengerApiException, MessengerIOException {
-//        final List<Button> riftButtons = Button.newListBuilder()
-//                .addUrlButton("Open Web URL", "https://www.oculus.com/en-us/rift/").toList()
-//                .addPostbackButton("Call Postback", "Payload for first bubble").toList()
-//                .build();
-//
-
         GenericTemplate.Element.ListBuilder genericTemplate = GenericTemplate.newBuilder().addElements();
 
         for(ResponseData item : items) {
@@ -101,26 +95,6 @@ public class ResponseHandler {
             element.toList();
         }
         sendClient.sendTemplate(recipientId, genericTemplate.done().build());
-
-
-//        final GenericTemplate genericTemplatez = GenericTemplate.newBuilder()
-//                .addElements()
-//                .addElement("rift")
-//                .subtitle("Next-generation virtual reality")
-//                .itemUrl("https://www.oculus.com/en-us/rift/")
-//                .imageUrl("/assets/rift.png")
-////                .buttons(riftButtons)
-//                .toList()
-//                .addElement("touch")
-//                .subtitle("Your Hands, Now in VR")
-//                .itemUrl("https://www.oculus.com/en-us/touch/")
-//                .imageUrl("/assets/touch.png")
-////                .buttons(touchButtons)
-//                .toList()
-//                .done()
-//                .build();
-
-//        this.sendClient.sendTemplate(recipientId, genericTemplate);
     }
 
     private void handleSendException(Exception e) {

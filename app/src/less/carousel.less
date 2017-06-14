@@ -23,10 +23,20 @@
         }
     }
 
+    .img-wrapper {
+        text-align: center;
+    }
+
+    .img-wrapper:before {
+        content: ' ';
+        display: inline-block;
+        vertical-align: middle;
+        min-height: 100px;
+    }
+
     img {
-        display: block;
-        margin: auto;
-        height: 150px;
+        display: inline-block;
+        vertical-align: middle;
         max-height: 150px;
         max-width: 100%;
     }

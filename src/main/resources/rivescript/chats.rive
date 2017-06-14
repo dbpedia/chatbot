@@ -21,5 +21,10 @@
 - Is something making you feel angry?
 - Does using that kind of language make you feel better?
 
+
+// Fallback Scenarios
 + *
-- {"type": "fallback"}
+- {"type": "fallback", "query": "<star>"}
+
++ [*] tell [me] [about] *
+@ <star>

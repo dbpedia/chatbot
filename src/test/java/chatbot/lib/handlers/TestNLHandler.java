@@ -26,7 +26,7 @@ public class TestNLHandler {
 
         assertNotNull(response);
         assertEquals(response.size(), 1);
-        assertEquals(response.get(0).getMessageType(), ResponseType.TEXT);
+        assertEquals(response.get(0).getMessageType(), ResponseType.TEXT_MESSAGE);
         assertNotNull(response.get(0).getMessageData().get(0).getText());
     }
 }

@@ -37,6 +37,8 @@ public class ParameterHandler {
                 responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
                 break;
+            case ParameterType.CHECK_SERVICE:
+                break;
             case ParameterType.DBPEDIA_ABOUT:
                 responseGenerator.addTextResponse(new ResponseData("DBpedia is a crowd-sourced community effort to extract structured information from Wikipedia and make this information available on the Web."));
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getAboutDBpediaTemplate());

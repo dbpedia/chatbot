@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Constants from './Constants.jsx';
 
 class ChatInput extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class ChatInput extends React.Component {
         if(this.state.chatInput != '') {
             this.setState({chatInput: '', sendDisabled: true});
             this.props.onSend({
-                messageType: 'text',
+                messageType: Constants.request.RequestType.TEXT_MESSAGE,
                 messageData: [{text: this.state.chatInput}]
             });
         }
@@ -37,6 +38,7 @@ class ChatInput extends React.Component {
                                onChange={this.textChangeHandler}
                                value={this.state.chatInput}
                                placeholder="Write a message"
+                               autoComplete="off"
                                />
                                <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
                                     <img src="/images/icon-send-32.png" />
