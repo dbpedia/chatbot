@@ -1,7 +1,9 @@
 package chatbot.lib.handlers;
 
+import chatbot.lib.Platform;
 import chatbot.lib.Utility;
 import chatbot.lib.api.StatusCheckService;
+import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
@@ -32,19 +34,19 @@ public class StatusCheckHandler {
     private static final String DBPEDIA_SPARQL = "DBpedia SPARQL";
 
     private StatusCheckService statusCheckService = new StatusCheckService();
-    private String userId;
+    private Request request;
     private ArrayList<String[]> service = new ArrayList<>();
     private RiveScriptBot riveScriptBot;
 
     private static final HashMap<String, String[]> ENDPOINTS = new HashMap<String, String[]>(){{
         // Service Name, Endpoint URL, Mailing List
-        put(DBPEDIA_SERVICE, new String[]{DBPEDIA, "http://wiki.dbpedia.org", "dbpedia-discussion@lists.sourceforge.net"});
-        put(DBPEDIA_RESOURCE_SERVICE, new String[]{DBPEDIA_RESOURCE, "http://dbpedia.org/page/DBpedia", "dbpedia-discussion@lists.sourceforge.net"});
-        put(DBPEDIA_SPARQL_SERVICE, new String[]{DBPEDIA_SPARQL, "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+distinct+%3FConcept+where+%7B%5B%5D+a+%3FConcept%7D+LIMIT+100&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on", "dbpedia-discussion@lists.sourceforge.net"});
+        put(DBPEDIA_SERVICE, new String[]{DBPEDIA, "http://wiki.dbpedia.org", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
+        put(DBPEDIA_RESOURCE_SERVICE, new String[]{DBPEDIA_RESOURCE, "http://dbpedia.org/page/DBpedia", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
+        put(DBPEDIA_SPARQL_SERVICE, new String[]{DBPEDIA_SPARQL, "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+distinct+%3FConcept+where+%7B%5B%5D+a+%3FConcept%7D+LIMIT+100&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
     }};
 
-    public StatusCheckHandler(String userId, String service, RiveScriptBot riveScriptBot) {
-        this.userId = userId;
+    public StatusCheckHandler(Request request, String service, RiveScriptBot riveScriptBot) {
+        this.request = request;
         this.riveScriptBot = riveScriptBot;
 
         switch(service) {
@@ -96,21 +98,30 @@ public class StatusCheckHandler {
 
     public List<Response> handleStatusCheck() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        String serviceName = this.service.get(0)[0];
-        String mailingList = this.service.get(0)[2];
+        String serviceName = service.get(0)[0];
+        String mailingList = service.get(0)[2];
         String[] replies = null;
+        String contactUri;
 
         String[] statusCheck = makeStatusCheck(serviceName); // 1st element is status and 2nd element is subject for the mailing list and 3rd element is message which needs to be used only in the case where multiple services are called
         if (service.size() > 1) {
             replies = Utility.split(statusCheck[0]);
         }
         else {
-            replies = riveScriptBot.answer(userId, RiveScriptReplyType.STATUS_CHECK_TEXT + " " + serviceName + " " + statusCheck[0]);
+            replies = riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.STATUS_CHECK_TEXT + " " + serviceName + " " + statusCheck[0]);
+        }
+
+        // Facebook does not support mailto: links so for that we are simply redirecting to the mailing list website
+        if (request.getPlatform().equals(Platform.FB)) {
+            contactUri = service.get(0)[3];
+        }
+        else {
+            contactUri = "mailto:" + mailingList + "?subject=" + statusCheck[1];
         }
 
         responseGenerator.addTextResponse(new ResponseData(replies[0]));
         responseGenerator.addButtonTextResponse(new ResponseData(replies[1], new ArrayList<ResponseData.ButtonData>(){{
-            add(new ResponseData.ButtonData("Contact Us", ResponseType.BUTTON_LINK, "mailto:" + mailingList + "?subject=" + statusCheck[1]));
+            add(new ResponseData.ButtonData("Contact Us", ResponseType.BUTTON_LINK, contactUri));
         }}));
         return responseGenerator.getResponse();
     }

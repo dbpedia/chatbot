@@ -1,6 +1,7 @@
 package chatbot.lib.handlers;
 
 import chatbot.lib.Utility;
+import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
@@ -19,19 +20,19 @@ import java.util.List;
 public class TextHandler {
     private static final Logger logger = LoggerFactory.getLogger(TextHandler.class);
 
-    private String userId;
+    private Request request;
     private String textMessage;
     private RiveScriptBot riveScriptBot;
 
-    public TextHandler(String userId, String textMessage, RiveScriptBot riveScriptBot) {
-        this.userId = userId;
+    public TextHandler(Request request, String textMessage, RiveScriptBot riveScriptBot) {
+        this.request = request;
         this.textMessage = textMessage;
         this.riveScriptBot = riveScriptBot;
     }
 
     public List<Response> handleTextMessage() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        String[] rivescriptReply = riveScriptBot.answer(userId, textMessage);
+        String[] rivescriptReply = riveScriptBot.answer(request.getUserId(), textMessage);
 
         for(String reply : rivescriptReply) {
             if(Utility.isJSONObject(reply) == true) {
@@ -40,7 +41,7 @@ public class TextHandler {
 
                 switch (rootNode.get("type").getTextValue()) {
                     case RiveScriptReplyType.TEMPLATE_SCENARIO:
-                        responseGenerator.addResponses(new ParameterHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot)
+                        responseGenerator.addResponses(new ParameterHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
                                 .handleParameterMessage()
                         );
                         break;
@@ -50,11 +51,11 @@ public class TextHandler {
 //                        );
 //                        break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
-                        responseGenerator.addResponses(new StatusCheckHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
+                        responseGenerator.addResponses(new StatusCheckHandler(request, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         textMessage = rootNode.get("query").getTextValue(); // Use processed text message
-                        responseGenerator.addResponses(new NLHandler(userId, textMessage, riveScriptBot).answer());
+                        responseGenerator.addResponses(new NLHandler(request, textMessage, riveScriptBot).answer());
                         break;
                 }
             }

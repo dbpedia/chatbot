@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseType;
 import chatbot.rivescript.RiveScriptBot;
@@ -21,7 +22,7 @@ public class TestNLHandler {
         String userId = "user";
         String question = "What is the population of France?";
 
-        NLHandler nlHandler = new NLHandler(userId, question, riveScriptBot);
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
         List<Response> response = nlHandler.answer();
 
         assertNotNull(response);

@@ -23,11 +23,11 @@ public class RequestRouter {
         List<Response> response = null;
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:
-                response = new TextHandler(request.getUserId(), request.getText(), riveScriptBot)
+                response = new TextHandler(request, request.getText(), riveScriptBot)
                     .handleTextMessage();
                 break;
             case RequestType.PARAMETER_MESSAGE:
-                response = new ParameterHandler(request.getUserId(), request.getPayload(), riveScriptBot)
+                response = new ParameterHandler(request, request.getPayload(), riveScriptBot)
                     .handleParameterMessage();
                 break;
         }

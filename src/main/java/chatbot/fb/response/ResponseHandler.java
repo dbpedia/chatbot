@@ -11,6 +11,7 @@ import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.NotificationType;
 import com.github.messenger4j.send.Recipient;
 import com.github.messenger4j.send.buttons.Button;
+import com.github.messenger4j.send.templates.ButtonTemplate;
 import com.github.messenger4j.send.templates.GenericTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,9 @@ public class ResponseHandler {
                 case ResponseType.TEXT_MESSAGE:
                     sendTextMessage(request.getUserId(), response.getMessageData().get(0).getText());
                     break;
+                case ResponseType.BUTTON_TEXT_MESSAGE:
+                    sendButtonMessage(request.getUserId(), response.getMessageData().get(0));
+                    break;
                 case ResponseType.CAROUSEL_MESSAGE:
                     sendGenericMessage(request.getUserId(), response.getMessageData());
                     break;
@@ -60,6 +64,24 @@ public class ResponseHandler {
             handleSendException(e);
         }
     }
+
+    private void sendButtonMessage(String recipientId, ResponseData data) throws MessengerApiException, MessengerIOException {
+        Button.ListBuilder buttons = Button.newListBuilder();
+        for(ResponseData.ButtonData button : data.getButtons()) {
+            switch(button.getButtonType()) {
+                case ResponseType.BUTTON_LINK:
+                    buttons.addUrlButton(button.getTitle(), button.getUri()).toList();
+                break;
+                case ResponseType.BUTTON_PARAM:
+                    buttons.addPostbackButton(button.getTitle(), button.getUri()).toList();
+                break;
+            }
+        }
+
+        ButtonTemplate buttonTemplate = ButtonTemplate.newBuilder(data.getText(), buttons.build()).build();
+        sendClient.sendTemplate(recipientId, buttonTemplate);
+    }
+
 
     private String processSubtitle(String subtitle) {
         if(subtitle.length() <= MAX_SUBTITLE_LENGTH) {

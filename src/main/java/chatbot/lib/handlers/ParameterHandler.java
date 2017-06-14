@@ -2,6 +2,7 @@ package chatbot.lib.handlers;
 
 import chatbot.lib.Utility;
 import chatbot.lib.request.ParameterType;
+import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
@@ -18,12 +19,13 @@ import java.util.List;
  */
 public class ParameterHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParameterHandler.class);
-    private String userId;
+//    private String userId;
+    private Request request;
     private String[] payload;
     private RiveScriptBot riveScriptBot;
 
-    public ParameterHandler(String userId, String payload, RiveScriptBot riveScriptBot) {
-        this.userId = userId;
+    public ParameterHandler(Request request, String payload, RiveScriptBot riveScriptBot) {
+        this.request = request;
         this.payload = Utility.split(payload);
         this.riveScriptBot = riveScriptBot;
     }
@@ -32,9 +34,9 @@ public class ParameterHandler {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(this.payload[0]) {
             case ParameterType.START:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.START_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
             case ParameterType.HELP:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.HELP_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
                 break;
             case ParameterType.CHECK_SERVICE:
@@ -44,7 +46,7 @@ public class ParameterHandler {
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getAboutDBpediaTemplate());
                 break;
             case ParameterType.DBPEDIA_CONTRIBUTE:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.userId, RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getContributeTemplate());
                 break;
         }

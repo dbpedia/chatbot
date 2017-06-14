@@ -3,6 +3,7 @@ package chatbot.lib.handlers;
 import chatbot.lib.Utility;
 import chatbot.lib.api.QAService;
 import chatbot.lib.api.SPARQL;
+import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
@@ -32,15 +33,15 @@ public class NLHandler {
     private QAService qaService;
     private SPARQL sparql;
 
-    private String userId;
+    private Request request;
     private RiveScriptBot riveScriptBot;
 
-    public NLHandler(String userId, String question, RiveScriptBot riveScriptBot) {
+    public NLHandler(Request request, String question, RiveScriptBot riveScriptBot) {
         this.question = question;
         this.qaService = new QAService();
         this.sparql = new SPARQL();
 
-        this.userId = userId;
+        this.request = request;
         this.riveScriptBot = riveScriptBot;
     }
 
@@ -55,11 +56,11 @@ public class NLHandler {
                 responseGenerator.addTextResponse(responseDatas.get(0));
                 break;
             case ProcessedResponse.RESPONSE_CAROUSEL:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
                 responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
                 break;
             default:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(userId, RiveScriptReplyType.FALLBACK_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0]));
         }
         return responseGenerator.getResponse();
     }
