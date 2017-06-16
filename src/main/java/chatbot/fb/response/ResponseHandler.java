@@ -95,8 +95,14 @@ public class ResponseHandler {
 
         for(ResponseData item : items) {
             GenericTemplate.Element.Builder element = genericTemplate.addElement(item.getTitle());
-            element.imageUrl(Utility.generateImageUrl(baseUrl, item.getImage()))
-                .subtitle(processSubtitle(item.getText()));
+
+            if (item.getImage() != null) {
+                element.imageUrl(Utility.generateImageUrl(baseUrl, item.getImage()));
+            }
+
+            if (item.getText() != null) {
+                element.subtitle(processSubtitle(item.getText()));
+            }
 
             List<ResponseData.ButtonData> buttons = item.getButtons();
             if(buttons != null && buttons.size() > 0) {

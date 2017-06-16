@@ -1,7 +1,5 @@
 package chatbot.lib.api;
 
-import chatbot.lib.Predicate;
-import chatbot.lib.Utility;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
 import org.apache.jena.query.*;
