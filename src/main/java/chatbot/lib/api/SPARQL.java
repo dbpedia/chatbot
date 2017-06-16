@@ -5,9 +5,11 @@ import chatbot.lib.Utility;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
 import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +24,14 @@ import java.util.List;
 public class SPARQL {
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
     private static final String SEPARATOR = "|";
+
+    // Variables used in SPARQL Queries
+    private static final String VAR_URI = "uri";
+    private static final String VAR_LABEL = "label";
+    private static final String VAR_THUMBNAIL = "thumbnail";
+    private static final String VAR_ABSTRACT = "abstract";
+    private static final String VAR_PRIMARY_TOPIC = "primaryTopic";
+
     
     private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
     private static final String PREFIXES = new String(
@@ -34,44 +44,37 @@ public class SPARQL {
 
     private static final String BASIC_ENTITY_PROPERTIES = "filter( (?property = rdfs:label && lang(?value) = 'en' ) || (?property = dbo:abstract && lang(?value) = 'en' ) || ?property=dbo:thumbnail || ?property=foaf:isPrimaryTopicOf) .";
 
-    public static String buildQuery(String query) {
+    public String buildQuery(String query) {
         return PREFIXES + query;
     }
 
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
+        RDFNode node;
         ResponseData responseData = new ResponseData();
-        String[] properties = Utility.split(result.get("properties").asLiteral().getString(), SEPARATOR);
-        String[] values = Utility.split(result.get("values").asLiteral().getString(), SEPARATOR);
+        responseData.setTitle(result.get(VAR_LABEL).toString());
+        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
 
-        for (int i = 0; i < properties.length; i++) {
-            switch(properties[i]) {
-                case Predicate.RDFS_LABEL:
-                    // This needs to be modified when more languages are supported
-                    responseData.setTitle(values[i].replace("@en", ""));
-                    break;
-                case Predicate.DBO_THUMBNAIL:
-                    responseData.setImage(values[i]);
-                    break;
-                case Predicate.DBO_ABSTRACT:
-                    responseData.setText(values[i]);
-                    break;
-                case Predicate.FOAF_IS_PRIMARY_TOPIC_OF:
-                    responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, values[i]));
-                    break;
-                default:
-                    logger.debug("PROPERTY: " + properties[i]);
-                    logger.debug("VALUE: " + values[i]);
-            }
+        node = result.get(VAR_THUMBNAIL);
+        if(node != null) {
+            responseData.setImage(node.toString());
+        }
+
+        node = result.get(VAR_ABSTRACT);
+        if(node != null) {
+            responseData.setText(node.asLiteral().getString());
         }
         responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
         return responseData;
     }
 
     public ResponseData getEntityInformation(String uri) {
-         String query = buildQuery(String.format("SELECT (group_concat(?property; separator='%s') as ?properties) (group_concat(?value; separator='%s') as ?values) WHERE {" +
-                 "<%s> ?property ?value. " +
-                 BASIC_ENTITY_PROPERTIES +
-                 "}", SEPARATOR, SEPARATOR, uri));
+        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'" +
+                "<{0}> rdfs:label ?{1}.\n" +
+                "<{0}> foaf:isPrimaryTopicOf ?{2}.\n" +
+                "OPTIONAL '{' <{0}> dbo:thumbnail ?{3}. '}'\n" +
+                "OPTIONAL '{' <{0}> dbo:abstract ?{4}. FILTER(lang(?{4}) = \"en\"). '}'\n" +
+                "FILTER(lang(?{1}) = \"en\")" +
+            "'}'", uri, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT));
         QueryExecution queryExecution = executeQuery(query);
         ResponseData responseData = null;
 
@@ -115,24 +118,16 @@ public class SPARQL {
         return count;
     }
 
-    public static String getDisambiguatedEntitiesQuery(String uri, int offset, int limit) {
-        return buildQuery(String.format("SELECT ?uri ?properties ?values where {" +
-            "{" +
-                "SELECT ?uri (group_concat(?property; separator='%s') as ?properties) (group_concat(?value; separator='%s') as ?values) WHERE {" +
-                    "?uri ?property ?value ." +
-                    BASIC_ENTITY_PROPERTIES +
-                    "{" +
-                        "SELECT ?uri WHERE {" +
-                            "<%s> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?uri" +
-                        "} OFFSET %d LIMIT %d" +
-                    "}" +
-                "} GROUP BY ?uri" +
-            "}" +
-        "}", SEPARATOR, SEPARATOR, uri, offset, limit));
-    }
-
     public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
-        String query = getDisambiguatedEntitiesQuery(uri, offset, limit);
+        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
+                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
+                "?{1} rdfs:label ?{2} .\n" +
+                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
+                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
+                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
+                "FILTER(lang(?{2}) = \"en\") .\n" +
+        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
+
         QueryExecution queryExecution = executeQuery(query);
         ArrayList<ResponseData> responseDatas = new ArrayList<>();
 
