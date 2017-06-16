@@ -1,5 +1,6 @@
 import React from 'react';
 import Message from './Message.jsx';
+import * as Constants from './Constants.jsx';
 
 class Messages extends React.Component {
 
@@ -24,13 +25,17 @@ class Messages extends React.Component {
         return (
             <div id="messages-container">
                 {messages}
+                {this.props.loading && <Message
+                    message={{messageType: Constants.response.ResponseType.LOADING_MESSAGE}}
+                    fromMe={false} /> }
             </div>
         );
     }
 }
 
 Messages.defaultProps = {
-    messages: []
+    messages: [],
+    loading: false
 };
 
 export default Messages;

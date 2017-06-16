@@ -3,6 +3,7 @@ export const response = {
         'TEXT_MESSAGE': 'text',
         'CAROUSEL_MESSAGE': 'carousel',
         'BUTTON_TEXT_MESSAGE': 'button_text',
+        'LOADING_MESSAGE': 'loading',
         'BUTTON_LINK': 'link',
         'BUTTON_PARAM': 'param'
     }

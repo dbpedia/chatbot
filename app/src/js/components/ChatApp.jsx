@@ -8,7 +8,7 @@ class ChatApp extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {messages: []};
+        this.state = {messages: [], loading: false};
         this.sendHandler = this.sendHandler.bind(this);
         this.uuid = this.getUuid();
     }
@@ -39,6 +39,7 @@ class ChatApp extends React.Component {
 
     makeRequest(data) {
         data.userId = this.uuid;
+        this.state.loading = true;
         $.ajax({
             type: 'POST',
             url: '/webhook',
@@ -50,6 +51,10 @@ class ChatApp extends React.Component {
             data: JSON.stringify(data),
             success: (response) => {
                 this.renderMessages(JSON.parse(response));
+                this.state.loading = false;
+            },
+            error: () => {
+                this.state.loading = false;
             }
         });
     }
@@ -98,10 +103,11 @@ class ChatApp extends React.Component {
     render() {
         return (
             <div className="card expandOpen" id="chat-app-container">
-                <Messages messages={this.state.messages} onSend={this.sendHandler} />
+                <Messages messages={this.state.messages}
+                    onSend={this.sendHandler}
+                    loading={this.state.loading} />
                 <ChatInput onSend={this.sendHandler} />
             </div>
-
         );
     }
 }

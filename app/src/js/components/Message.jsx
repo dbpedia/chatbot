@@ -111,7 +111,15 @@ class Message extends React.Component {
                         })}
                     </div>
                 );
-                //this.renderCarouselDiv(this.props.message.messageData);
+            break;
+            case Constants.response.ResponseType.LOADING_MESSAGE:
+                msgDiv = (
+                    <div className={`bubble card pullUp ${fromMe}`}>
+                        <div className="loading-dot dot-1"></div>
+                        <div className="loading-dot dot-2"></div>
+                        <div className="loading-dot dot-3"></div>
+                    </div>
+                );
             break;
         }
 
