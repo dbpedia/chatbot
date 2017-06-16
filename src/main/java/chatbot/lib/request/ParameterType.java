@@ -10,4 +10,5 @@ public interface ParameterType {
 
     String DBPEDIA_ABOUT = "dbpedia-about";
     String DBPEDIA_CONTRIBUTE = "dbpedia-contribute";
+    String LOAD_MORE = "load-more";
 }

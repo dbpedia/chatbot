@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  * Created by ramgathreya on 5/23/17.
  */
 public class Utility {
-    public static final String STRING_SEPARATOR = "|";
+    public static final String STRING_SEPARATOR = "__";
 
     public static String generateImageUrl(String baseUrl, String imageUrl) {
         if(imageUrl.startsWith("http")) {
@@ -21,15 +21,18 @@ public class Utility {
         }
     }
 
-    public static String[] split(String string) {
-        if(string.contains("|")) {
-            return string.split("\\|");
+    public static String[] split(String string, String separator) {
+        if(string.contains(separator)) {
+            return string.split("\\" + separator);
         }
         else {
             return new String[]{string};
         }
     }
 
+    public static String[] split(String string) {
+        return split(string, STRING_SEPARATOR);
+    }
 
     public static boolean isJSONObject(String string) {
         try {
@@ -49,5 +52,15 @@ public class Utility {
         int amount = Integer.parseInt(s);
         DecimalFormat formatter = new DecimalFormat("#,###");
         return formatter.format(amount);
+    }
+
+    public static <T> String toJson(T object) throws IOException {
+        org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+        return mapper.writeValueAsString(object);
+    }
+
+    public static <T> T toObject(String json, Class T) throws IOException {
+        org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+        return (T) mapper.readValue(json, T);
     }
 }

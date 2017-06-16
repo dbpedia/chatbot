@@ -3,6 +3,11 @@ import * as Constants from './Constants.jsx';
 
 class Message extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.onParamButtonClick = this.onParamButtonClick.bind(this);
+    }
+
     renderBotDiv() {
         // If message is from bot and messageType not carousel then show the bot icon
         if (!this.props.fromMe && this.props.message.messageType.indexOf(['carousel']) == -1) {
@@ -16,7 +21,10 @@ class Message extends React.Component {
 
     onParamButtonClick(event, uri) {
         event.preventDefault();
-
+        this.props.onSend({
+            messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
+            messageData: [{payload: uri}]
+        })
     }
 
     render() {

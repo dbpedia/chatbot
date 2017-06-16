@@ -17,6 +17,8 @@ public interface RiveScriptReplyType {
     String STATUS_CHECK_TEXT = "statuschecktext";
 
     String DBPEDIA_CONTRIBUTE_TEXT = "dbpediacontributetext";
+    String DISAMBIGUATION_TEXT = "disambiguationtext";
+    String LOAD_MORE_TEXT = "loadmoretext";
 
     String YES_TEXT = "yes";
     String NO_TEXT = "no";

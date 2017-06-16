@@ -9,17 +9,23 @@
 - You can ask me questions like:
 - Here are some things you can ask for:
 
++ nlanswertext disambiguationtext
+- Which one do you mean?
+- Can you be more specific.
+
++ nlanswertext loadmoretext
+- Maybe, you are looking for something else.
+
 + nlanswertext
 - This is what I found:
 - Here's some info I found:
 
 + statuschecktext * yes
-- <star> is {uppercase}(@statusup){/uppercase} right now|Please try again. If you are still facing issues reach out to us.
+- <star> is {uppercase}(@statusup){/uppercase} right now__Please try again. If you are still facing issues reach out to us.
 
 + statuschecktext * no
-- <star> is {uppercase}(@statusdown){/uppercase} right now. We are looking into it.|You can help us by sending a message.
+- <star> is {uppercase}(@statusdown){/uppercase} right now. We are looking into it.__You can help us by sending a message.
 
-//- It looks like <star> is suffering some issues right now. We are looking into it.|You can help us by (sending a message|dropping a mail).
 + dbpediacontributetext
 - There are many ways you can contribute to the community.
 - There are many ways you can help the community.

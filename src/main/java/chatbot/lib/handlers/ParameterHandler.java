@@ -1,17 +1,17 @@
 package chatbot.lib.handlers;
 
 import chatbot.lib.Utility;
+import chatbot.lib.api.SPARQL;
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.request.Request;
-import chatbot.lib.response.Response;
-import chatbot.lib.response.ResponseData;
-import chatbot.lib.response.ResponseGenerator;
-import chatbot.lib.response.ResponseTemplates;
+import chatbot.lib.response.*;
 import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ParameterHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParameterHandler.class);
-//    private String userId;
+
     private Request request;
     private String[] payload;
     private RiveScriptBot riveScriptBot;
@@ -30,9 +30,9 @@ public class ParameterHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> handleParameterMessage() {
+    public List<Response> handleParameterMessage() throws IOException {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        switch(this.payload[0]) {
+        switch(payload[0]) {
             case ParameterType.START:
                 responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
             case ParameterType.HELP:
@@ -48,6 +48,19 @@ public class ParameterHandler {
             case ParameterType.DBPEDIA_CONTRIBUTE:
                 responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getContributeTemplate());
+                break;
+            case ParameterType.LOAD_MORE:
+                SPARQL.ProcessedResponse.ResponseInfo responseInfo = Utility.toObject(payload[1], SPARQL.ProcessedResponse.ResponseInfo.class);
+                ArrayList<ResponseData> responseDatas = responseInfo.nextPage();
+                responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
+
+                // Pagination
+                if (responseInfo.hasMorePages()) {
+                    responseInfo.next();
+                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.ButtonData>(){{
+                        add(new ResponseData.ButtonData("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
+                    }}));
+                }
                 break;
         }
         return responseGenerator.getResponse();
