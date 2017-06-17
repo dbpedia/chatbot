@@ -15,13 +15,8 @@ import static org.junit.Assert.assertNotNull;
  * Created by ramgathreya on 6/13/17.
  */
 public class TestNLHandler {
-
-    @Test
-    public void testLiteral() throws Exception { // Very basic test case which can be improved upon later
+    private void checkLiteral(String userId, String question) throws Exception {
         RiveScriptBot riveScriptBot = new RiveScriptBot();
-        String userId = "user";
-        String question = "What is the population of France?";
-
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
         List<Response> response = nlHandler.answer();
 
@@ -30,4 +25,10 @@ public class TestNLHandler {
         assertEquals(response.get(0).getMessageType(), ResponseType.TEXT_MESSAGE);
         assertNotNull(response.get(0).getMessageData().get(0).getText());
     }
+
+    @Test
+    public void testLiteral() throws Exception {
+        checkLiteral("user", "What is the population of France?");
+    }
+
 }

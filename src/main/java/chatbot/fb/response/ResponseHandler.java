@@ -50,7 +50,7 @@ public class ResponseHandler {
                 case ResponseType.CAROUSEL_MESSAGE:
                     sendGenericMessage(request.getUserId(), response.getMessageData());
                     break;
-                default: // This case needs to be separately handled probably send a text message or something saying the bot could not understand the query
+                default: // This case needs to be separately handled probably send a text message saying the bot could not understand the query
             }
         }
     }

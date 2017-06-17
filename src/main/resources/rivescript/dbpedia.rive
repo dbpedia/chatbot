@@ -29,6 +29,9 @@
 + [*] [is] dbpedia [*] (@statusup|@statusdown)
 @ dbpedia status
 
++ [*] dbpedia [not] running [*]
+@ dbpedia status
+
 
 // Contribute to DBpedia
 + [how] [*] (contribute|contributing|involved) [*] dbpedia [*]

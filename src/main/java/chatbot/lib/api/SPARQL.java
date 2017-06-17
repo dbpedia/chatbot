@@ -49,7 +49,7 @@ public class SPARQL {
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
         RDFNode node;
         ResponseData responseData = new ResponseData();
-        responseData.setTitle(result.get(VAR_LABEL).toString());
+        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
         responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
 
         node = result.get(VAR_THUMBNAIL);
