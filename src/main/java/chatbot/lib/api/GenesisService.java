@@ -30,7 +30,7 @@ public class GenesisService {
         this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
-    private String makeRequest(String endpoint, String url, String key) {
+    private String makeRequest(String endpoint, String url, String requestType) {
         try {
             HttpPost httpPost = new HttpPost(endpoint);
             List<NameValuePair> params = new ArrayList<>();
@@ -45,27 +45,40 @@ public class GenesisService {
             if(response.getStatusLine().getStatusCode() >= 400) {
                 throw new Exception("Genesis Server could not answer due to: " + response.getStatusLine());
             }
+            else {
+                String result = "";
+                String entities = EntityUtils.toString(response.getEntity());
+                JsonNode rootNode = new ObjectMapper().readTree(entities).get(requestType);
 
-            String entities = EntityUtils.toString(response.getEntity());
-            JsonNode rootNode = new ObjectMapper().readTree(entities).get(key);
-            String uris = "";
-            int count = 0;
-
-            for (JsonNode node : rootNode) {
-                count++;
-                if (count <= ResponseData.MAX_DATA_SIZE) {
-                    uris += "<" + node.get("url").getTextValue() + "> ";
+                switch (requestType) {
+                    case "similarEntities":
+                    case "relatedEntities":
+                        int count = 0;
+                        for (JsonNode node : rootNode) {
+                            count++;
+                            if (count <= ResponseData.MAX_DATA_SIZE) {
+                                result += "<" + node.get("url").getTextValue() + "> ";
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        break;
+                    case "summary":
+                        result = rootNode.getTextValue();
+                        break;
                 }
-                else {
-                    break;
-                }
+                return result.trim();
             }
-            return uris.trim();
         }
         catch (Exception e) {
 
         }
         return null;
+    }
+
+    public String getSummary(String uri) {
+        return makeRequest(GENESIS_URL + "/api/summary", uri, "summary");
     }
 
     public String getSimilarEntities(String uri) {
