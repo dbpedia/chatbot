@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotEquals;
 /**
  * Created by ramgathreya on 6/12/17.
  */
-public class TestDBpedia extends TestRiveScriptBase {
+public class TestDBpedia extends RiveScriptBase {
 
     @Test
     public void testDBpedia() {

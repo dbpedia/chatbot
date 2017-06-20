@@ -1,6 +1,7 @@
 package chatbot.lib.handlers;
 
 import chatbot.lib.Utility;
+import chatbot.lib.api.GenesisService;
 import chatbot.lib.api.SPARQL;
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.request.Request;
@@ -50,10 +51,8 @@ public class ParameterHandler {
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getContributeTemplate());
                 break;
             case ParameterType.LOAD_MORE:
-                SPARQL.ProcessedResponse.ResponseInfo responseInfo = Utility.toObject(payload[1], SPARQL.ProcessedResponse.ResponseInfo.class);
-                ArrayList<ResponseData> responseDatas = responseInfo.nextPage();
-                responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
-
+                SPARQL.ResponseInfo responseInfo = Utility.toObject(payload[1], SPARQL.ResponseInfo.class);
+                responseGenerator.addCarouselResponse(responseInfo.nextPage());
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
@@ -61,6 +60,12 @@ public class ParameterHandler {
                         add(new ResponseData.ButtonData("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                     }}));
                 }
+                break;
+            case ParameterType.LOAD_SIMILAR:
+                GenesisService genesisService = new GenesisService();
+                String uris = genesisService.getSimilarEntities(payload[1]);
+                SPARQL sparql = new SPARQL();
+                responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
                 break;
         }
         return responseGenerator.getResponse();

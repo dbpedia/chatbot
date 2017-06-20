@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by ramgathreya on 6/20/17.
  */
-public class TestDBpediaLanguages extends TestRiveScriptBase {
+public class TestDBpediaLanguages extends RiveScriptBase {
 
     @Test
     public void testDBpediaLanguages() {

@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * Created by ramgathreya on 6/20/17.
  */
-public class TestDBpediaStatusCheck extends TestRiveScriptBase {
+public class TestDBpediaStatusCheck extends RiveScriptBase {
     @Test
     public void testDBpediaServiceCheck() {
         String[] testCases = new String[]{"dbpedia status", "dbpedia down", "dbpedia down right now", "DBPedia down?", "DbPedia is down", "DBpedia down?", "is dbpedia down right now", "check if dbpedia is down", "check if dbpedia is down right now", "How long is DBpedia going to be down ???"};

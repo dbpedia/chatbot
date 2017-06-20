@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by ramgathreya on 6/14/17.
  */
-public class TestFallback extends TestRiveScriptBase{
+public class TestFallback extends RiveScriptBase {
     @Test
     public void testFallback() {
         String[] testCases = new String[]{"tell me about barack obama", "can you tell me about barack obama"};

@@ -12,6 +12,7 @@ public class ResponseData {
     private String text;
     private List<ButtonData> buttons = new ArrayList<>();
     public static final int MAX_DATA_SIZE = 5;
+    public static final int MAX_BUTTON_SIZE = 3;
 
     public ResponseData addButton(ButtonData buttonData) {
         this.buttons.add(buttonData);

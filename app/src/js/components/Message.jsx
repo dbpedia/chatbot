@@ -99,7 +99,7 @@ class Message extends React.Component {
                                                 case Constants.response.ResponseType.BUTTON_LINK:
                                                     return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
                                                 case Constants.response.ResponseType.BUTTON_PARAM:
-                                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
+                                                    return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri)} className="btn btn-block btn-primary">{button.title}</a>
                                             }
                                         }
                                         )}

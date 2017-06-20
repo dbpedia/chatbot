@@ -1,9 +1,11 @@
 package chatbot.lib.api;
 
+import chatbot.lib.Utility;
+import chatbot.lib.request.ParameterType;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
 import org.apache.jena.query.*;
-//import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,23 +49,23 @@ public class SPARQL {
     }
 
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
-//        RDFNode node;
-//        ResponseData responseData = new ResponseData();
-//        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
-//        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
-//
-//        node = result.get(VAR_THUMBNAIL);
-//        if(node != null) {
-//            responseData.setImage(node.toString());
-//        }
-//
-//        node = result.get(VAR_ABSTRACT);
-//        if(node != null) {
-//            responseData.setText(node.asLiteral().getString());
-//        }
-//        responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-//        return responseData;
-        return null;
+        RDFNode node;
+        ResponseData responseData = new ResponseData();
+        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
+        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
+
+        node = result.get(VAR_THUMBNAIL);
+        if(node != null) {
+            responseData.setImage(node.toString());
+        }
+
+        node = result.get(VAR_ABSTRACT);
+        if(node != null) {
+            responseData.setText(node.asLiteral().getString());
+        }
+        responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
+        responseData.addButton(new ResponseData.ButtonData("Similar", ResponseType.BUTTON_PARAM, ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri));
+        return responseData;
     }
 
     public ResponseData getEntityInformation(String uri) {
@@ -96,57 +98,71 @@ public class SPARQL {
      * @return 0 or count
      */
     public int isDisambiguationPage(String uri) {
-//         String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
-//                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
-//                 "}");
-//        QueryExecution queryExecution = executeQuery(query);
-//        int count = 0;
-//
-//        try {
-//            Iterator<QuerySolution> results = queryExecution.execSelect();
-//            if (results != null) {
-//                while(results.hasNext()) {
-//                    QuerySolution result = results.next();
-//                    count = result.get("count").asLiteral().getInt();
-//                }
-//            }
-//        }
-//        finally {
-//            queryExecution.close();
-//        }
-//        return count;
-        return 0;
+         String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
+                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
+                 "}");
+        QueryExecution queryExecution = executeQuery(query);
+        int count = 0;
+
+        try {
+            Iterator<QuerySolution> results = queryExecution.execSelect();
+            if (results != null) {
+                while(results.hasNext()) {
+                    QuerySolution result = results.next();
+                    count = result.get("count").asLiteral().getInt();
+                }
+            }
+        }
+        finally {
+            queryExecution.close();
+        }
+        return count;
+    }
+
+    private ArrayList<ResponseData> getEntities(String query) {
+        QueryExecution queryExecution = executeQuery(query);
+        ArrayList<ResponseData> responseDatas = null;
+
+        try {
+            Iterator<QuerySolution> results = queryExecution.execSelect();
+            if (results != null) {
+                responseDatas = new ArrayList<>();
+                while(results.hasNext()) {
+                    QuerySolution result = results.next();
+                    responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
+                }
+            }
+        }
+        finally {
+            queryExecution.close();
+        }
+        return responseDatas;
     }
 
     public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
-//        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
-//                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
-//                "?{1} rdfs:label ?{2} .\n" +
-//                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
-//                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
-//                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
-//                "FILTER(lang(?{2}) = \"en\") .\n" +
-//        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
-//
-//        QueryExecution queryExecution = executeQuery(query);
-//        ArrayList<ResponseData> responseDatas = new ArrayList<>();
-//
-//        try {
-//            Iterator<QuerySolution> results = queryExecution.execSelect();
-//            if (results != null) {
-//                while(results.hasNext()) {
-//                    QuerySolution result = results.next();
-//                    responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
-//                }
-//            }
-//        }
-//        finally {
-//            queryExecution.close();
-//        }
-//
-//        return responseDatas;
-        return null;
+        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
+                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
+                "?{1} rdfs:label ?{2} .\n" +
+                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
+                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
+                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
+                "FILTER(lang(?{2}) = \"en\") .\n" +
+        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
+        return getEntities(query);
     }
+
+    public ArrayList<ResponseData> getEntitiesByURIs(String uris) {
+        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
+                "VALUES ?{1} '{' {0} '}' .\n" +
+                "?{1} rdfs:label ?{2} .\n" +
+                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
+                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
+                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
+                "FILTER(lang(?{2}) = \"en\") .\n" +
+                "'}'", uris, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT));
+        return getEntities(query);
+    }
+
 
     public QueryExecution executeQuery(String queryString) {
         logger.info("SPARQL Query is:\n" + queryString);
@@ -194,75 +210,78 @@ public class SPARQL {
             return this;
         }
 
-        public static class ResponseInfo {
-            public static final String DISAMBIGUATION_PAGE = "Disambiguation Page";
-            private String queryResultType = "";
+    }
 
-            private String uri = "";
-            private int count = 0;
-            private int limit = 0;
-            private int offset = 0;
+    public static class ResponseInfo {
+        public static final String DISAMBIGUATION_PAGE = "Disambiguation Page";
+//        public static final String DISAMBIGUATION_PAGE = "Disambiguation Page";
 
-            public boolean hasMorePages() {
-                if (offset + limit < count) {
-                    return true;
-                }
-                return false;
+        private String queryResultType = "";
+
+        private String uri = "";
+        private int count = 0;
+        private int limit = 0;
+        private int offset = 0;
+
+        public boolean hasMorePages() {
+            if (offset + limit < count) {
+                return true;
             }
+            return false;
+        }
 
-            public void next() {
-                offset += limit;
-            }
+        public void next() {
+            offset += limit;
+        }
 
-            public ArrayList<ResponseData> nextPage() {
-                SPARQL sparql = new SPARQL();
-                return sparql.getDisambiguatedEntities(uri, offset, limit);
-            }
+        public ArrayList<ResponseData> nextPage() {
+            SPARQL sparql = new SPARQL();
+            return sparql.getDisambiguatedEntities(uri, offset, limit);
+        }
 
-            public String getQueryResultType() {
-                return queryResultType;
-            }
+        public String getQueryResultType() {
+            return queryResultType;
+        }
 
-            public ResponseInfo setQueryResultType(String queryResultType) {
-                this.queryResultType = queryResultType;
-                return this;
-            }
+        public ResponseInfo setQueryResultType(String queryResultType) {
+            this.queryResultType = queryResultType;
+            return this;
+        }
 
-            public int getCount() {
-                return count;
-            }
+        public int getCount() {
+            return count;
+        }
 
-            public ResponseInfo setCount(int count) {
-                this.count = count;
-                return this;
-            }
+        public ResponseInfo setCount(int count) {
+            this.count = count;
+            return this;
+        }
 
-            public int getLimit() {
-                return limit;
-            }
+        public int getLimit() {
+            return limit;
+        }
 
-            public ResponseInfo setLimit(int limit) {
-                this.limit = limit;
-                return this;
-            }
+        public ResponseInfo setLimit(int limit) {
+            this.limit = limit;
+            return this;
+        }
 
-            public int getOffset() {
-                return offset;
-            }
+        public int getOffset() {
+            return offset;
+        }
 
-            public ResponseInfo setOffset(int offset) {
-                this.offset = offset;
-                return this;
-            }
+        public ResponseInfo setOffset(int offset) {
+            this.offset = offset;
+            return this;
+        }
 
-            public String getUri() {
-                return uri;
-            }
+        public String getUri() {
+            return uri;
+        }
 
-            public ResponseInfo setUri(String uri) {
-                this.uri = uri;
-                return this;
-            }
+        public ResponseInfo setUri(String uri) {
+            this.uri = uri;
+            return this;
         }
     }
 }

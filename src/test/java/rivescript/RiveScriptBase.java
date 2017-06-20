@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotEquals;
  * Created by ramgathreya on 6/13/17.
  */
 @Ignore
-public class TestRiveScriptBase {
+public class RiveScriptBase {
     String userId = "User";
     RiveScriptBot bot = new RiveScriptBot();
 

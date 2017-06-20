@@ -47,6 +47,11 @@ public class ResponseGenerator {
         return this;
     }
 
+    // Convenience function converts arraylist to array
+    public ResponseGenerator addCarouselResponse(List<ResponseData> data) {
+        return addCarouselResponse(data.toArray(new ResponseData[data.size()]));
+    }
+
     public List<Response> getResponse() {
         return this.response;
     }

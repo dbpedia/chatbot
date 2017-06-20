@@ -2,7 +2,7 @@ package chatbot.lib.handlers;
 
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
-import chatbot.lib.response.ResponseType;
+import chatbot.lib.response.TestResponseBase;
 import chatbot.rivescript.RiveScriptBot;
 import org.junit.Test;
 
@@ -22,13 +22,28 @@ public class TestNLHandler {
 
         assertNotNull(response);
         assertEquals(response.size(), 1);
-        assertEquals(response.get(0).getMessageType(), ResponseType.TEXT_MESSAGE);
-        assertNotNull(response.get(0).getMessageData().get(0).getText());
+        TestResponseBase.checkTextMessage(response.get(0));
+    }
+
+    private void checkEntity(String userId, String question) throws Exception {
+        RiveScriptBot riveScriptBot = new RiveScriptBot();
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
+        List<Response> response = nlHandler.answer();
+        assertEquals(response.size(), 2);
+        TestResponseBase.checkTextMessage(response.get(0));
+        assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element
+        TestResponseBase.checkCarouselMessage(response.get(1));
     }
 
     @Test
     public void testLiteral() throws Exception {
         checkLiteral("user", "What is the population of France?");
+    }
+
+    @Test
+    public void testEntity() throws Exception {
+        checkEntity("user", "Barack Obama");
+
     }
 
 }

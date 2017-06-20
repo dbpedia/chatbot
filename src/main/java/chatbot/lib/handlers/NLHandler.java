@@ -11,16 +11,11 @@ import chatbot.lib.response.ResponseGenerator;
 import chatbot.lib.response.ResponseType;
 import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ramgathreya on 6/2/17.
@@ -55,9 +50,9 @@ public class NLHandler {
                 responseGenerator.addTextResponse(responseDatas.get(0));
                 break;
             case SPARQL.ProcessedResponse.RESPONSE_CAROUSEL:
-                SPARQL.ProcessedResponse.ResponseInfo responseInfo = processedResponse.getResponseInfo();
+                SPARQL.ResponseInfo responseInfo = processedResponse.getResponseInfo();
                 switch(responseInfo.getQueryResultType()) {
-                    case SPARQL.ProcessedResponse.ResponseInfo.DISAMBIGUATION_PAGE:
+                    case SPARQL.ResponseInfo.DISAMBIGUATION_PAGE:
                         responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
                         break;
                     default:
@@ -106,7 +101,7 @@ public class NLHandler {
                         }
                         // Disambiguation page
                         else {
-                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ProcessedResponse.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
+                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
                             processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
                             return processedResponse;
                         }
