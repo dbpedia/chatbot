@@ -1,0 +1,23 @@
++ dbpedia (@languages) [support]
+- {"type": "language", "name": "<star1>"}
+
++ [*] (@languages) dbpedia [*]
+@ dbpedia <star1>
+
++ [*] dbpedia in (@languages)
+@ dbpedia <star1>
+
++ [*] [dbpedia] (@languages) chapter
+@ dbpedia <star1>
+
++ [dbpedia] language@s support
+- {"type": "language", "name": ""}
+
++ [*] dbpedia in other language@s
+@ dbpedia language support
+
++ [*] other language@s
+@ dbpedia language support
+
++ [*] [dbpedia] language chapter@s
+@ dbpedia language support

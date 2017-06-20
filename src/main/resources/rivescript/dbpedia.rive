@@ -19,36 +19,9 @@
 + [*] tutorial@s [*] dbpedia
 @ dbpedia
 
-// Questions regarding DBpedia is online or available
-+ dbpedia status
-- {"type": "status_check", "name": "dbpedia"}
-
-+ [*] dbpedia [is] (@statusup|@statusdown) [*]
-@ dbpedia status
-
-+ [*] [is] dbpedia [*] (@statusup|@statusdown)
-@ dbpedia status
-
-+ [*] dbpedia [not] running [*]
-@ dbpedia status
-
-
 // Contribute to DBpedia
 + [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
 - {"type": "template", "name": "dbpedia-contribute"}
 
 + how (i can|can i|to|do|do i) contribute
 @ how can i contribute to dbpedia
-
-// Language DBpedia - TEST CASE NEEDED
-/*
-
-+ dbpedia (@languages) [support]
-- {"type": "language", "name": "<star1>"}
-
-+ [*] (@languages) dbpedia [*]
-@ dbpedia <star1>
-
-+ [*] dbpedia in (@languages)
-@ dbpedia <star1>
-*/

@@ -1,6 +1,8 @@
 package chatbot.lib.handlers;
 
 import chatbot.lib.Utility;
+import chatbot.lib.handlers.dbpedia.LanguageHandler;
+import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
@@ -45,11 +47,11 @@ public class TextHandler {
                                 .handleParameterMessage()
                         );
                         break;
-//                    case RiveScriptReplyType.LANGUAGE_SCENARIO:
-//                        responseGenerator.addResponses(new LanguageHandler(userId, rootNode.get("name").getTextValue(), riveScriptBot)
-//                                .handleLanguageAbout()
-//                        );
-//                        break;
+                    case RiveScriptReplyType.LANGUAGE_SCENARIO:
+                        responseGenerator.addResponses(new LanguageHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
+                                .handleLanguageAbout()
+                        );
+                        break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
                         responseGenerator.addResponses(new StatusCheckHandler(request, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
                         break;

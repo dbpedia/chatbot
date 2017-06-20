@@ -3,7 +3,7 @@ package chatbot.lib.api;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
 import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.RDFNode;
+//import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +18,7 @@ import java.util.List;
 
 // https://stackoverflow.com/questions/1644252/querying-dbpedia-with-sparql-and-jena
 // https://jena.apache.org/documentation/query/app_api.html
+// http://tutorial-academy.com/apache-jena-tdb-crud-operations/
 
 public class SPARQL {
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
@@ -30,7 +31,6 @@ public class SPARQL {
     private static final String VAR_ABSTRACT = "abstract";
     private static final String VAR_PRIMARY_TOPIC = "primaryTopic";
 
-    
     private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
     private static final String PREFIXES = new String(
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
@@ -47,22 +47,23 @@ public class SPARQL {
     }
 
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
-        RDFNode node;
-        ResponseData responseData = new ResponseData();
-        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
-        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
-
-        node = result.get(VAR_THUMBNAIL);
-        if(node != null) {
-            responseData.setImage(node.toString());
-        }
-
-        node = result.get(VAR_ABSTRACT);
-        if(node != null) {
-            responseData.setText(node.asLiteral().getString());
-        }
-        responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-        return responseData;
+//        RDFNode node;
+//        ResponseData responseData = new ResponseData();
+//        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
+//        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
+//
+//        node = result.get(VAR_THUMBNAIL);
+//        if(node != null) {
+//            responseData.setImage(node.toString());
+//        }
+//
+//        node = result.get(VAR_ABSTRACT);
+//        if(node != null) {
+//            responseData.setText(node.asLiteral().getString());
+//        }
+//        responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
+//        return responseData;
+        return null;
     }
 
     public ResponseData getEntityInformation(String uri) {
@@ -95,54 +96,56 @@ public class SPARQL {
      * @return 0 or count
      */
     public int isDisambiguationPage(String uri) {
-         String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
-                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
-                 "}");
-        QueryExecution queryExecution = executeQuery(query);
-        int count = 0;
-
-        try {
-            Iterator<QuerySolution> results = queryExecution.execSelect();
-            if (results != null) {
-                while(results.hasNext()) {
-                    QuerySolution result = results.next();
-                    count = result.get("count").asLiteral().getInt();
-                }
-            }
-        }
-        finally {
-            queryExecution.close();
-        }
-        return count;
+//         String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
+//                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
+//                 "}");
+//        QueryExecution queryExecution = executeQuery(query);
+//        int count = 0;
+//
+//        try {
+//            Iterator<QuerySolution> results = queryExecution.execSelect();
+//            if (results != null) {
+//                while(results.hasNext()) {
+//                    QuerySolution result = results.next();
+//                    count = result.get("count").asLiteral().getInt();
+//                }
+//            }
+//        }
+//        finally {
+//            queryExecution.close();
+//        }
+//        return count;
+        return 0;
     }
 
     public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
-        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
-                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
-                "?{1} rdfs:label ?{2} .\n" +
-                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
-                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
-                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
-                "FILTER(lang(?{2}) = \"en\") .\n" +
-        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
-
-        QueryExecution queryExecution = executeQuery(query);
-        ArrayList<ResponseData> responseDatas = new ArrayList<>();
-
-        try {
-            Iterator<QuerySolution> results = queryExecution.execSelect();
-            if (results != null) {
-                while(results.hasNext()) {
-                    QuerySolution result = results.next();
-                    responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
-                }
-            }
-        }
-        finally {
-            queryExecution.close();
-        }
-
-        return responseDatas;
+//        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
+//                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
+//                "?{1} rdfs:label ?{2} .\n" +
+//                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
+//                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
+//                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
+//                "FILTER(lang(?{2}) = \"en\") .\n" +
+//        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
+//
+//        QueryExecution queryExecution = executeQuery(query);
+//        ArrayList<ResponseData> responseDatas = new ArrayList<>();
+//
+//        try {
+//            Iterator<QuerySolution> results = queryExecution.execSelect();
+//            if (results != null) {
+//                while(results.hasNext()) {
+//                    QuerySolution result = results.next();
+//                    responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
+//                }
+//            }
+//        }
+//        finally {
+//            queryExecution.close();
+//        }
+//
+//        return responseDatas;
+        return null;
     }
 
     public QueryExecution executeQuery(String queryString) {

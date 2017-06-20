@@ -1,0 +1,23 @@
+// Questions regarding DBpedia is online or available
++ dbpedia status
+- {"type": "status_check", "name": "dbpedia"}
+
++ [*] dbpedia [is] (@statusup|@statusdown) [*]
+@ dbpedia status
+
++ [*] [is] dbpedia [*] (@statusup|@statusdown)
+@ dbpedia status
+
+
+// Questions regarding DBpedia SPARQL is online or available
++ [dbpedia] sparql status
+- {"type": "status_check", "name": "dbpedia-sparql"}
+
++ [*] [dbpedia] sparql [is] (@statusup|@statusdown) [*]
+@ dbpedia sparql status
+
++ [*] [is] [dbpedia] sparql [*] (@statusup|@statusdown)
+@ dbpedia sparql status
+
++ [*] [dbpedia] sparql [not] running [*]
+@ dbpedia status

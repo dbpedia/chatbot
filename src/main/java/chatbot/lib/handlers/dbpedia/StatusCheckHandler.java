@@ -1,4 +1,4 @@
-package chatbot.lib.handlers;
+package chatbot.lib.handlers.dbpedia;
 
 import chatbot.lib.Platform;
 import chatbot.lib.Utility;

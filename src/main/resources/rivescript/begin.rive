@@ -5,8 +5,8 @@
 
 ! array languages = arabic|basque|czech|dutch|english|esperanto|french|greek|german|indonesian|italian|japanese|korean|polish|portuguese|russian|spanish|swedish|ukrainian
 
-! array statusup = working|up|available|online|live
-! array statusdown = not working|down|not available|offline|dead
+! array statusup = working|up|available|online|live|running
+! array statusdown = not working|down|not available|unavailable|offline|dead|not running
 
 ! array s = |s // Plurals
 
@@ -35,4 +35,6 @@
 ! sub dbpediaorg = dbpedia
 ! sub contrbute = contribute
 ! sub contriute = contribute
+! sub availble = available
 ! sub workng = working
+! sub langauge = language

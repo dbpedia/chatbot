@@ -1,6 +1,8 @@
 package rivescript;
 
 import chatbot.rivescript.RiveScriptBot;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -10,6 +12,7 @@ import static org.junit.Assert.assertNotEquals;
 /**
  * Created by ramgathreya on 6/13/17.
  */
+@Ignore
 public class TestRiveScriptBase {
     String userId = "User";
     RiveScriptBot bot = new RiveScriptBot();
