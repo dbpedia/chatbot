@@ -10,20 +10,37 @@ public class ResponseData {
     private String image;
     private String title;
     private String text;
-    private List<ButtonData> buttons = new ArrayList<>();
+    private List<Button> buttons = new ArrayList<>();
+    private List<SmartReply> smartReplies = new ArrayList<>();
+
     public static final int MAX_DATA_SIZE = 5;
     public static final int MAX_BUTTON_SIZE = 3;
+    public static final int MAX_SMART_REPLY_SIZE = 10;
 
-    public ResponseData addButton(ButtonData buttonData) {
-        this.buttons.add(buttonData);
+    public ResponseData addButton(Button button) {
+        this.buttons.add(button);
         return this;
     }
 
-    public List<ButtonData> getButtons() {
+    public ResponseData addSmartReply(SmartReply smartReply) {
+        this.smartReplies.add(smartReply);
+        return this;
+    }
+
+    public List<SmartReply> getSmartReplies() {
+        return smartReplies;
+    }
+
+    public ResponseData setSmartReplies(List<SmartReply> smartReplies) {
+        this.smartReplies = smartReplies;
+        return this;
+    }
+
+    public List<Button> getButtons() {
         return buttons;
     }
 
-    public ResponseData setButtons(List<ButtonData> buttons) {
+    public ResponseData setButtons(List<Button> buttons) {
         this.buttons = buttons;
         return this;
     }
@@ -61,9 +78,9 @@ public class ResponseData {
     }
 
     // Constructor for Button Text Data
-    public ResponseData(String text, ArrayList<ButtonData> buttonData) {
+    public ResponseData(String text, ArrayList<Button> button) {
         this.text = text;
-        this.buttons = buttonData;
+        this.buttons = button;
     }
 
     // Constructor for Carousel Data
@@ -77,12 +94,12 @@ public class ResponseData {
 
     }
 
-    public static class ButtonData {
+    public static class Button {
         private String title;
         private String buttonType;
         private String uri;
 
-        public ButtonData(String title, String buttonType, String uri) {
+        public Button(String title, String buttonType, String uri) {
             this.title = title;
             this.buttonType = buttonType;
             this.uri = uri;
@@ -92,7 +109,7 @@ public class ResponseData {
             return title;
         }
 
-        public ButtonData setTitle(String title) {
+        public Button setTitle(String title) {
             this.title = title;
             return this;
         }
@@ -101,7 +118,7 @@ public class ResponseData {
             return buttonType;
         }
 
-        public ButtonData setButtonType(String buttonType) {
+        public Button setButtonType(String buttonType) {
             this.buttonType = buttonType;
             return this;
         }
@@ -110,7 +127,35 @@ public class ResponseData {
             return uri;
         }
 
-        public ButtonData setUri(String uri) {
+        public Button setUri(String uri) {
+            this.uri = uri;
+            return this;
+        }
+    }
+
+    public static class SmartReply {
+        private String title;
+        private String uri;
+
+        public SmartReply(String title, String uri) {
+            this.title = title;
+            this.uri = uri;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public SmartReply setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public SmartReply setUri(String uri) {
             this.uri = uri;
             return this;
         }

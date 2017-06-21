@@ -1,5 +1,6 @@
 package chatbot.lib.api;
 
+import chatbot.lib.Constants;
 import chatbot.lib.response.ResponseData;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
@@ -13,6 +14,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +24,12 @@ import java.util.List;
  * Created by ramgathreya on 6/20/17.
  */
 public class GenesisService {
-    private static final int timeout = 0;
+    private static final Logger logger = LoggerFactory.getLogger(GenesisService.class);
     private static final String GENESIS_URL = "http://genesis.aksw.org";
     private HttpClient client;
 
     public GenesisService() {
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(this.timeout).build();
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(Constants.API_TIMEOUT).build();
         this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
@@ -43,7 +46,8 @@ public class GenesisService {
 
             // Error Scenario
             if(response.getStatusLine().getStatusCode() >= 400) {
-                throw new Exception("Genesis Server could not answer due to: " + response.getStatusLine());
+                logger.error("Genesis Server could not answer due to: " + response.getStatusLine());
+                return null;
             }
             else {
                 String result = "";

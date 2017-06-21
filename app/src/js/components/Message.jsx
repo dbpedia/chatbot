@@ -10,7 +10,10 @@ class Message extends React.Component {
 
     renderBotDiv() {
         // If message is from bot and messageType not carousel then show the bot icon
-        if (!this.props.fromMe && this.props.message.messageType.indexOf(['carousel']) == -1) {
+        var excluded = [Constants.response.ResponseType.CAROUSEL_MESSAGE, Constants.response.ResponseType.SMART_REPLY_MESSAGE];
+
+        // Only show DBpedia icon for messages which are from bot and not carousel or smart reply
+        if (!this.props.fromMe && excluded.indexOf(this.props.message.messageType) == -1) {
             return (
                 <div className="btn btn-default btn-fab btn-fab-mini pull-left fadeIn bot-icon">
                     <img src="/images/icon-dbpedia-35.jpg" />
@@ -19,11 +22,12 @@ class Message extends React.Component {
         }
     }
 
-    onParamButtonClick(event, uri) {
+    // Label is used internally to show what user has clicked on
+    onParamButtonClick(event, uri, label) {
         event.preventDefault();
         this.props.onSend({
             messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
-            messageData: [{payload: uri}]
+            messageData: [{payload: uri, label: label}]
         })
     }
 
@@ -32,11 +36,29 @@ class Message extends React.Component {
         const messageData = this.props.message.messageData;
         let msgDiv = '';
         switch(this.props.message.messageType) {
+            case Constants.request.RequestType.PARAMETER_MESSAGE:
+                console.log(messageData[0]);
+                msgDiv = (
+                    <div className={`bubble card pullUp ${fromMe}`}>
+                        {messageData[0].label}
+                    </div>
+                );
+            break;
             case Constants.response.ResponseType.TEXT_MESSAGE:
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromMe}`}>
                         {messageData[0].text.split('\n').map((line, index) => {
                             return <div key={index}>{line}</div>;
+                        })}
+                    </div>
+                );
+            break;
+            case Constants.response.ResponseType.SMART_REPLY_MESSAGE:
+                var message = messageData[0];
+                msgDiv = (
+                    <div className={`smart-reply-container slideUp`}>
+                        {message.smartReplies.map((reply, index) => {
+                            return <a key={index} href="#" className="smart-reply" data-param={reply.uri} onClick={(event) => this.onParamButtonClick(event, reply.uri, reply.title)}>{reply.title}</a>
                         })}
                     </div>
                 );
@@ -56,7 +78,7 @@ class Message extends React.Component {
                                         case Constants.response.ResponseType.BUTTON_LINK:
                                             return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">{button.title}</a>
                                         case Constants.response.ResponseType.BUTTON_PARAM:
-                                            return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri)} className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                            return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-raised btn-info">{button.title}</a>
                                     }
                                 }
                                 )}
@@ -99,7 +121,7 @@ class Message extends React.Component {
                                                 case Constants.response.ResponseType.BUTTON_LINK:
                                                     return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
                                                 case Constants.response.ResponseType.BUTTON_PARAM:
-                                                    return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri)} className="btn btn-block btn-primary">{button.title}</a>
+                                                    return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-primary">{button.title}</a>
                                             }
                                         }
                                         )}

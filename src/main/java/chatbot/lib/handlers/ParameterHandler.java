@@ -31,6 +31,21 @@ public class ParameterHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
+    private List<ResponseData> getSimilarOrRelatedEntities(String scenario, String uri) {
+        SPARQL sparql = new SPARQL();
+        String uris = null;
+
+        switch (scenario) {
+            case ParameterType.LOAD_SIMILAR:
+                uris = new GenesisService().getSimilarEntities(uri);
+                break;
+            case ParameterType.LOAD_RELATED:
+                uris = new GenesisService().getRelatedEntities(uri);
+                break;
+        }
+        return sparql.getEntitiesByURIs(uris);
+    }
+
     public List<Response> handleParameterMessage() throws IOException {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
@@ -56,16 +71,20 @@ public class ParameterHandler {
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
-                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.ButtonData>(){{
-                        add(new ResponseData.ButtonData("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
+                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
+                        add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                     }}));
                 }
                 break;
             case ParameterType.LOAD_SIMILAR:
-                GenesisService genesisService = new GenesisService();
-                String uris = genesisService.getSimilarEntities(payload[1]);
-                SPARQL sparql = new SPARQL();
-                responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
+            case ParameterType.LOAD_RELATED:
+                responseGenerator.addCarouselResponse(getSimilarOrRelatedEntities(payload[0], payload[1]));
+                break;
+            case ParameterType.LEARN_MORE:
+                responseGenerator.addSmartReplyResponse(new ResponseData()
+                        .addSmartReply(new ResponseData.SmartReply("Similar", ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + payload[1]))
+                        .addSmartReply(new ResponseData.SmartReply("Related", ParameterType.LOAD_RELATED + Utility.STRING_SEPARATOR + payload[1]))
+                );
                 break;
         }
         return responseGenerator.getResponse();

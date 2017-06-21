@@ -120,8 +120,8 @@ public class StatusCheckHandler {
         }
 
         responseGenerator.addTextResponse(new ResponseData(replies[0]));
-        responseGenerator.addButtonTextResponse(new ResponseData(replies[1], new ArrayList<ResponseData.ButtonData>(){{
-            add(new ResponseData.ButtonData("Contact Us", ResponseType.BUTTON_LINK, contactUri));
+        responseGenerator.addButtonTextResponse(new ResponseData(replies[1], new ArrayList<ResponseData.Button>(){{
+            add(new ResponseData.Button("Contact Us", ResponseType.BUTTON_LINK, contactUri));
         }}));
         return responseGenerator.getResponse();
     }

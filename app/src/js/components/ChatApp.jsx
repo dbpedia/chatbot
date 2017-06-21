@@ -85,10 +85,17 @@ class ChatApp extends React.Component {
     sendHandler(message) {
         const messageObject = {
             username: this.props.username,
-            message: message
+            message: message,
+            fromMe: true
         };
 
-        messageObject.fromMe = true;
+        // Remove any smart replies that exist
+        this.state.messages.map((message, index) => {
+            if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
+                delete this.state.messages[index];
+            }
+        });
+
         this.addMessage(messageObject);
         this.makeRequest(message);
     }

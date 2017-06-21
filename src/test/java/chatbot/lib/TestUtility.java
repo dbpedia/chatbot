@@ -7,6 +7,6 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class TestUtility {
     public static void checkUrl(String url) {
-        assertTrue("Check If URL is Proper", url.matches("^(http|https)://.*$"));
+        assertTrue("Check If URL is Proper", url.matches("^(((http|https)://)|mailto:).*$"));
     }
 }

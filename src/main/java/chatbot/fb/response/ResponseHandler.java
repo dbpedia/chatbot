@@ -10,7 +10,6 @@ import com.github.messenger4j.exceptions.MessengerIOException;
 import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.NotificationType;
 import com.github.messenger4j.send.Recipient;
-import com.github.messenger4j.send.buttons.Button;
 import com.github.messenger4j.send.templates.ButtonTemplate;
 import com.github.messenger4j.send.templates.GenericTemplate;
 import org.slf4j.Logger;
@@ -66,8 +65,8 @@ public class ResponseHandler {
     }
 
     private void sendButtonMessage(String recipientId, ResponseData data) throws MessengerApiException, MessengerIOException {
-        Button.ListBuilder buttons = Button.newListBuilder();
-        for(ResponseData.ButtonData button : data.getButtons()) {
+        com.github.messenger4j.send.buttons.Button.ListBuilder buttons = com.github.messenger4j.send.buttons.Button.newListBuilder();
+        for(ResponseData.Button button : data.getButtons()) {
             switch(button.getButtonType()) {
                 case ResponseType.BUTTON_LINK:
                     buttons.addUrlButton(button.getTitle(), button.getUri()).toList();
@@ -104,10 +103,10 @@ public class ResponseHandler {
                 element.subtitle(processSubtitle(item.getText()));
             }
 
-            List<ResponseData.ButtonData> buttons = item.getButtons();
+            List<ResponseData.Button> buttons = item.getButtons();
             if(buttons != null && buttons.size() > 0) {
-                Button.ListBuilder fbButtons = Button.newListBuilder();
-                for(ResponseData.ButtonData button : buttons) {
+                com.github.messenger4j.send.buttons.Button.ListBuilder fbButtons = com.github.messenger4j.send.buttons.Button.newListBuilder();
+                for(ResponseData.Button button : buttons) {
                     switch(button.getButtonType()) {
                         case ResponseType.BUTTON_LINK:
                             fbButtons.addUrlButton(button.getTitle(), button.getUri()).toList();

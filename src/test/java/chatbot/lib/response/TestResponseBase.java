@@ -18,10 +18,10 @@ public class TestResponseBase {
         assertNotNull(messageData.get(0).getText());
     }
 
-    public static void checkButtons(List<ResponseData.ButtonData> buttons) {
+    public static void checkButtons(List<ResponseData.Button> buttons) {
         assertTrue("Button Data Size Greater Than 0", buttons.size() > 0);
         assertTrue("Button Data Size Less Than Equal to " + ResponseData.MAX_BUTTON_SIZE, buttons.size() <= ResponseData.MAX_BUTTON_SIZE);
-        for (ResponseData.ButtonData button : buttons) {
+        for (ResponseData.Button button : buttons) {
             assertNotNull(button.getTitle());
             switch(button.getButtonType()) {
                 case ResponseType.BUTTON_LINK:
@@ -45,7 +45,7 @@ public class TestResponseBase {
         for(ResponseData responseData : messageData) {
             assertNotNull(responseData.getTitle());
             String image = responseData.getImage();
-            List<ResponseData.ButtonData> buttons = responseData.getButtons();
+            List<ResponseData.Button> buttons = responseData.getButtons();
             if (image != null) {
                 TestUtility.checkUrl(image);
             }

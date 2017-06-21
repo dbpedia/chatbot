@@ -41,7 +41,13 @@ public class NLHandler {
 
     public List<Response> answer() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
+        // Need to change this section once QANARY is live
         List<QAService.Data> data = qaService.search(question);
+
+//        List<QAService.Data> data = new ArrayList<QAService.Data>(){{
+//            add(new QAService.Data(QAService.Data.URI, "http://dbpedia.org/resource/Barack_Obama"));
+//        }};
+
         SPARQL.ProcessedResponse processedResponse = processResponseData(data);
         List<ResponseData> responseDatas = processedResponse.getResponseData();
 
@@ -63,8 +69,8 @@ public class NLHandler {
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
-                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.ButtonData>(){{
-                        add(new ResponseData.ButtonData("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
+                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
+                        add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                     }}));
                 }
                 break;

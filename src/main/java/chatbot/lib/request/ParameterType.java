@@ -14,4 +14,6 @@ public interface ParameterType {
     String LOAD_MORE = "load-more";
     String LOAD_RELATED = "load-related";
     String LOAD_SIMILAR = "load-similar";
+
+    String LEARN_MORE = "learn-more";
 }

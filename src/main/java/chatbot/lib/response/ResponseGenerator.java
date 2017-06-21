@@ -52,6 +52,13 @@ public class ResponseGenerator {
         return addCarouselResponse(data.toArray(new ResponseData[data.size()]));
     }
 
+    public ResponseGenerator addSmartReplyResponse(ResponseData data) {
+        this.addResponse(new Response().setMessageType(ResponseType.SMART_REPLY_MESSAGE)
+                .addData(data)
+        );
+        return this;
+    }
+
     public List<Response> getResponse() {
         return this.response;
     }

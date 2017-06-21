@@ -62,17 +62,17 @@ public class LanguageHandler {
             String[] lang = LANGUAGES.get(language);
             responseGenerator.addButtonTextResponse(new ResponseData(
                 riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DBPEDIA_LANGUAGE_TEXT + " " + lang[0])[0],
-                new ArrayList<ResponseData.ButtonData>(){{
-                    add(new ResponseData.ButtonData("Official Website", ResponseType.BUTTON_LINK, lang[1]));
-                    add(new ResponseData.ButtonData("SPARQL Endpoint", ResponseType.BUTTON_LINK, lang[2]));
+                new ArrayList<ResponseData.Button>(){{
+                    add(new ResponseData.Button("Official Website", ResponseType.BUTTON_LINK, lang[1]));
+                    add(new ResponseData.Button("SPARQL Endpoint", ResponseType.BUTTON_LINK, lang[2]));
                 }}
             ));
         }
         else {
             responseGenerator.addButtonTextResponse(new ResponseData(
                     MessageFormat.format("At the moment DBpedia has {0} language chapters that are concerned with improving the extraction of data from language-specific Wikipedia versions.", LANGUAGES.size()),
-                    new ArrayList<ResponseData.ButtonData>(){{
-                        add(new ResponseData.ButtonData("All Chapters", ResponseType.BUTTON_LINK, "http://wiki.dbpedia.org/about/language-chapters"));
+                    new ArrayList<ResponseData.Button>(){{
+                        add(new ResponseData.Button("All Chapters", ResponseType.BUTTON_LINK, "http://wiki.dbpedia.org/about/language-chapters"));
                     }}
             ));
         }

@@ -23,8 +23,8 @@ import java.util.List;
 // http://tutorial-academy.com/apache-jena-tdb-crud-operations/
 
 public class SPARQL {
+    private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
-    private static final String SEPARATOR = "|";
 
     // Variables used in SPARQL Queries
     private static final String VAR_URI = "uri";
@@ -33,7 +33,6 @@ public class SPARQL {
     private static final String VAR_ABSTRACT = "abstract";
     private static final String VAR_PRIMARY_TOPIC = "primaryTopic";
 
-    private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
     private static final String PREFIXES = new String(
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
@@ -52,21 +51,24 @@ public class SPARQL {
         RDFNode node;
         ResponseData responseData = new ResponseData();
         responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
-        responseData.addButton(new ResponseData.ButtonData("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
+        responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
 
         node = result.get(VAR_THUMBNAIL);
         if(node != null) {
             responseData.setImage(node.toString());
         }
 
-        // responseData.setText(new GenesisService().getSummary(uri));
+        responseData.setText(new GenesisService().getSummary(uri));
+//        node = result.get(VAR_ABSTRACT);
+//        if(node != null) {
+//            responseData.setText(node.asLiteral().getString());
+//        }
+        responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
 
-       node = result.get(VAR_ABSTRACT);
-       if(node != null) {
-           responseData.setText(node.asLiteral().getString());
-       }
-        responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-        responseData.addButton(new ResponseData.ButtonData("Similar", ResponseType.BUTTON_PARAM, ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri));
+//        responseData.addButton(new ResponseData.Button("Similar", ResponseType.BUTTON_PARAM, ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri));
+
+        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, ParameterType.LEARN_MORE + Utility.STRING_SEPARATOR + uri));
+
         return responseData;
     }
 
