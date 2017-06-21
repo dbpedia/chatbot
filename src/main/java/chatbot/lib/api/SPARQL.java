@@ -59,12 +59,12 @@ public class SPARQL {
             responseData.setImage(node.toString());
         }
 
-        responseData.setText(new GenesisService().getSummary(uri));
+        // responseData.setText(new GenesisService().getSummary(uri));
 
-//        node = result.get(VAR_ABSTRACT);
-//        if(node != null) {
-//            responseData.setText(node.asLiteral().getString());
-//        }
+       node = result.get(VAR_ABSTRACT);
+       if(node != null) {
+           responseData.setText(node.asLiteral().getString());
+       }
         responseData.addButton(new ResponseData.ButtonData("View in DBpedia", ResponseType.BUTTON_LINK, uri));
         responseData.addButton(new ResponseData.ButtonData("Similar", ResponseType.BUTTON_PARAM, ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri));
         return responseData;
