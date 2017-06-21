@@ -9,29 +9,32 @@
 - You can ask me questions like:
 - Here are some things you can ask for:
 
-+ nlanswertext disambiguationtext
-- Which one do you mean?
-- I am not sure what you meant. Is it one of these?
-
-+ nlanswertext loadmoretext
-- Maybe, you are looking for something else.
-
 + nlanswertext
 - This is what I found:
 - Here's some info I found:
 
++ disambiguationtext
+- Which one do you mean?
+- I am not sure what you meant. Is it one of these?
+
++ loadmoretext
+- Maybe, you are looking for something else.
+
++ learnmoretext *
+- What would you like to know about <formal>
+
 + statuschecktext * yes
-- <star> is {uppercase}(@statusup){/uppercase} right now__Please try again. If you are still facing issues reach out to us.
+- <formal> is {uppercase}(@statusup){/uppercase} right now__Please try again. If you are still facing issues reach out to us.
 
 + statuschecktext * no
-- <star> is {uppercase}(@statusdown){/uppercase} right now. We are looking into it.__You can help us by sending a message.
+- <formal> is {uppercase}(@statusdown){/uppercase} right now. We are looking into it.__You can help us by sending a message.
 
 + dbpediacontributetext
 - There are many ways you can contribute to the community.
 - There are many ways you can help the community.
 
 + dbpedialanguagetext *
-- Here are some links about <star>:
+- Here are some links about <formal>:
 
 + fallbacktext
 - I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.

@@ -37,7 +37,6 @@ class Message extends React.Component {
         let msgDiv = '';
         switch(this.props.message.messageType) {
             case Constants.request.RequestType.PARAMETER_MESSAGE:
-                console.log(messageData[0]);
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromMe}`}>
                         {messageData[0].label}

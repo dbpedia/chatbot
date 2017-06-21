@@ -59,7 +59,7 @@ public class NLHandler {
                 SPARQL.ResponseInfo responseInfo = processedResponse.getResponseInfo();
                 switch(responseInfo.getQueryResultType()) {
                     case SPARQL.ResponseInfo.DISAMBIGUATION_PAGE:
-                        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
+                        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
                         break;
                     default:
                         responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
@@ -69,7 +69,7 @@ public class NLHandler {
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
-                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT + " " + RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
+                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
                         add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                     }}));
                 }

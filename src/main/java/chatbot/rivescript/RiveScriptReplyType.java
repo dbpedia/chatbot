@@ -21,6 +21,7 @@ public interface RiveScriptReplyType {
 
     String DISAMBIGUATION_TEXT = "disambiguationtext";
     String LOAD_MORE_TEXT = "loadmoretext";
+    String LEARN_MORE_TEXT = "learnmoretext";
 
     String YES_TEXT = "yes";
     String NO_TEXT = "no";

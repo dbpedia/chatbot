@@ -50,7 +50,8 @@ public class SPARQL {
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
         RDFNode node;
         ResponseData responseData = new ResponseData();
-        responseData.setTitle(result.get(VAR_LABEL).asLiteral().getString());
+        String label = result.get(VAR_LABEL).asLiteral().getString();
+        responseData.setTitle(label);
         responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
 
         node = result.get(VAR_THUMBNAIL);
@@ -64,11 +65,7 @@ public class SPARQL {
 //            responseData.setText(node.asLiteral().getString());
 //        }
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-
-//        responseData.addButton(new ResponseData.Button("Similar", ResponseType.BUTTON_PARAM, ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri));
-
-        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, ParameterType.LEARN_MORE + Utility.STRING_SEPARATOR + uri));
-
+        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, ParameterType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
     }
 
