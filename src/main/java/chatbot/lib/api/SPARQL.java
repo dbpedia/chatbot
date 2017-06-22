@@ -47,6 +47,26 @@ public class SPARQL {
         return PREFIXES + query;
     }
 
+    // Remove the pronounciation information that appears at the beginning of the article enclosed by ()
+    // Additionally can be checked to contain unnecessary characters instead of blindly stripping based on brackets
+    private String stripWikiepdiaContent(String text) {
+        int indexStart = text.indexOf("(");
+        if(indexStart != -1) {
+            int indexEnd = text.indexOf(")", indexStart) + 2;
+            if(indexEnd != -1) {
+                return text.replace(text.substring(indexStart, indexEnd), "");
+            }
+        }
+        return text;
+    }
+
+    private String processWikipediaAbstract(String abs) {
+        while(abs.indexOf("(") != -1) {
+            abs = stripWikiepdiaContent(abs);
+        }
+        return abs;
+    }
+
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
         RDFNode node;
         ResponseData responseData = new ResponseData();
@@ -59,11 +79,15 @@ public class SPARQL {
             responseData.setImage(node.toString());
         }
 
-        responseData.setText(new GenesisService().getSummary(uri));
-//        node = result.get(VAR_ABSTRACT);
-//        if(node != null) {
-//            responseData.setText(node.asLiteral().getString());
-//        }
+        String summary = new GenesisService().getSummary(uri);
+        if(summary == null || summary.isEmpty()) {
+            node = result.get(VAR_ABSTRACT);
+            if(node != null) {
+                summary = processWikipediaAbstract(node.asLiteral().getString());
+            }
+        }
+
+        responseData.setText(summary);
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
         responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, ParameterType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
@@ -215,7 +239,6 @@ public class SPARQL {
 
     public static class ResponseInfo {
         public static final String DISAMBIGUATION_PAGE = "Disambiguation Page";
-//        public static final String DISAMBIGUATION_PAGE = "Disambiguation Page";
 
         private String queryResultType = "";
 

@@ -36,8 +36,7 @@ public class Utility {
 
     public static boolean isJSONObject(String string) {
         try {
-            final ObjectMapper mapper = new ObjectMapper();
-            mapper.readTree(string);
+            new ObjectMapper().readTree(string);
             return true;
         } catch (Exception e) {
             return false;
