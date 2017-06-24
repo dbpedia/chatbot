@@ -31,7 +31,7 @@ public class ParameterHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    private List<ResponseData> getSimilarOrRelatedEntities(String scenario, String uri) {
+    private ResponseGenerator getSimilarOrRelatedEntities(ResponseGenerator responseGenerator, String scenario, String uri) {
         SPARQL sparql = new SPARQL();
         String uris = null;
 
@@ -43,14 +43,19 @@ public class ParameterHandler {
                 uris = new GenesisService().getRelatedEntities(uri);
                 break;
         }
-        return sparql.getEntitiesByURIs(uris);
+        // Set Fallback when GENESIS returns null or invalid response
+        if(uris.isEmpty() || uris == " " || uris == null) {
+            return responseGenerator.setFallbackResponse(request, riveScriptBot);
+        }
+        return responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
     }
 
-    public List<Response> handleParameterMessage() throws IOException {
+    public ResponseGenerator handleParameterMessage() throws IOException {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case ParameterType.START:
                 responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
+                responseGenerator.setShowFeedback(false);
             case ParameterType.HELP:
                 responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
@@ -78,16 +83,28 @@ public class ParameterHandler {
                 break;
             case ParameterType.LOAD_SIMILAR:
             case ParameterType.LOAD_RELATED:
-                responseGenerator.addCarouselResponse(getSimilarOrRelatedEntities(payload[0], payload[1]));
+                responseGenerator = getSimilarOrRelatedEntities(responseGenerator, payload[0], payload[1]);
                 break;
             case ParameterType.LEARN_MORE:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + payload[2])[0]));
                 responseGenerator.addSmartReplyResponse(new ResponseData()
+                        .setText(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + payload[2])[0])
                         .addSmartReply(new ResponseData.SmartReply("Similar", ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + payload[1]))
                         .addSmartReply(new ResponseData.SmartReply("Related", ParameterType.LOAD_RELATED + Utility.STRING_SEPARATOR + payload[1]))
                 );
                 break;
+            case ParameterType.FEEDBACK:
+                // Responses can be converted to rivescript
+                switch (payload[1]) {
+                    case ParameterType.YES:
+                        responseGenerator.addTextResponse(new ResponseData("Glad that you like it."));
+                        break;
+                    case ParameterType.NO:
+                        responseGenerator.addTextResponse(new ResponseData("Sorry, I will try better."));
+                        break;
+                }
+                responseGenerator.setShowFeedback(false);
+                break;
         }
-        return responseGenerator.getResponse();
+        return responseGenerator;
     }
 }

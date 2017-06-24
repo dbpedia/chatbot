@@ -96,7 +96,7 @@ public class StatusCheckHandler {
         return new String[]{status, subject};
     }
 
-    public List<Response> handleStatusCheck() {
+    public ResponseGenerator handleStatusCheck() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         String serviceName = service.get(0)[0];
         String mailingList = service.get(0)[2];
@@ -123,6 +123,6 @@ public class StatusCheckHandler {
         responseGenerator.addButtonTextResponse(new ResponseData(replies[1], new ArrayList<ResponseData.Button>(){{
             add(new ResponseData.Button("Contact Us", ResponseType.BUTTON_LINK, contactUri));
         }}));
-        return responseGenerator.getResponse();
+        return responseGenerator;
     }
 }

@@ -17,7 +17,7 @@ class Messages extends React.Component {
                     key={i}
                     username={message.username}
                     message={message.message}
-                    fromMe={message.fromMe}
+                    fromBot={message.fromBot}
                     onSend={this.props.onSend} />
             );
         });
@@ -27,7 +27,7 @@ class Messages extends React.Component {
                 {messages}
                 {this.props.loading && <Message
                     message={{messageType: Constants.response.ResponseType.LOADING_MESSAGE}}
-                    fromMe={false} /> }
+                    fromBot={true} /> }
             </div>
         );
     }

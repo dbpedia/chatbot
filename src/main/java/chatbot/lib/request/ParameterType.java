@@ -16,4 +16,8 @@ public interface ParameterType {
     String LOAD_SIMILAR = "load-similar";
 
     String LEARN_MORE = "learn-more";
+    String FEEDBACK = "feedback";
+
+    String YES = "yes";
+    String NO = "no";
 }

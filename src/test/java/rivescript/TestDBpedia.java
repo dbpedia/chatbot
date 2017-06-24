@@ -19,7 +19,7 @@ public class TestDBpedia extends RiveScriptBase {
 
     @Test
     public void testDBpediaContribute() {
-        String[] testCases = new String[]{"how to contribute to dbpedia", "how to contribute to dbpedia project", "contribute to dbpedia project", "how can i contribute to dbpedia???", "how can i contribute"};
+        String[] testCases = new String[]{"how to contribute to dbpedia", "how to contribute to dbpedia project", "contribute to dbpedia project", "how can i contribute to dbpedia???", "how can i contribute", "how can i help the project"};
         String[] expectedAnswer = new String[]{"{\"type\": \"template\", \"name\": \"dbpedia-contribute\"}"};
         checkAnswers(testCases, expectedAnswer, true);
     }

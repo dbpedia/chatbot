@@ -9,6 +9,7 @@ import com.github.messenger4j.exceptions.MessengerApiException;
 import com.github.messenger4j.exceptions.MessengerIOException;
 import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.NotificationType;
+import com.github.messenger4j.send.QuickReply;
 import com.github.messenger4j.send.Recipient;
 import com.github.messenger4j.send.templates.ButtonTemplate;
 import com.github.messenger4j.send.templates.GenericTemplate;
@@ -49,6 +50,9 @@ public class ResponseHandler {
                 case ResponseType.CAROUSEL_MESSAGE:
                     sendGenericMessage(request.getUserId(), response.getMessageData());
                     break;
+                case ResponseType.SMART_REPLY_MESSAGE:
+                    sendQuickReply(request.getUserId(), response.getMessageData().get(0));
+                    break;
                 default: // This case needs to be separately handled probably send a text message saying the bot could not understand the query
             }
         }
@@ -81,6 +85,13 @@ public class ResponseHandler {
         sendClient.sendTemplate(recipientId, buttonTemplate);
     }
 
+    private void sendQuickReply(String recipientId, ResponseData data) throws MessengerApiException, MessengerIOException {
+        QuickReply.ListBuilder quickReplies = QuickReply.newListBuilder();
+        for (ResponseData.SmartReply smartReply : data.getSmartReplies()) {
+            quickReplies.addTextQuickReply(smartReply.getTitle(), smartReply.getUri()).toList();
+        }
+        this.sendClient.sendTextMessage(recipientId, data.getText(), quickReplies.build());
+    }
 
     private String processSubtitle(String subtitle) {
         if(subtitle.length() <= MAX_SUBTITLE_LENGTH) {

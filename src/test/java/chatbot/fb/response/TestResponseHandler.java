@@ -1,16 +1,6 @@
 package chatbot.fb.response;
 
-import chatbot.lib.Platform;
-import chatbot.lib.request.MessageData;
-import chatbot.lib.request.Request;
-import chatbot.lib.request.RequestRouter;
-import chatbot.lib.request.RequestType;
-import chatbot.lib.response.Response;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by ramgathreya on 6/14/17.

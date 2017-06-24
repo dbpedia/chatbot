@@ -64,7 +64,7 @@ class ChatApp extends React.Component {
             setTimeout(() => {
                 this.addMessage({
                     username: 'bot',
-                    fromMe: false,
+                    fromBot: true,
                     message: messages[index]
                 });
             }, 500 * index);
@@ -86,13 +86,13 @@ class ChatApp extends React.Component {
         const messageObject = {
             username: this.props.username,
             message: message,
-            fromMe: true
+            fromBot: false
         };
 
         // Remove any smart replies that exist
         this.state.messages.map((message, index) => {
             if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
-                delete this.state.messages[index];
+                delete this.state.messages[index].message.messageData[0].smartReplies;
             }
         });
 

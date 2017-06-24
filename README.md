@@ -6,6 +6,10 @@
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
      
+     couchbase.cluster.host = <host>
+     couchbase.cluster.password = <bucket-password>
+     couchbase.cluster.bucket = <bucket-name>
+     
      logging.level.com.github.messenger4j=<log-level>
 
 ### Development Only Configurations

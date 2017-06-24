@@ -1,5 +1,6 @@
 package chatbot.fb;
 
+import chatbot.couchbase.ChatRepository;
 import chatbot.fb.response.ResponseHandler;
 import chatbot.lib.Platform;
 import chatbot.lib.request.*;
@@ -10,8 +11,10 @@ import com.github.messenger4j.exceptions.MessengerApiException;
 import com.github.messenger4j.exceptions.MessengerIOException;
 import com.github.messenger4j.exceptions.MessengerVerificationException;
 import com.github.messenger4j.receive.MessengerReceiveClient;
+import com.github.messenger4j.receive.events.QuickReplyMessageEvent;
 import com.github.messenger4j.receive.events.TextMessageEvent;
 import com.github.messenger4j.receive.handlers.PostbackEventHandler;
+import com.github.messenger4j.receive.handlers.QuickReplyMessageEventHandler;
 import com.github.messenger4j.receive.handlers.TextMessageEventHandler;
 import com.github.messenger4j.send.MessengerSendClient;
 import com.github.messenger4j.send.SenderAction;
@@ -44,6 +47,7 @@ public class FBHandler {
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
     private final RiveScriptBot riveScriptBot;
+    private final ChatRepository chatRepository;
 
     private final String appSecret;
     private final String verifyToken;
@@ -57,7 +61,8 @@ public class FBHandler {
               @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
               @Value("${chatbot.baseUrl}") final String baseUrl,
               final MessengerSendClient sendClient,
-              final RiveScriptBot riveScriptBot) throws MessengerApiException, MessengerIOException, MalformedURLException {
+              final RiveScriptBot riveScriptBot,
+              final ChatRepository chatRepository) throws MessengerApiException, MessengerIOException, MalformedURLException {
         logger.debug("App Secret is " + appSecret);
         logger.debug("Verification Token is " + verifyToken);
 
@@ -68,11 +73,13 @@ public class FBHandler {
 
         this.receiveClient = MessengerPlatform.newReceiveClientBuilder(this.appSecret, this.verifyToken)
                 .onTextMessageEvent(textMessageEventHandler())
-                .onPostbackEvent(newPostbackEventHandler())
+                .onPostbackEvent(postbackEventHandler())
+                .onQuickReplyMessageEvent(quickReplyMessageEventHandler())
                 .build();
 
         this.sendClient = sendClient;
         this.riveScriptBot = riveScriptBot;
+        this.chatRepository = chatRepository;
 
         MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
 
@@ -122,17 +129,32 @@ public class FBHandler {
         return getGraphData(userId).getFirstName();
     }
 
-    private PostbackEventHandler newPostbackEventHandler() {
+    private QuickReplyMessageEventHandler quickReplyMessageEventHandler() {
         return event -> {
-            logger.debug("Received PostbackEvent: {}", event);
-
             final String senderId = event.getSender().getId();
-            final String recipientId = event.getRecipient().getId();
-            final String payload = event.getPayload();
-            final Date timestamp = event.getTimestamp();
+            final String payload = event.getQuickReply().getPayload();
 
-            logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'",
-                    senderId, recipientId, payload, timestamp);
+            try {
+                Request request = new Request(senderId, RequestType.PARAMETER_MESSAGE, Platform.FB)
+                        .setMessageData(new ArrayList<>(
+                                Arrays.asList(new MessageData().setPayload(payload))
+                        ));
+                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest();
+                new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
+            } catch (MessengerApiException e) {
+                e.printStackTrace();
+            } catch (MessengerIOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
+    private PostbackEventHandler postbackEventHandler() {
+        return event -> {
+            final String senderId = event.getSender().getId();
+            final String payload = event.getPayload();
 
             try {
                 sendReadReceipt(senderId);
@@ -142,7 +164,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setPayload(payload))
                         ));
-                List<Response> responseList = new RequestRouter(request, riveScriptBot).routeRequest();
+                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest();
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
 
                 sendTypingOff(senderId);
@@ -175,7 +197,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setText(messageText))
                         ));
-                List<Response> responseList = new RequestRouter(request, riveScriptBot).routeRequest(); // Get Generic Response List
+                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest(); // Get Generic Response List
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse(); // Translate for FB
 
                 sendTypingOff(senderId);

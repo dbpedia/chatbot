@@ -55,7 +55,7 @@ public class LanguageHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> handleLanguageAbout() {
+    public ResponseGenerator handleLanguageAbout() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
 
         if(!language.equals("")) {
@@ -76,6 +76,6 @@ public class LanguageHandler {
                     }}
             ));
         }
-        return responseGenerator.getResponse();
+        return responseGenerator;
     }
 }

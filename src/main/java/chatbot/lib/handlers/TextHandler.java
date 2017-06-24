@@ -32,7 +32,7 @@ public class TextHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> handleTextMessage() throws Exception {
+    public ResponseGenerator handleTextMessage() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         String[] rivescriptReply = riveScriptBot.answer(request.getUserId(), textMessage);
 
@@ -43,21 +43,19 @@ public class TextHandler {
 
                 switch (rootNode.get("type").getTextValue()) {
                     case RiveScriptReplyType.TEMPLATE_SCENARIO:
-                        responseGenerator.addResponses(new ParameterHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
-                                .handleParameterMessage()
-                        );
+                        responseGenerator = new ParameterHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
+                                .handleParameterMessage();
                         break;
                     case RiveScriptReplyType.LANGUAGE_SCENARIO:
-                        responseGenerator.addResponses(new LanguageHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
-                                .handleLanguageAbout()
-                        );
+                        responseGenerator = new LanguageHandler(request, rootNode.get("name").getTextValue(), riveScriptBot)
+                                .handleLanguageAbout();
                         break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
-                        responseGenerator.addResponses(new StatusCheckHandler(request, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck());
+                        responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), riveScriptBot).handleStatusCheck();
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         textMessage = rootNode.get("query").getTextValue(); // Use processed text message
-                        responseGenerator.addResponses(new NLHandler(request, textMessage, riveScriptBot).answer());
+                        responseGenerator = new NLHandler(request, textMessage, riveScriptBot).answer();
                         break;
                 }
             }
@@ -65,6 +63,6 @@ public class TextHandler {
                 responseGenerator.addTextResponse(new ResponseData(reply));
             }
         }
-        return responseGenerator.getResponse();
+        return responseGenerator;
     }
 }

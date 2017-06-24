@@ -18,7 +18,7 @@ public class TestNLHandler {
     private void checkLiteral(String userId, String question) throws Exception {
         RiveScriptBot riveScriptBot = new RiveScriptBot();
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
-        List<Response> response = nlHandler.answer();
+        List<Response> response = nlHandler.answer().getResponse();
 
         assertNotNull(response);
         assertEquals(response.size(), 1);
@@ -28,7 +28,7 @@ public class TestNLHandler {
     private void checkEntity(String userId, String question) throws Exception {
         RiveScriptBot riveScriptBot = new RiveScriptBot();
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
-        List<Response> response = nlHandler.answer();
+        List<Response> response = nlHandler.answer().getResponse();
         assertEquals(response.size(), 2);
         TestResponseBase.checkTextMessage(response.get(0));
         assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element

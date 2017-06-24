@@ -20,8 +20,11 @@
 @ dbpedia
 
 // Contribute to DBpedia
-+ [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
++ dbpedia contribute
 - {"type": "template", "name": "dbpedia-contribute"}
 
-+ how (i can|can i|to|do|do i) contribute
-@ how can i contribute to dbpedia
++ [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
+@ dbpedia contribute
+
++ how [*] (can|to|do) [*] (help|contribute) [*] [project]
+@ dbpedia contribute

@@ -39,45 +39,45 @@ public class NLHandler {
         this.riveScriptBot = riveScriptBot;
     }
 
-    public List<Response> answer() throws Exception {
+    public ResponseGenerator answer() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        // Need to change this section once QANARY is live
         List<QAService.Data> data = qaService.search(question);
-
-//        List<QAService.Data> data = new ArrayList<QAService.Data>(){{
-//            add(new QAService.Data(QAService.Data.URI, "http://dbpedia.org/resource/Barack_Obama"));
-//        }};
-
         SPARQL.ProcessedResponse processedResponse = processResponseData(data);
         List<ResponseData> responseDatas = processedResponse.getResponseData();
 
-        switch(processedResponse.getResponseType()) {
-            case SPARQL.ProcessedResponse.RESPONSE_TEXT:
-                responseGenerator.addTextResponse(responseDatas.get(0));
-                break;
-            case SPARQL.ProcessedResponse.RESPONSE_CAROUSEL:
-                SPARQL.ResponseInfo responseInfo = processedResponse.getResponseInfo();
-                switch(responseInfo.getQueryResultType()) {
-                    case SPARQL.ResponseInfo.DISAMBIGUATION_PAGE:
-                        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
-                        break;
-                    default:
-                        responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
-                }
-                responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
+        // When there is a valid response
+        if (responseDatas.size() > 0) {
+            switch (processedResponse.getResponseType()) {
+                case SPARQL.ProcessedResponse.RESPONSE_TEXT:
+                    responseGenerator.addTextResponse(responseDatas.get(0));
+                    break;
+                case SPARQL.ProcessedResponse.RESPONSE_CAROUSEL:
+                    SPARQL.ResponseInfo responseInfo = processedResponse.getResponseInfo();
+                    switch (responseInfo.getQueryResultType()) {
+                        case SPARQL.ResponseInfo.DISAMBIGUATION_PAGE:
+                            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
+                            break;
+                        default:
+                            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
+                    }
+                    responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
 
-                // Pagination
-                if (responseInfo.hasMorePages()) {
-                    responseInfo.next();
-                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
-                        add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
-                    }}));
-                }
-                break;
-            default:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0]));
+                    // Pagination
+                    if (responseInfo.hasMorePages()) {
+                        responseInfo.next();
+                        responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>() {{
+                            add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
+                        }}));
+                    }
+                    break;
+                default:
+                    responseGenerator.setFallbackResponse(request, riveScriptBot);
+            }
         }
-        return responseGenerator.getResponse();
+        else {
+            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0])).setShowFeedback(false);
+        }
+        return responseGenerator;
     }
 
     private SPARQL.ProcessedResponse processResponseData(List<QAService.Data> data) {

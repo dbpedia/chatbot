@@ -1,5 +1,11 @@
 package chatbot.lib.response;
 
+import chatbot.lib.Utility;
+import chatbot.lib.request.ParameterType;
+import chatbot.lib.request.Request;
+import chatbot.rivescript.RiveScriptBot;
+import chatbot.rivescript.RiveScriptReplyType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +14,8 @@ import java.util.List;
  */
 public class ResponseGenerator {
     private List<Response> response = new ArrayList<>();
+    private boolean showFeedback = true;
+
     public ResponseGenerator addResponse(Response response) {
         this.response.add(response);
         return this;
@@ -56,6 +64,34 @@ public class ResponseGenerator {
         this.addResponse(new Response().setMessageType(ResponseType.SMART_REPLY_MESSAGE)
                 .addData(data)
         );
+        return this;
+    }
+
+    public ResponseGenerator addFeedbackResponse(String msgId) {
+        if (showFeedback) {
+            Response response = this.response.get(this.response.size() - 1);
+
+            // Show feedback message when the response does not contain a smart reply
+            if(!response.getMessageType().equals(ResponseType.SMART_REPLY_MESSAGE)) {
+                addSmartReplyResponse(new ResponseData()
+                        .setText("Was this helpful?")
+                        .addSmartReply(new ResponseData.SmartReply("Yes", ParameterType.FEEDBACK + Utility.STRING_SEPARATOR + ParameterType.YES + Utility.STRING_SEPARATOR + msgId))
+                        .addSmartReply(new ResponseData.SmartReply("No", ParameterType.FEEDBACK + Utility.STRING_SEPARATOR + ParameterType.NO + Utility.STRING_SEPARATOR + msgId))
+                );
+            }
+
+        }
+        return this;
+    }
+
+    public ResponseGenerator setShowFeedback(boolean showFeedback) {
+        this.showFeedback = showFeedback;
+        return this;
+    }
+
+    public ResponseGenerator setFallbackResponse(Request request, RiveScriptBot riveScriptBot) {
+        showFeedback = false;
+        addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0]));
         return this;
     }
 
