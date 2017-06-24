@@ -1,5 +1,6 @@
 package chatbot;
 
+import chatbot.couchbase.ChatRepository;
 import chatbot.rivescript.RiveScriptBot;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.send.MessengerSendClient;
@@ -37,31 +38,35 @@ public class Application {
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
     }
 
-    @Configuration
-    @EnableCouchbaseRepositories
-    static class CouchbaseConfiguration extends AbstractCouchbaseConfiguration {
-        @Value("${couchbase.cluster.bucket}")
-        private String bucket;
-        @Value("${couchbase.cluster.password}")
-        private String password;
-        @Value("${couchbase.cluster.host}")
-        private String host;
-
-        @Override
-        protected List<String> getBootstrapHosts() {
-            return Arrays.asList(host);
-        }
-
-        @Override
-        protected String getBucketName() {
-            return bucket;
-        }
-
-        @Override
-        protected String getBucketPassword() {
-            return password;
-        }
+    @Bean
+    public ChatRepository initializeChatRepository() {
+        return new ChatRepository();
     }
+//    @Configuration
+//    @EnableCouchbaseRepositories
+//    static class CouchbaseConfiguration extends AbstractCouchbaseConfiguration {
+//        @Value("${couchbase.cluster.bucket}")
+//        private String bucket;
+//        @Value("${couchbase.cluster.password}")
+//        private String password;
+//        @Value("${couchbase.cluster.host}")
+//        private String host;
+//
+//        @Override
+//        protected List<String> getBootstrapHosts() {
+//            return Arrays.asList(host);
+//        }
+//
+//        @Override
+//        protected String getBucketName() {
+//            return bucket;
+//        }
+//
+//        @Override
+//        protected String getBucketPassword() {
+//            return password;
+//        }
+//    }
 
     @Configuration
     static class AssetsConfiguration extends WebMvcConfigurerAdapter {

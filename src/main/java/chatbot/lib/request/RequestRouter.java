@@ -31,29 +31,29 @@ public class RequestRouter {
     }
 
     private void addRequestChatHistory() {
-        chatRepository.save(new Chat()
-                .setId(msgId + Chat.ID_SEPARATOR + "request")
-                .setUserId(request.getUserId())
-                .setRequest(request)
-                .setDate(new Date())
-        );
+//        chatRepository.save(new Chat()
+//                .setId(msgId + Chat.ID_SEPARATOR + "request")
+//                .setUserId(request.getUserId())
+//                .setRequest(request)
+//                .setDate(new Date())
+//        );
     }
 
     private void addResponseChatHistory(List<Response> responseList) {
-        Date date = new Date();
-        String userId = request.getUserId();
-        chatRepository.save(new Chat()
-                .setId(msgId + Chat.ID_SEPARATOR + "response")
-                .setUserId(userId)
-                .setFromBot(true)
-                .setResponse(responseList)
-                .setDate(date)
-        );
+//        Date date = new Date();
+//        String userId = request.getUserId();
+//        chatRepository.save(new Chat()
+//                .setId(msgId + Chat.ID_SEPARATOR + "response")
+//                .setUserId(userId)
+//                .setFromBot(true)
+//                .setResponse(responseList)
+//                .setDate(date)
+//        );
     }
 
     public List<Response> routeRequest() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        addRequestChatHistory();
+//        addRequestChatHistory();
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:
                 responseGenerator = new TextHandler(request, request.getText(), riveScriptBot)
@@ -68,7 +68,7 @@ public class RequestRouter {
         responseGenerator.addFeedbackResponse(msgId);
 
         List<Response> response = responseGenerator.getResponse();
-        addResponseChatHistory(response);
+//        addResponseChatHistory(response);
         return response;
     }
 }
