@@ -9,12 +9,14 @@ class ChatApp extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {messages: [], loading: false, showFeedback: false};
+        this.state = {messages: [], loading: false, showFeedback: false, overlay: false};
         this.uuid = this.getUuid();
 
         this.sendHandler = this.sendHandler.bind(this);
         this.showFeedbackModal = this.showFeedbackModal.bind(this);
         this.hideFeedbackModal = this.hideFeedbackModal.bind(this);
+        this.showOverlay = this.showOverlay.bind(this);
+        this.hideOverlay = this.hideOverlay.bind(this);
     }
 
     generateUuid() {
@@ -119,17 +121,31 @@ class ChatApp extends React.Component {
         this.setState({showFeedback: false});
     }
 
+    showOverlay() {
+        this.setState({overlay: true});
+    }
+
+    hideOverlay() {
+        this.setState({overlay: false});
+    }
+
     render() {
         return (
             <div className="card expandOpen" id="chat-app-container">
                 <Messages messages={this.state.messages}
                     onSend={this.sendHandler}
                     loading={this.state.loading} />
-                <ChatInput onSend={this.sendHandler} showFeedback={this.showFeedbackModal} />
+                <ChatInput
+                    onSend={this.sendHandler}
+                    showFeedback={this.showFeedbackModal}
+                    showOverlay={this.showOverlay}
+                    hideOverlay={this.hideOverlay} />
                 <Feedback
                     isOpen={this.state.showFeedback}
-                    hide={this.hideFeedbackModal}
-                />
+                    hide={this.hideFeedbackModal} />
+                {this.state.overlay && (
+                    <div className="overlay"></div>
+                )}
             </div>
         );
     }

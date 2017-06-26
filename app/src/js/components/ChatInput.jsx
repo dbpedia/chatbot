@@ -5,7 +5,13 @@ class ChatInput extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {chatInput: '', sendDisabled: true, inputMargin: 60, isFlyoutOpen: false};
+        this.state = {
+            chatInput: '',
+            showSendButton: false,
+            sendDisabled: true,
+            inputMargin: 60,
+            isFlyoutOpen: false
+        };
 
         this.submitHandler = this.submitHandler.bind(this);
         this.textChangeHandler = this.textChangeHandler.bind(this);
@@ -26,16 +32,27 @@ class ChatInput extends React.Component {
         }
     }
 
+    toggleOverlay(isFlyoutOpen) {
+        if (isFlyoutOpen) {
+            this.props.showOverlay();
+        }
+        else {
+            this.props.hideOverlay();
+        }
+    }
+
     toggleFlyout() {
-        this.setState({isFlyoutOpen: !this.state.isFlyoutOpen});
+        let isFlyoutOpen = !this.state.isFlyoutOpen;
+        this.setState({isFlyoutOpen: isFlyoutOpen});
+        this.toggleOverlay(isFlyoutOpen);
     }
 
     inputFocus() {
-        this.setState({inputMargin: 0, isFlyoutOpen: false});
+        this.setState({inputMargin: 0, isFlyoutOpen: false, showSendButton: true});
     }
 
     inputBlur() {
-        this.setState({inputMargin: 60});
+        this.setState({inputMargin: 60, showSendButton: false});
     }
 
     textChangeHandler(event) {
@@ -50,6 +67,7 @@ class ChatInput extends React.Component {
                 this.props.showFeedback();
             break;
         }
+        this.toggleOverlay(false);
     }
 
     render() {
@@ -87,9 +105,12 @@ class ChatInput extends React.Component {
                                onFocus={this.inputFocus}
                                onBlur={this.inputBlur}
                                />
-                        <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
-                             <img src="/images/icon-send-32.png" />
-                        </a>
+
+                        {this.state.showSendButton && (
+                            <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
+                                 <img src="/images/icon-send-32.png" />
+                            </a>
+                        )}
                     </div>
                 </fieldset>
             </form>

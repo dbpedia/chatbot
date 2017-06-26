@@ -38,6 +38,7 @@ class Feedback extends React.Component {
         }
         else {
             $.snackbar({content: 'Submitting', timeout: 2000});
+            this.setState({title: '', description: ''});
             this.props.hide();
         }
     }
@@ -57,12 +58,14 @@ class Feedback extends React.Component {
                                 <legend>Feedback</legend>
                                 <div className="form-group">
                                     <input type="text"
+                                        value={this.state.title}
                                         onChange={this.titleChangeHandler}
                                         className="form-control"
                                         placeholder="Provide a short title (min 5 chars)" />
                                 </div>
                                 <div className="form-group">
                                     <textarea
+                                        value={this.state.description}
                                         className="form-control"
                                         onChange={this.descriptionChangeHandler}
                                         placeholder="Please describe the issue or help us by suggesting a feature (min 20 chars)"
