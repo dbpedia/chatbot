@@ -62,7 +62,7 @@ class Message extends React.Component {
                         </div>
                         {message.smartReplies && (<div className={`smart-reply-container slideUp`}>
                             {message.smartReplies.map((reply, index) => {
-                                return <a key={index} href="#" className="smart-reply" data-param={reply.uri} onClick={(event) => this.onParamButtonClick(event, reply.uri, reply.title)}>{reply.title}</a>
+                                return <a key={index} href="#" className="smart-reply" onClick={(event) => this.onParamButtonClick(event, reply.uri, reply.title)}>{reply.title}</a>
                             })}
                         </div>)}
                     </div>
@@ -126,7 +126,7 @@ class Message extends React.Component {
                                                 case Constants.response.ResponseType.BUTTON_LINK:
                                                     return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
                                                 case Constants.response.ResponseType.BUTTON_PARAM:
-                                                    return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-primary">{button.title}</a>
+                                                    return <a key={index} href="#" onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-primary">{button.title}</a>
                                             }
                                         }
                                         )}

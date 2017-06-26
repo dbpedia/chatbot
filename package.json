@@ -16,6 +16,8 @@
     "less-loader": "^4.0.3",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-modal": "2.0.7",
+    "snackbarjs": "1.1.0",
     "style-loader": "^0.17.0",
     "webpack": "^2.5.1"
   },

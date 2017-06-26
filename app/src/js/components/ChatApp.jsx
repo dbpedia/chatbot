@@ -3,14 +3,18 @@ import React from 'react';
 import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
 import * as Constants from './Constants.jsx';
+import Feedback from './Feedback.jsx';
 
 class ChatApp extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {messages: [], loading: false};
-        this.sendHandler = this.sendHandler.bind(this);
+        this.state = {messages: [], loading: false, showFeedback: false};
         this.uuid = this.getUuid();
+
+        this.sendHandler = this.sendHandler.bind(this);
+        this.showFeedbackModal = this.showFeedbackModal.bind(this);
+        this.hideFeedbackModal = this.hideFeedbackModal.bind(this);
     }
 
     generateUuid() {
@@ -107,13 +111,25 @@ class ChatApp extends React.Component {
         this.setState({ messages });
     }
 
+    showFeedbackModal() {
+        this.setState({showFeedback: true});
+    }
+
+    hideFeedbackModal() {
+        this.setState({showFeedback: false});
+    }
+
     render() {
         return (
             <div className="card expandOpen" id="chat-app-container">
                 <Messages messages={this.state.messages}
                     onSend={this.sendHandler}
                     loading={this.state.loading} />
-                <ChatInput onSend={this.sendHandler} />
+                <ChatInput onSend={this.sendHandler} showFeedback={this.showFeedbackModal} />
+                <Feedback
+                    isOpen={this.state.showFeedback}
+                    hide={this.hideFeedbackModal}
+                />
             </div>
         );
     }
