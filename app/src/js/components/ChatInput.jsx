@@ -5,11 +5,13 @@ class ChatInput extends React.Component {
 
     constructor(props) {
         super(props);
+        this.inputMargin = 60;
+
         this.state = {
             chatInput: '',
             showSendButton: false,
             sendDisabled: true,
-            inputMargin: 60,
+            inputMargin: this.inputMargin,
             isFlyoutOpen: false
         };
 
@@ -24,7 +26,7 @@ class ChatInput extends React.Component {
     submitHandler(event) {
         event.preventDefault();
         if(this.state.chatInput != '') {
-            this.setState({chatInput: '', sendDisabled: true});
+            this.setState({chatInput: '', sendDisabled: true, showSendButton: false, inputMargin: this.inputMargin});
             this.props.onSend({
                 messageType: Constants.request.RequestType.TEXT_MESSAGE,
                 messageData: [{text: this.state.chatInput}]
@@ -52,7 +54,10 @@ class ChatInput extends React.Component {
     }
 
     inputBlur() {
-        this.setState({inputMargin: 60, showSendButton: false});
+        let showSendButton = this.state.chatInput.length > 0;
+        let inputMargin = showSendButton ? 0 : this.inputMargin;
+        // Do not hide send button if user has typed something
+        this.setState({inputMargin: inputMargin, showSendButton: showSendButton});
     }
 
     textChangeHandler(event) {

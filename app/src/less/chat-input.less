@@ -27,12 +27,13 @@
 .more-button-container {
   position: absolute;
   bottom: 5px;
+  pointer-events: none;
 
   &.active {
     z-index: 101;
     .button {
         opacity: 1;
-        pointer-events: all;
+        pointer-events: auto;
     }
 
     .more-button {
@@ -46,6 +47,7 @@
   .more-button {
     background: @brand-primary !important;
     margin-top: 20px;
+    pointer-events: auto;
     img {
         transition: 0.25s;
         -webkit-transition: 0.25s;
