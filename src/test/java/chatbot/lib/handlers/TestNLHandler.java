@@ -5,8 +5,12 @@ import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.TestResponseBase;
 import chatbot.rivescript.RiveScriptBot;
+import com.cloudant.client.api.ClientBuilder;
+import com.cloudant.client.api.CloudantClient;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -16,8 +20,18 @@ import static org.junit.Assert.assertNotNull;
  * Created by ramgathreya on 6/13/17.
  */
 public class TestNLHandler {
+    CloudantClient cloudantClient;
+
+    // These need to be standardized based on properties file
+    public TestNLHandler() throws MalformedURLException {
+        cloudantClient = ClientBuilder.url(new URL("http://localhost:9081"))
+                .username("ramgathreya")
+                .password("password")
+                .build();
+    }
+
     private void checkLiteral(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper();
+        Application.Helper helper = new Application.Helper(cloudantClient, "", "");
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
 
@@ -27,7 +41,7 @@ public class TestNLHandler {
     }
 
     private void checkEntity(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper();
+        Application.Helper helper = new Application.Helper(cloudantClient, "", "");
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
         assertEquals(response.size(), 2);

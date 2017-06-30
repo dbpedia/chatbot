@@ -6,9 +6,11 @@
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
      
-     couchbase.cluster.host = <host>
-     couchbase.cluster.password = <bucket-password>
-     couchbase.cluster.bucket = <bucket-name>
+     cloudnaut.url = <couchdb-url>
+     cloudnaut.username = <couchdb-username>
+     cloudnaut.password = <couchdb-password>
+     cloudnaut.chatDB = <couchdb-chatdb-name>
+     cloudnaut.feedbackDB = <couchdb-feedback-name>
      
      logging.level.com.github.messenger4j=<log-level>
 
@@ -21,4 +23,4 @@
      java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar // $PORT is the port number you want the server to run in for example 8080         
  
 ## Development
-     node/node node_modules/.bin/webpack --watch     
+     node/node node_modules/.bin/webpack --watch

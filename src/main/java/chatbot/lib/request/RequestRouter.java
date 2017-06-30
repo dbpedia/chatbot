@@ -1,16 +1,11 @@
 package chatbot.lib.request;
 
 import chatbot.Application;
-import chatbot.couchbase.Chat;
-import chatbot.couchbase.ChatRepository;
-import chatbot.lib.Utility;
+import chatbot.couchdb.Chat;
 import chatbot.lib.handlers.ParameterHandler;
-import chatbot.lib.response.Response;
 import chatbot.lib.handlers.TextHandler;
+import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseGenerator;
-import chatbot.lib.response.ResponseType;
-import chatbot.rivescript.RiveScriptBot;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
@@ -22,37 +17,37 @@ public class RequestRouter {
     private Request request;
     private String msgId;
     private Application.Helper helper;
+    private long timestamp;
 
     public RequestRouter(Request request, Application.Helper helper) {
         this.request = request;
         this.helper = helper;
-        msgId = request.getUserId() + Chat.ID_SEPARATOR + new Date().getTime();
+        timestamp = new Date().getTime();
+        msgId = request.getUserId() + Chat.ID_SEPARATOR + timestamp;
     }
 
     private void addRequestChatHistory() {
-//        chatRepository.save(new Chat()
-//                .setId(msgId + Chat.ID_SEPARATOR + "request")
-//                .setUserId(request.getUserId())
-//                .setRequest(request)
-//                .setDate(new Date())
-//        );
+        helper.getChatDB().save(new Chat()
+                .setId(msgId + Chat.ID_SEPARATOR + "request")
+                .setUserId(request.getUserId())
+                .setRequest(request)
+                .setTimestamp(timestamp)
+        );
     }
 
     private void addResponseChatHistory(List<Response> responseList) {
-//        Date date = new Date();
-//        String userId = request.getUserId();
-//        chatRepository.save(new Chat()
-//                .setId(msgId + Chat.ID_SEPARATOR + "response")
-//                .setUserId(userId)
-//                .setFromBot(true)
-//                .setResponse(responseList)
-//                .setDate(date)
-//        );
+        helper.getChatDB().save(new Chat()
+                .setId(msgId + Chat.ID_SEPARATOR + "response")
+                .setUserId(request.getUserId())
+                .setFromBot(true)
+                .setResponse(responseList)
+                .setTimestamp(new Date().getTime())
+        );
     }
 
     public List<Response> routeRequest() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-//        addRequestChatHistory();
+        addRequestChatHistory();
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:
                 responseGenerator = new TextHandler(request, request.getText(), helper)
@@ -67,7 +62,7 @@ public class RequestRouter {
         responseGenerator.addFeedbackResponse(msgId);
 
         List<Response> response = responseGenerator.getResponse();
-//        addResponseChatHistory(response);
+        addResponseChatHistory(response);
         return response;
     }
 }

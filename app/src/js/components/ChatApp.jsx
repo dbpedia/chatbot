@@ -69,7 +69,6 @@ class ChatApp extends React.Component {
         for (let index in messages) {
             setTimeout(() => {
                 this.addMessage({
-                    username: 'bot',
                     fromBot: true,
                     message: messages[index]
                 });
@@ -142,7 +141,8 @@ class ChatApp extends React.Component {
                     hideOverlay={this.hideOverlay} />
                 <Feedback
                     isOpen={this.state.showFeedback}
-                    hide={this.hideFeedbackModal} />
+                    hide={this.hideFeedbackModal}
+                    userId={this.getUuid()} />
                 {this.state.overlay && (
                     <div className="overlay"></div>
                 )}
@@ -152,7 +152,7 @@ class ChatApp extends React.Component {
 }
 
 ChatApp.defaultProps = {
-    'username': 'anonymous'
+
 };
 
 export default ChatApp;

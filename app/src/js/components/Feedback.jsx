@@ -37,8 +37,26 @@ class Feedback extends React.Component {
             $.snackbar({content: 'Please provide more information'});
         }
         else {
-            $.snackbar({content: 'Submitting', timeout: 2000});
-            this.setState({title: '', description: ''});
+            var submit_snackbar = $.snackbar({content: 'Submitting...', timeout: 2000});
+            $.ajax({
+                type: 'POST',
+                url: '/feedback',
+                headers: {
+                    'Accept': 'application/json; charset=utf-8',
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                dataType: 'text',
+                data: JSON.stringify({title: this.state.title, description: this.state.description, userId: this.props.userId}),
+                success: (response) => {
+                    this.setState({title: '', description: ''});
+                    submit_snackbar.snackbar('hide');
+                    $.snackbar({content: 'Feedback Submitted Successfully', timeout: 5000});
+                },
+                error: () => {
+                    submit_snackbar.snackbar('hide');
+                    $.snackbar({content: 'Error! Feedback could not be submitted. Please try again.', timeout: 5000});
+                }
+            });
             this.props.hide();
         }
     }

@@ -1,10 +1,7 @@
-package chatbot.couchbase;
+package chatbot.couchdb;
 
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
-import com.couchbase.client.java.repository.annotation.Field;
-import com.couchbase.client.java.repository.annotation.Id;
-import org.springframework.data.couchbase.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
@@ -12,27 +9,16 @@ import java.util.List;
 /**
  * Created by ramgathreya on 6/23/17.
  */
-@Document(expiry=0)
+//@Document(expiry=0)
 public class Chat {
     public static final String ID_SEPARATOR = "_";
 
-    @Id
     private String id;
-
-    @Field
     private String userId;
-
-    @Field
     private boolean fromBot = false;
-
-    @Field
     private Request request;
-
-    @Field
     private List<Response> response;
-
-    @Field
-    private Date date;
+    private long timestamp;
 
     public String getUserId() {
         return userId;
@@ -52,12 +38,12 @@ public class Chat {
         return this;
     }
 
-    public Date getDate() {
-        return date;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public Chat setDate(Date date) {
-        this.date = date;
+    public Chat setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
         return this;
     }
 

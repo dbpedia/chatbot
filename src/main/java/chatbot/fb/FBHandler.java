@@ -1,18 +1,15 @@
 package chatbot.fb;
 
 import chatbot.Application;
-import chatbot.couchbase.ChatRepository;
 import chatbot.fb.response.ResponseHandler;
 import chatbot.lib.Platform;
 import chatbot.lib.request.*;
 import chatbot.lib.response.Response;
-import chatbot.rivescript.RiveScriptBot;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.exceptions.MessengerApiException;
 import com.github.messenger4j.exceptions.MessengerIOException;
 import com.github.messenger4j.exceptions.MessengerVerificationException;
 import com.github.messenger4j.receive.MessengerReceiveClient;
-import com.github.messenger4j.receive.events.QuickReplyMessageEvent;
 import com.github.messenger4j.receive.events.TextMessageEvent;
 import com.github.messenger4j.receive.handlers.PostbackEventHandler;
 import com.github.messenger4j.receive.handlers.QuickReplyMessageEventHandler;

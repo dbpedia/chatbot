@@ -15,7 +15,6 @@ class Messages extends React.Component {
             return (
                 <Message
                     key={i}
-                    username={message.username}
                     message={message.message}
                     fromBot={message.fromBot}
                     onSend={this.props.onSend} />

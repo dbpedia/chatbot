@@ -1,23 +1,21 @@
 package chatbot;
 
-import chatbot.couchbase.ChatRepository;
 import chatbot.rivescript.RiveScriptBot;
+import com.cloudant.client.api.CloudantClient;
+import com.cloudant.client.api.Database;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.send.MessengerSendClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.couchbase.config.AbstractCouchbaseConfiguration;
-import org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by ramgathreya on 5/10/17.
@@ -28,46 +26,10 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     @Bean
-    public RiveScriptBot initializeRiveScriptBot() {
-        return new RiveScriptBot();
-    }
-
-    @Bean
     public MessengerSendClient initializeFBMessengerSendClient(@Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
         logger.info("Initializing MessengerSendClient - pageAccessToken: {}", pageAccessToken);
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
     }
-
-    @Bean
-    public Helper initializeHelper() {
-        return new Helper();
-    }
-
-//    @Configuration
-//    @EnableCouchbaseRepositories
-//    static class CouchbaseConfiguration extends AbstractCouchbaseConfiguration {
-//        @Value("${couchbase.cluster.bucket}")
-//        private String bucket;
-//        @Value("${couchbase.cluster.password}")
-//        private String password;
-//        @Value("${couchbase.cluster.host}")
-//        private String host;
-//
-//        @Override
-//        protected List<String> getBootstrapHosts() {
-//            return Arrays.asList(host);
-//        }
-//
-//        @Override
-//        protected String getBucketName() {
-//            return bucket;
-//        }
-//
-//        @Override
-//        protected String getBucketPassword() {
-//            return password;
-//        }
-//    }
 
     @Configuration
     static class AssetsConfiguration extends WebMvcConfigurerAdapter {
@@ -80,21 +42,28 @@ public class Application {
         }
     }
 
+    @Component
     public static class Helper {
         private RiveScriptBot riveScriptBot;
-        private ChatRepository chatRepository;
+        private Database chatDB, feedbackDB;
 
-        public Helper() {
+        @Autowired
+        public Helper(final CloudantClient cloudantClient, @Value("${cloudant.chatDB}") String chatDBName, @Value("${cloudant.feedbackDB}") String feedbackDBName) {
             riveScriptBot = new RiveScriptBot();
-            chatRepository = new ChatRepository();
+            chatDB = cloudantClient.database(chatDBName, true);
+            feedbackDB = cloudantClient.database(feedbackDBName, true);
         }
 
         public RiveScriptBot getRiveScriptBot() {
             return riveScriptBot;
         }
 
-        public ChatRepository getChatRepository() {
-            return chatRepository;
+        public Database getChatDB() {
+            return chatDB;
+        }
+
+        public Database getFeedbackDB() {
+            return feedbackDB;
         }
     }
 

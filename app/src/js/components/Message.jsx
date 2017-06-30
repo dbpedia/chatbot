@@ -161,7 +161,6 @@ class Message extends React.Component {
 
 Message.defaultProps = {
     message: [], // {messageType: string, messageData: object}
-    username: '',
     fromBot: false
 };
 
