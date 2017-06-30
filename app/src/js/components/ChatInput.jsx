@@ -71,6 +71,9 @@ class ChatInput extends React.Component {
             case 'feedback':
                 this.props.showFeedback();
             break;
+            case 'start':
+                this.props.showStart();
+            break;
         }
         this.toggleOverlay(false);
     }
@@ -87,6 +90,12 @@ class ChatInput extends React.Component {
                     <div className="form-group">
                         {this.state.inputMargin > 0 && (
                             <nav className={flyoutClass}>
+                                <a onClick={(event) => this.onFlyoutOptionClick(event, 'start')} className="button">
+                                    <div className={`${moreButtonOptionClass} btn-info`}>
+                                        <img src="/images/icon-restart-32.png" />
+                                    </div>
+                                    <span>Start Over</span>
+                                </a>
                                 <a onClick={(event) => this.onFlyoutOptionClick(event, 'feedback')} className="button">
                                     <div className={`${moreButtonOptionClass} btn-danger`}>
                                         <img src="/images/icon-feedback-32.png" />

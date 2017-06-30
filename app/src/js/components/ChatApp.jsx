@@ -13,6 +13,7 @@ class ChatApp extends React.Component {
         this.uuid = this.getUuid();
 
         this.sendHandler = this.sendHandler.bind(this);
+        this.showStart = this.showStart.bind(this);
         this.showFeedbackModal = this.showFeedbackModal.bind(this);
         this.hideFeedbackModal = this.hideFeedbackModal.bind(this);
         this.showOverlay = this.showOverlay.bind(this);
@@ -76,14 +77,18 @@ class ChatApp extends React.Component {
         }
     }
 
+    showStart() {
+        this.makeRequest({
+            messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
+            messageData: [{
+                payload: Constants.request.ParameterType.START
+            }]
+        });
+    }
+
     componentDidMount() {
         setTimeout(() => {
-            this.makeRequest({
-                messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
-                messageData: [{
-                    payload: Constants.request.ParameterType.START
-                }]
-            });
+            this.showStart();
         }, 500);
     }
 
@@ -136,6 +141,7 @@ class ChatApp extends React.Component {
                     loading={this.state.loading} />
                 <ChatInput
                     onSend={this.sendHandler}
+                    showStart={this.showStart}
                     showFeedback={this.showFeedbackModal}
                     showOverlay={this.showOverlay}
                     hideOverlay={this.hideOverlay} />

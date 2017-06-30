@@ -6,11 +6,11 @@
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
      
-     cloudnaut.url = <couchdb-url>
-     cloudnaut.username = <couchdb-username>
-     cloudnaut.password = <couchdb-password>
-     cloudnaut.chatDB = <couchdb-chatdb-name>
-     cloudnaut.feedbackDB = <couchdb-feedback-name>
+     cloudant.url = <couchdb-url>
+     cloudant.username = <couchdb-username>
+     cloudant.password = <couchdb-password>
+     cloudant.chatDB = <couchdb-chatdb-name>
+     cloudant.feedbackDB = <couchdb-feedback-name>
      
      logging.level.com.github.messenger4j=<log-level>
 
