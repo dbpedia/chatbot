@@ -39,9 +39,10 @@ public class Application {
     }
 
     @Bean
-    public ChatRepository initializeChatRepository() {
-        return new ChatRepository();
+    public Helper initializeHelper() {
+        return new Helper();
     }
+
 //    @Configuration
 //    @EnableCouchbaseRepositories
 //    static class CouchbaseConfiguration extends AbstractCouchbaseConfiguration {
@@ -76,6 +77,24 @@ public class Application {
             registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/");
             registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/");
             super.addResourceHandlers(registry);
+        }
+    }
+
+    public static class Helper {
+        private RiveScriptBot riveScriptBot;
+        private ChatRepository chatRepository;
+
+        public Helper() {
+            riveScriptBot = new RiveScriptBot();
+            chatRepository = new ChatRepository();
+        }
+
+        public RiveScriptBot getRiveScriptBot() {
+            return riveScriptBot;
+        }
+
+        public ChatRepository getChatRepository() {
+            return chatRepository;
         }
     }
 

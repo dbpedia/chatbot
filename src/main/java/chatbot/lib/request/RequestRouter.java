@@ -1,5 +1,6 @@
 package chatbot.lib.request;
 
+import chatbot.Application;
 import chatbot.couchbase.Chat;
 import chatbot.couchbase.ChatRepository;
 import chatbot.lib.Utility;
@@ -19,14 +20,12 @@ import java.util.List;
  */
 public class RequestRouter {
     private Request request;
-    private RiveScriptBot riveScriptBot;
-    private ChatRepository chatRepository;
     private String msgId;
+    private Application.Helper helper;
 
-    public RequestRouter(Request request, RiveScriptBot riveScriptBot, ChatRepository chatRepository) {
+    public RequestRouter(Request request, Application.Helper helper) {
         this.request = request;
-        this.riveScriptBot = riveScriptBot;
-        this.chatRepository = chatRepository;
+        this.helper = helper;
         msgId = request.getUserId() + Chat.ID_SEPARATOR + new Date().getTime();
     }
 
@@ -56,11 +55,11 @@ public class RequestRouter {
 //        addRequestChatHistory();
         switch(request.getMessageType()) {
             case RequestType.TEXT_MESSAGE:
-                responseGenerator = new TextHandler(request, request.getText(), riveScriptBot)
+                responseGenerator = new TextHandler(request, request.getText(), helper)
                     .handleTextMessage();
                 break;
             case RequestType.PARAMETER_MESSAGE:
-                responseGenerator = new ParameterHandler(request, request.getPayload(), riveScriptBot)
+                responseGenerator = new ParameterHandler(request, request.getPayload(), helper)
                     .handleParameterMessage();
                 break;
         }

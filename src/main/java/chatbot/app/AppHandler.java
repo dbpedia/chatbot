@@ -1,5 +1,6 @@
 package chatbot.app;
 
+import chatbot.Application;
 import chatbot.couchbase.Chat;
 import chatbot.couchbase.ChatRepository;
 import chatbot.lib.Platform;
@@ -23,19 +24,17 @@ import java.util.List;
 @RequestMapping("/webhook")
 public class AppHandler {
     private static final Logger logger = LoggerFactory.getLogger(AppHandler.class);
-    private final RiveScriptBot riveScriptBot;
-    private final ChatRepository chatRepository;
+    private final Application.Helper helper;
 
     @Autowired
-    AppHandler(final RiveScriptBot riveScriptBot, final ChatRepository chatRepository) {
-        this.riveScriptBot = riveScriptBot;
-        this.chatRepository = chatRepository;
+    AppHandler(final Application.Helper helper) {
+        this.helper = helper;
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     List<Response> handleRequest(@RequestBody final Request request) throws Exception {
         request.setPlatform(Platform.WEB);
-        return (List<Response>) new RequestRouter(request, riveScriptBot, chatRepository).routeRequest();
+        return (List<Response>) new RequestRouter(request, helper).routeRequest();
     }
 }

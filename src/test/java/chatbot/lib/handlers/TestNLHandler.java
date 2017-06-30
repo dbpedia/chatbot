@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.Application;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.TestResponseBase;
@@ -16,8 +17,8 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestNLHandler {
     private void checkLiteral(String userId, String question) throws Exception {
-        RiveScriptBot riveScriptBot = new RiveScriptBot();
-        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
+        Application.Helper helper = new Application.Helper();
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
 
         assertNotNull(response);
@@ -26,8 +27,8 @@ public class TestNLHandler {
     }
 
     private void checkEntity(String userId, String question) throws Exception {
-        RiveScriptBot riveScriptBot = new RiveScriptBot();
-        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, riveScriptBot);
+        Application.Helper helper = new Application.Helper();
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
         assertEquals(response.size(), 2);
         TestResponseBase.checkTextMessage(response.get(0));

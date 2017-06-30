@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.Application;
 import chatbot.lib.Utility;
 import chatbot.lib.api.GenesisService;
 import chatbot.lib.api.SPARQL;
@@ -23,12 +24,12 @@ public class ParameterHandler {
 
     private Request request;
     private String[] payload;
-    private RiveScriptBot riveScriptBot;
-
-    public ParameterHandler(Request request, String payload, RiveScriptBot riveScriptBot) {
+    private Application.Helper helper;
+    
+    public ParameterHandler(Request request, String payload, Application.Helper helper) {
         this.request = request;
         this.payload = Utility.split(payload);
-        this.riveScriptBot = riveScriptBot;
+        this.helper = helper;
     }
 
     private ResponseGenerator getSimilarOrRelatedEntities(ResponseGenerator responseGenerator, String scenario, String uri) {
@@ -45,7 +46,7 @@ public class ParameterHandler {
         }
         // Set Fallback when GENESIS returns null or invalid response
         if(uris.isEmpty() || uris == " " || uris == null) {
-            return responseGenerator.setFallbackResponse(request, riveScriptBot);
+            return responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
         }
         return responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
     }
@@ -54,10 +55,10 @@ public class ParameterHandler {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case ParameterType.START:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
                 responseGenerator.setShowFeedback(false);
             case ParameterType.HELP:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
                 break;
             case ParameterType.CHECK_SERVICE:
@@ -67,7 +68,7 @@ public class ParameterHandler {
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getAboutDBpediaTemplate());
                 break;
             case ParameterType.DBPEDIA_CONTRIBUTE:
-                responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(this.request.getUserId(), RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.DBPEDIA_CONTRIBUTE_TEXT)[0]));
                 responseGenerator.addButtonTextResponse(ResponseTemplates.getContributeTemplate());
                 break;
             case ParameterType.LOAD_MORE:
@@ -76,7 +77,7 @@ public class ParameterHandler {
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
-                    responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
+                    responseGenerator.addButtonTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>(){{
                         add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                     }}));
                 }
@@ -87,7 +88,7 @@ public class ParameterHandler {
                 break;
             case ParameterType.LEARN_MORE:
                 responseGenerator.addSmartReplyResponse(new ResponseData()
-                        .setText(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + payload[2])[0])
+                        .setText(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + payload[2])[0])
                         .addSmartReply(new ResponseData.SmartReply("Similar", ParameterType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + payload[1]))
                         .addSmartReply(new ResponseData.SmartReply("Related", ParameterType.LOAD_RELATED + Utility.STRING_SEPARATOR + payload[1]))
                 );

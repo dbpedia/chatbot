@@ -1,5 +1,6 @@
 package chatbot.lib.handlers;
 
+import chatbot.Application;
 import chatbot.lib.Utility;
 import chatbot.lib.api.QAService;
 import chatbot.lib.api.SPARQL;
@@ -28,15 +29,15 @@ public class NLHandler {
     private SPARQL sparql;
 
     private Request request;
-    private RiveScriptBot riveScriptBot;
+    private Application.Helper helper;
 
-    public NLHandler(Request request, String question, RiveScriptBot riveScriptBot) {
+    public NLHandler(Request request, String question, Application.Helper helper) {
         this.question = question;
         this.qaService = new QAService();
         this.sparql = new SPARQL();
 
         this.request = request;
-        this.riveScriptBot = riveScriptBot;
+        this.helper = helper;
     }
 
     public ResponseGenerator answer() throws Exception {
@@ -55,27 +56,27 @@ public class NLHandler {
                     SPARQL.ResponseInfo responseInfo = processedResponse.getResponseInfo();
                     switch (responseInfo.getQueryResultType()) {
                         case SPARQL.ResponseInfo.DISAMBIGUATION_PAGE:
-                            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
+                            responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.DISAMBIGUATION_TEXT)[0]));
                             break;
                         default:
-                            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
+                            responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.NL_ANSWER_TEXT)[0]));
                     }
                     responseGenerator.addCarouselResponse(responseDatas.toArray(new ResponseData[responseDatas.size()]));
 
                     // Pagination
                     if (responseInfo.hasMorePages()) {
                         responseInfo.next();
-                        responseGenerator.addButtonTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>() {{
+                        responseGenerator.addButtonTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>() {{
                             add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                         }}));
                     }
                     break;
                 default:
-                    responseGenerator.setFallbackResponse(request, riveScriptBot);
+                    responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
             }
         }
         else {
-            responseGenerator.addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0])).setShowFeedback(false);
+            responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0])).setShowFeedback(false);
         }
         return responseGenerator;
     }

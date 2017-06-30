@@ -1,5 +1,6 @@
 package chatbot.lib.handlers.dbpedia;
 
+import chatbot.Application;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
@@ -23,7 +24,7 @@ public class LanguageHandler {
 
     private Request request;
     private String language;
-    private RiveScriptBot riveScriptBot;
+    private Application.Helper helper;
 
     // At the moment DBpedia has around 15 language chapters, that are concerned with improving the extraction of data from language-specific Wikipedia versions. For example you can look at the Spanish DBpedia or the Dutch DBpedia.
 
@@ -49,10 +50,10 @@ public class LanguageHandler {
         put("ukrainian", new String[]{"DBpedia Ukrainian", "http://uk.dbpedia.org", "http://uk.dbpedia.org/sparql"});
     }};
 
-    public LanguageHandler(Request request, String language, RiveScriptBot riveScriptBot) {
+    public LanguageHandler(Request request, String language, Application.Helper helper) {
         this.request = request;
         this.language = language;
-        this.riveScriptBot = riveScriptBot;
+        this.helper = helper;
     }
 
     public ResponseGenerator handleLanguageAbout() {
@@ -61,7 +62,7 @@ public class LanguageHandler {
         if(!language.equals("")) {
             String[] lang = LANGUAGES.get(language);
             responseGenerator.addButtonTextResponse(new ResponseData(
-                riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DBPEDIA_LANGUAGE_TEXT + " " + lang[0])[0],
+                helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.DBPEDIA_LANGUAGE_TEXT + " " + lang[0])[0],
                 new ArrayList<ResponseData.Button>(){{
                     add(new ResponseData.Button("Official Website", ResponseType.BUTTON_LINK, lang[1]));
                     add(new ResponseData.Button("SPARQL Endpoint", ResponseType.BUTTON_LINK, lang[2]));

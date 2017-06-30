@@ -1,5 +1,6 @@
 package chatbot.fb;
 
+import chatbot.Application;
 import chatbot.couchbase.ChatRepository;
 import chatbot.fb.response.ResponseHandler;
 import chatbot.lib.Platform;
@@ -46,8 +47,7 @@ public class FBHandler {
     private static final Logger logger = LoggerFactory.getLogger(FBHandler.class);
     private final MessengerReceiveClient receiveClient;
     private final MessengerSendClient sendClient;
-    private final RiveScriptBot riveScriptBot;
-    private final ChatRepository chatRepository;
+    private final Application.Helper helper;
 
     private final String appSecret;
     private final String verifyToken;
@@ -61,8 +61,7 @@ public class FBHandler {
               @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
               @Value("${chatbot.baseUrl}") final String baseUrl,
               final MessengerSendClient sendClient,
-              final RiveScriptBot riveScriptBot,
-              final ChatRepository chatRepository) throws MessengerApiException, MessengerIOException, MalformedURLException {
+              final Application.Helper helper) throws MessengerApiException, MessengerIOException, MalformedURLException {
         logger.debug("App Secret is " + appSecret);
         logger.debug("Verification Token is " + verifyToken);
 
@@ -78,8 +77,7 @@ public class FBHandler {
                 .build();
 
         this.sendClient = sendClient;
-        this.riveScriptBot = riveScriptBot;
-        this.chatRepository = chatRepository;
+        this.helper = helper;
 
         MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
 
@@ -139,7 +137,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setPayload(payload))
                         ));
-                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest();
+                List<Response> responseList = new RequestRouter(request, helper).routeRequest();
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
             } catch (MessengerApiException e) {
                 e.printStackTrace();
@@ -164,7 +162,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setPayload(payload))
                         ));
-                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest();
+                List<Response> responseList = new RequestRouter(request, helper).routeRequest();
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
 
                 sendTypingOff(senderId);
@@ -197,7 +195,7 @@ public class FBHandler {
                         .setMessageData(new ArrayList<>(
                                 Arrays.asList(new MessageData().setText(messageText))
                         ));
-                List<Response> responseList = new RequestRouter(request, riveScriptBot, chatRepository).routeRequest(); // Get Generic Response List
+                List<Response> responseList = new RequestRouter(request, helper).routeRequest(); // Get Generic Response List
                 new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse(); // Translate for FB
 
                 sendTypingOff(senderId);
