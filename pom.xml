@@ -29,10 +29,10 @@
             <name>University Leipzig, AKSW Maven2 Repository</name>
             <url>http://maven.aksw.org/archiva/repository/snapshots</url>
         </repository>
-        <!--<repository>-->
-            <!--<id>local repository</id>-->
-            <!--<url>file://${basedir}/repo</url>-->
-        <!--</repository>-->
+        <repository>
+            <id>local repository</id>
+            <url>file:${project.basedir}/repo</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -87,8 +87,6 @@
         <dependency>
             <groupId>com.wolfram</groupId>
             <artifactId>alpha</artifactId>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/repo/WolframAlpha-1.1.jar</systemPath>
             <version>1.1</version>
         </dependency>
 
