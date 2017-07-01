@@ -6,3 +6,11 @@
 - Hello there
 - Hi, how may I help you?
 - Hello, how may I help you?
+
+// Goodbye
++ (goodbye|good bye) [*]
+- Bye
+
+// Thanks
++ (thanks|thank you) [*]
+- You are welcome

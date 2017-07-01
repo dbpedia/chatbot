@@ -29,6 +29,10 @@
             <name>University Leipzig, AKSW Maven2 Repository</name>
             <url>http://maven.aksw.org/archiva/repository/snapshots</url>
         </repository>
+        <repository>
+            <id>local repository</id>
+            <url>file://${project.basedir}/repo</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,6 +75,7 @@
             <artifactId>cloudant-spring-boot-starter</artifactId>
             <version>0.9.5</version>
         </dependency>
+
 
         <!-- Testing -->
         <dependency>

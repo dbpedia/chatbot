@@ -10,6 +10,7 @@ import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
+import codeanticode.eliza.ElizaMain;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -56,7 +57,14 @@ public class TextHandler {
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         textMessage = rootNode.get("query").getTextValue(); // Use processed text message
-                        responseGenerator = new NLHandler(request, textMessage, helper).answer();
+
+                        // Eliza
+                        if(textMessage.endsWith("!") || textMessage.endsWith(".")) {
+                            responseGenerator.addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
+                        }
+                        else {
+                            responseGenerator = new NLHandler(request, textMessage, helper).answer();
+                        }
                         break;
                 }
             }

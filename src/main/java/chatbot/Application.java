@@ -1,6 +1,7 @@
 package chatbot;
 
 import chatbot.rivescript.RiveScriptBot;
+import codeanticode.eliza.ElizaMain;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.github.messenger4j.MessengerPlatform;
@@ -46,12 +47,15 @@ public class Application {
     public static class Helper {
         private RiveScriptBot riveScriptBot;
         private Database chatDB, feedbackDB;
+        private ElizaMain eliza;
 
         @Autowired
         public Helper(final CloudantClient cloudantClient, @Value("${cloudant.chatDB}") String chatDBName, @Value("${cloudant.feedbackDB}") String feedbackDBName) {
             riveScriptBot = new RiveScriptBot();
             chatDB = cloudantClient.database(chatDBName, true);
             feedbackDB = cloudantClient.database(feedbackDBName, true);
+            eliza = new ElizaMain();
+            eliza.readScript(true, "src/main/resources/eliza/script");
         }
 
         public RiveScriptBot getRiveScriptBot() {
@@ -64,6 +68,10 @@ public class Application {
 
         public Database getFeedbackDB() {
             return feedbackDB;
+        }
+
+        public ElizaMain getEliza() {
+            return eliza;
         }
     }
 

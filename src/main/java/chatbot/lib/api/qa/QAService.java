@@ -1,4 +1,4 @@
-package chatbot.lib.api;
+package chatbot.lib.api.qa;
 
 import chatbot.lib.Constants;
 import chatbot.lib.Utility;
