@@ -64,7 +64,6 @@ public class Application {
             eliza = new ElizaMain();
             eliza.readScript(true, "src/main/resources/eliza/script");
             this.wolframRepository = wolframRepository;
-            wolframRepository.getAnswer("asdfafdsaf");
         }
 
         public RiveScriptBot getRiveScriptBot() {

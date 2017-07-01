@@ -6,9 +6,6 @@ import com.wolfram.alpha.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by ramgathreya on 7/1/17.
  */
@@ -16,7 +13,7 @@ public class WolframModel {
     private static final Logger logger = LoggerFactory.getLogger(WolframModel.class);
 
     private String question;
-    private List<QAService.Data> answer = null;
+    private QAService.Data result = new QAService.Data();
 
     public String getQuestion() {
         return question;
@@ -27,12 +24,12 @@ public class WolframModel {
         return this;
     }
 
-    public List<QAService.Data> getAnswer() {
-        return answer;
+    public QAService.Data getResult() {
+        return result;
     }
 
-    public WolframModel setAnswer(List<QAService.Data> answer) {
-        this.answer = answer;
+    public WolframModel setResult(QAService.Data result) {
+        this.result = result;
         return this;
     }
 
@@ -87,21 +84,16 @@ public class WolframModel {
 
     public WolframModel getAnswer(String apiKey) {
         String wolframAnswer = queryWolframAlpha(apiKey);
-        System.out.println("RESULT COULD BE: " + wolframAnswer);
-
         if (wolframAnswer != null) {
-            answer = new ArrayList();
-            // Try to Resolve to DBpedia using Spotlight
             String uri = new SpotlightService().search(wolframAnswer);
             // If URI found
             if (uri != null) {
-//                answer.add(new QAService.Data());
+                result.addURI(uri);
             }
             else {
-
+                result.addLiteral(wolframAnswer);
             }
         }
-
         return this;
     }
 }

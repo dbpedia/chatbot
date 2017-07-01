@@ -63,7 +63,7 @@ public class QANARY {
     }
 
     // Calls QANARY Service then returns resulting data as a list of Data Objects
-    public List<QAService.Data> search(String question) throws Exception {
+    public QAService.Data search(String question) throws Exception {
         String response = makeRequest(question);
         if(response != null) {
             ObjectMapper mapper = new ObjectMapper();
@@ -72,19 +72,27 @@ public class QANARY {
 
             if (answers != null) {
                 JsonNode bindings = answers.get("results").get("bindings");
-                List<QAService.Data> data = new ArrayList<>();
+                QAService.Data data = new QAService.Data();
 
                 for(JsonNode binding : bindings) {
                     Iterator<Map.Entry<String, JsonNode>> nodes = binding.getFields();
                     while (nodes.hasNext()) {
                         Map.Entry<String, JsonNode> entry = nodes.next();
                         JsonNode value = entry.getValue();
-                        data.add(new QAService.Data(value.get("type").getTextValue(), value.get("value").getTextValue()));
+                        switch(value.get("type").getTextValue()) {
+                            case "uri":
+                                data.addURI(value.get("value").getTextValue());
+                                break;
+                            case "typed-literal":
+                                data.addLiteral(value.get("value").getTextValue());
+                                break;
+                        }
+//                        data.add(new QAService.Data(value.get("type").getTextValue(), value.get("value").getTextValue()));
                     }
                 }
-                if(data.size() > ResponseData.MAX_DATA_SIZE) {
-                    data = data.subList(0, ResponseData.MAX_DATA_SIZE);
-                }
+//                if(data.size() > ResponseData.MAX_DATA_SIZE) {
+//                    data = data.subList(0, ResponseData.MAX_DATA_SIZE);
+//                }
                 return data;
             }
         }

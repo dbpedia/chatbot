@@ -19,10 +19,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ramgathreya on 6/2/17.
@@ -39,17 +36,13 @@ public class QAService {
     }
 
     // Calls QA Service then returns resulting data as a list of Data Objects. The Data class is defined below as an inner class to be used here locally
-    public List<QAService.Data> search(String question) throws Exception {
-        List<QAService.Data> datas = qanary.search(question);
-        return datas;
+    public Data search(String question) throws Exception {
+        return qanary.search(question).addData(wolframAlpha.search(question));
     }
 
     public static class Data {
-        public static final String URI = "uri";
-        public static final String TYPED_LITERAL = "typed-literal";
-
-        private String type;
-        private String value;
+        private HashSet<String> uris = new HashSet<>();
+        private HashSet<String> literals = new HashSet<>();
 
         private String processValue(String value) {
             if (Utility.isInteger(value)) {
@@ -58,27 +51,28 @@ public class QAService {
             return value;
         }
 
-        public String getType() {
-            return type;
-        }
-
-        public Data setType(String type) {
-            this.type = type;
+        public Data addURI(String uri) {
+            this.uris.add(uri);
             return this;
         }
 
-        public String getValue() {
-            return value;
-        }
-
-        public Data setValue(String value) {
-            this.value = processValue(value);
+        public Data addLiteral(String literal) {
+            this.literals.add(processValue(literal));
             return this;
         }
 
-        public Data(String type, String value) {
-            this.type = type;
-            this.value = processValue(value);
+        public Data addData(Data data) {
+            uris.addAll(data.getUris());
+            literals.addAll(data.getLiterals());
+            return this;
+        }
+
+        public HashSet<String> getUris() {
+            return uris;
+        }
+
+        public HashSet<String> getLiterals() {
+            return literals;
         }
     }
 }

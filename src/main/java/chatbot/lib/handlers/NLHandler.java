@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ramgathreya on 6/2/17.
@@ -40,7 +42,7 @@ public class NLHandler {
 
     public ResponseGenerator answer() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        List<QAService.Data> data = qaService.search(question);
+        QAService.Data data = qaService.search(question);
         SPARQL.ProcessedResponse processedResponse = processResponseData(data);
         List<ResponseData> responseDatas = processedResponse.getResponseData();
 
@@ -79,40 +81,80 @@ public class NLHandler {
         return responseGenerator;
     }
 
-    private SPARQL.ProcessedResponse processResponseData(List<QAService.Data> data) {
+    private SPARQL.ProcessedResponse processResponseData(QAService.Data data) {
         SPARQL.ProcessedResponse processedResponse = new SPARQL.ProcessedResponse();
-        if(data != null && data.size() > 0) {
-            String uri;
+        if(data != null) {
             int count;
-            for(QAService.Data item : data) {
-                switch(item.getType()) {
-                    case QAService.Data.TYPED_LITERAL:
-                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_TEXT);
-                        processedResponse.setResponseData(new ArrayList<ResponseData>() {{
-                            add(new ResponseData(item.getValue()));
-                        }});
-                        return processedResponse;
-                    case QAService.Data.URI:
-                        uri = item.getValue();
-                        count = sparql.isDisambiguationPage(uri);
-                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
 
-                        // Not a disambiguation page
-                        if(count == 0) {
-                            ResponseData _data = sparql.getEntityInformation(item.getValue());
-                            if (_data != null) {
-                                processedResponse.addResponseData(_data);
-                            }
-                        }
-                        // Disambiguation page
-                        else {
-                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
-                            processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
-                            return processedResponse;
-                        }
+            HashSet<String> literals = data.getLiterals();
+            HashSet<String> uris = data.getUris();
+
+            if(literals.size() > 0) {
+                String result = "";
+                for(String literal : literals) {
+                    result += literal + "\n";
+                }
+                final String finalResult = result.substring(0, result.length() - 1);
+                processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_TEXT);
+                processedResponse.setResponseData(new ArrayList<ResponseData>() {{
+                    add(new ResponseData(finalResult));
+                }});
+            }
+            else if(uris.size() > 0) {
+                for(String uri : uris) {
+                    // Restrict to MAX_DATA_SIZE Elements
+                    if(processedResponse.getResponseData().size() == ResponseData.MAX_DATA_SIZE) {
                         break;
+                    }
+
+                    count = sparql.isDisambiguationPage(uri);
+                    processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
+
+                    // Not a disambiguation page
+                    if(count == 0) {
+                        ResponseData _data = sparql.getEntityInformation(uri);
+                        if (_data != null) {
+                            processedResponse.addResponseData(_data);
+                        }
+                    }
+                    // Disambiguation page
+                    else {
+                        processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
+                        processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
+                        return processedResponse;
+                    }
                 }
             }
+
+//            for(QAService.Data item : data) {
+//                switch(item.getType()) {
+//                    case QAService.Data.TYPED_LITERAL:
+//                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_TEXT);
+//                        processedResponse.setResponseData(new ArrayList<ResponseData>() {{
+//                            add(new ResponseData(item.getValue()));
+//                        }});
+//                        return processedResponse;
+//                    case QAService.Data.URI:
+//                        uri = item.getValue();
+//                        count = sparql.isDisambiguationPage(uri);
+//                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
+//
+//                        // Not a disambiguation page
+//                        if(count == 0) {
+//                            ResponseData _data = sparql.getEntityInformation(item.getValue());
+//                            if (_data != null) {
+//                                processedResponse.addResponseData(_data);
+//                            }
+//                        }
+//                        // Disambiguation page
+//                        else {
+//                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
+//                            processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
+//                            return processedResponse;
+//                        }
+//                        break;
+//                }
+//            }
         }
         return processedResponse;
     }

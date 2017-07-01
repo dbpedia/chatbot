@@ -22,7 +22,6 @@ public class WolframRepository {
 
     @Cacheable(value="wolfram", key="#question")
     public WolframModel getAnswer(String question) {
-        logger.info("API KEY IS : " + apiKey);
         return new WolframModel(question).getAnswer(apiKey);
     }
 }

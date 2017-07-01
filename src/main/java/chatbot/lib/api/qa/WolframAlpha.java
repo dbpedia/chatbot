@@ -12,4 +12,8 @@ public class WolframAlpha {
         this.wolframRepository = wolframRepository;
     }
 
+    public QAService.Data search(String question) {
+        return wolframRepository.getAnswer(question).getResult();
+    }
+
 }
