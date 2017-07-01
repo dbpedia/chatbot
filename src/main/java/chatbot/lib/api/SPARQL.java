@@ -1,6 +1,7 @@
 package chatbot.lib.api;
 
 import chatbot.lib.Utility;
+import chatbot.lib.api.dbpedia.GenesisService;
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
@@ -205,11 +206,6 @@ public class SPARQL {
 
         public ResponseInfo getResponseInfo() {
             return responseInfo;
-        }
-
-        public ProcessedResponse setResponseInfo(ResponseInfo responseInfo) {
-            this.responseInfo = responseInfo;
-            return this;
         }
 
         public List<ResponseData> getResponseData() {

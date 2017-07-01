@@ -29,13 +29,14 @@
             <name>University Leipzig, AKSW Maven2 Repository</name>
             <url>http://maven.aksw.org/archiva/repository/snapshots</url>
         </repository>
-        <repository>
-            <id>local repository</id>
-            <url>file://${project.basedir}/repo</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>local repository</id>-->
+            <!--<url>file://${basedir}/repo</url>-->
+        <!--</repository>-->
     </repositories>
 
     <dependencies>
+        <!-- Spring Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -45,6 +46,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.github.messenger4j</groupId>
             <artifactId>messenger4j</artifactId>
@@ -70,12 +76,21 @@
             <artifactId>jena-arq</artifactId>
             <version>3.3.0</version>
         </dependency>
+
+        <!-- CouchDB -->
         <dependency>
             <groupId>com.clianz</groupId>
             <artifactId>cloudant-spring-boot-starter</artifactId>
             <version>0.9.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.wolfram</groupId>
+            <artifactId>alpha</artifactId>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/repo/WolframAlpha-1.1.jar</systemPath>
+            <version>1.1</version>
+        </dependency>
 
         <!-- Testing -->
         <dependency>

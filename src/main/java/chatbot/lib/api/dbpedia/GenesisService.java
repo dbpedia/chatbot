@@ -1,4 +1,4 @@
-package chatbot.lib.api;
+package chatbot.lib.api.dbpedia;
 
 import chatbot.lib.Constants;
 import chatbot.lib.response.ResponseData;
@@ -25,12 +25,12 @@ import java.util.List;
  */
 public class GenesisService {
     private static final Logger logger = LoggerFactory.getLogger(GenesisService.class);
-    private static final String GENESIS_URL = "http://genesis.aksw.org";
+    private static final String URL = "http://genesis.aksw.org";
     private HttpClient client;
 
     public GenesisService() {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(Constants.API_TIMEOUT).build();
-        this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+        client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
     private String makeRequest(String endpoint, String url, String requestType) {
@@ -82,14 +82,14 @@ public class GenesisService {
     }
 
     public String getSummary(String uri) {
-        return makeRequest(GENESIS_URL + "/api/summary", uri, "summary");
+        return makeRequest(URL + "/api/summary", uri, "summary");
     }
 
     public String getSimilarEntities(String uri) {
-         return makeRequest(GENESIS_URL + "/api/similar", uri, "similarEntities");
+         return makeRequest(URL + "/api/similar", uri, "similarEntities");
     }
 
     public String getRelatedEntities(String uri) {
-        return makeRequest(GENESIS_URL + "/api/related", uri, "relatedEntities");
+        return makeRequest(URL + "/api/related", uri, "relatedEntities");
     }
 }

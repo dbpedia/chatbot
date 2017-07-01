@@ -2,15 +2,13 @@ package chatbot.lib.handlers;
 
 import chatbot.Application;
 import chatbot.lib.Utility;
-import chatbot.lib.api.QAService;
+import chatbot.lib.api.qa.QAService;
 import chatbot.lib.api.SPARQL;
 import chatbot.lib.request.ParameterType;
 import chatbot.lib.request.Request;
-import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.lib.response.ResponseType;
-import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ public class NLHandler {
 
     public NLHandler(Request request, String question, Application.Helper helper) {
         this.question = question;
-        this.qaService = new QAService();
+        this.qaService = new QAService(helper.getWolframRepository());
         this.sparql = new SPARQL();
 
         this.request = request;

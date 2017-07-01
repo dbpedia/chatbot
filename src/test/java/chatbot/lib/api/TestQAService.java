@@ -1,5 +1,7 @@
 package chatbot.lib.api;
 
+import chatbot.cache.WolframRepository;
+import chatbot.lib.api.qa.QAService;
 import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
@@ -9,6 +11,7 @@ import static org.junit.Assert.assertNotNull;
 public class TestQAService {
     @Test
     public void checkService() throws Exception {
-        assertNotNull(new QAService().search("Barack Obama"));
+        // this needs to be refactored the wolfram repository part needs to be tested
+        assertNotNull(new QAService(new WolframRepository("")).search("Barack Obama"));
     }
 }

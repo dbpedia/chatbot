@@ -1,5 +1,6 @@
 package chatbot.lib.api.qa;
 
+import chatbot.cache.WolframRepository;
 import chatbot.lib.Constants;
 import chatbot.lib.Utility;
 import chatbot.lib.response.ResponseData;
@@ -28,66 +29,19 @@ import java.util.Map;
  */
 public class QAService {
     private static final Logger logger = LoggerFactory.getLogger(QAService.class);
-    private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core0,%20QueryExecuter/";
-    private HttpClient client;
 
-    public QAService() {
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(Constants.API_TIMEOUT).build();
-        this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-    }
+    private QANARY qanary;
+    private WolframAlpha wolframAlpha;
 
-    private String makeRequest(String question) {
-        try {
-            HttpPost httpPost = new HttpPost(URL);
-            List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("query", question));
-
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
-            httpPost.setEntity(entity);
-
-            HttpResponse response = client.execute(httpPost);
-
-            // Error Scenario
-            if(response.getStatusLine().getStatusCode() >= 400) {
-                logger.error("QANARY Server could not answer due to: " + response.getStatusLine());
-                return null;
-            }
-
-            return EntityUtils.toString(response.getEntity());
-        }
-        catch(Exception e) {
-            logger.error(e.getMessage());
-        }
-        return null;
+    public QAService(WolframRepository wolframRepository) {
+        qanary = new QANARY();
+        wolframAlpha = new WolframAlpha(wolframRepository);
     }
 
     // Calls QA Service then returns resulting data as a list of Data Objects. The Data class is defined below as an inner class to be used here locally
     public List<QAService.Data> search(String question) throws Exception {
-        String response = makeRequest(question);
-        if(response != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(response);
-            JsonNode answers = mapper.readTree(rootNode.findValue("questions").get(0).get("question").get("answers").getTextValue());
-
-            if (answers != null) {
-                JsonNode bindings = answers.get("results").get("bindings");
-                List<QAService.Data> data = new ArrayList<>();
-
-                for(JsonNode binding : bindings) {
-                    Iterator<Map.Entry<String, JsonNode>> nodes = binding.getFields();
-                    while (nodes.hasNext()) {
-                        Map.Entry<String, JsonNode> entry = nodes.next();
-                        JsonNode value = entry.getValue();
-                        data.add(new QAService.Data(value.get("type").getTextValue(), value.get("value").getTextValue()));
-                    }
-                }
-                if(data.size() > ResponseData.MAX_DATA_SIZE) {
-                    data = data.subList(0, ResponseData.MAX_DATA_SIZE);
-                }
-                return data;
-            }
-        }
-        return null;
+        List<QAService.Data> datas = qanary.search(question);
+        return datas;
     }
 
     public static class Data {

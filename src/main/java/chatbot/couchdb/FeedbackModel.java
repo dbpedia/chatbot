@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by ramgathreya on 6/30/17.
  */
-public class Feedback {
+public class FeedbackModel {
     private static final int MIN_TITLE_LENGTH = 5;
     private static final int MIN_DESCRIPTION_LENGTH = 20;
 
@@ -14,7 +14,7 @@ public class Feedback {
     private String userId;
     private long timestamp;
 
-    public Feedback() {
+    public FeedbackModel() {
         timestamp = new Date().getTime();
     }
 
@@ -22,7 +22,7 @@ public class Feedback {
         return title;
     }
 
-    public Feedback setTitle(String title) {
+    public FeedbackModel setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -31,7 +31,7 @@ public class Feedback {
         return description;
     }
 
-    public Feedback setDescription(String description) {
+    public FeedbackModel setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -40,7 +40,7 @@ public class Feedback {
         return userId;
     }
 
-    public Feedback setUserId(String userId) {
+    public FeedbackModel setUserId(String userId) {
         this.userId = userId;
         return this;
     }

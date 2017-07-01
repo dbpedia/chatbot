@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 
 /**
@@ -61,5 +63,9 @@ public class Utility {
     public static <T> T toObject(String json, Class T) throws IOException {
         org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
         return (T) mapper.readValue(json, T);
+    }
+
+    public static String urlEncode(String text) throws UnsupportedEncodingException {
+        return URLEncoder.encode(text, "UTF-8");
     }
 }

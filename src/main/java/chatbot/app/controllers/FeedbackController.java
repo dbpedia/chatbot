@@ -1,7 +1,7 @@
 package chatbot.app.controllers;
 
 import chatbot.Application;
-import chatbot.couchdb.Feedback;
+import chatbot.couchdb.FeedbackModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,9 @@ public class FeedbackController {
     }
 
     @RequestMapping(method= RequestMethod.POST, path="/feedback")
-    public ResponseEntity<Void> actionFeedback(@RequestBody Feedback feedback) {
-        if(feedback.validate()) {
-            helper.getFeedbackDB().save(feedback);
+    public ResponseEntity<Void> actionFeedback(@RequestBody FeedbackModel feedbackModel) {
+        if(feedbackModel.validate()) {
+            helper.getFeedbackDB().save(feedbackModel);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

@@ -1,6 +1,7 @@
 package chatbot.lib.handlers;
 
 import chatbot.Application;
+import chatbot.cache.WolframRepository;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.TestResponseBase;
@@ -30,8 +31,9 @@ public class TestNLHandler {
                 .build();
     }
 
+    // Proper values need to be provided here
     private void checkLiteral(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper(cloudantClient, "", "");
+        Application.Helper helper = new Application.Helper(cloudantClient, new WolframRepository(""), "", "");
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
 
@@ -41,7 +43,7 @@ public class TestNLHandler {
     }
 
     private void checkEntity(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper(cloudantClient, "", "");
+        Application.Helper helper = new Application.Helper(cloudantClient, new WolframRepository(""), "", "");
         NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
         List<Response> response = nlHandler.answer().getResponse();
         assertEquals(response.size(), 2);

@@ -1,7 +1,7 @@
 package chatbot.lib.request;
 
 import chatbot.Application;
-import chatbot.couchdb.Chat;
+import chatbot.couchdb.ChatModel;
 import chatbot.lib.handlers.ParameterHandler;
 import chatbot.lib.handlers.TextHandler;
 import chatbot.lib.response.Response;
@@ -23,12 +23,12 @@ public class RequestRouter {
         this.request = request;
         this.helper = helper;
         timestamp = new Date().getTime();
-        msgId = request.getUserId() + Chat.ID_SEPARATOR + timestamp;
+        msgId = request.getUserId() + ChatModel.ID_SEPARATOR + timestamp;
     }
 
     private void addRequestChatHistory() {
-        helper.getChatDB().save(new Chat()
-                .setId(msgId + Chat.ID_SEPARATOR + "request")
+        helper.getChatDB().save(new ChatModel()
+                .setId(msgId + ChatModel.ID_SEPARATOR + "request")
                 .setUserId(request.getUserId())
                 .setRequest(request)
                 .setTimestamp(timestamp)
@@ -36,8 +36,8 @@ public class RequestRouter {
     }
 
     private void addResponseChatHistory(List<Response> responseList) {
-        helper.getChatDB().save(new Chat()
-                .setId(msgId + Chat.ID_SEPARATOR + "response")
+        helper.getChatDB().save(new ChatModel()
+                .setId(msgId + ChatModel.ID_SEPARATOR + "response")
                 .setUserId(request.getUserId())
                 .setFromBot(true)
                 .setResponse(responseList)

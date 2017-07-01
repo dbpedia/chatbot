@@ -1,5 +1,6 @@
 package chatbot;
 
+import chatbot.cache.WolframRepository;
 import chatbot.rivescript.RiveScriptBot;
 import codeanticode.eliza.ElizaMain;
 import com.cloudant.client.api.CloudantClient;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * Created by ramgathreya on 5/10/17.
  * http://bits-and-kites.blogspot.com/2015/03/spring-and-nodejs.html
  */
+@EnableCaching
 @SpringBootApplication
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -48,14 +51,20 @@ public class Application {
         private RiveScriptBot riveScriptBot;
         private Database chatDB, feedbackDB;
         private ElizaMain eliza;
+        private WolframRepository wolframRepository;
 
         @Autowired
-        public Helper(final CloudantClient cloudantClient, @Value("${cloudant.chatDB}") String chatDBName, @Value("${cloudant.feedbackDB}") String feedbackDBName) {
+        public Helper(final CloudantClient cloudantClient,
+                      WolframRepository wolframRepository,
+                      @Value("${cloudant.chatDB}") String chatDBName,
+                      @Value("${cloudant.feedbackDB}") String feedbackDBName) {
             riveScriptBot = new RiveScriptBot();
             chatDB = cloudantClient.database(chatDBName, true);
             feedbackDB = cloudantClient.database(feedbackDBName, true);
             eliza = new ElizaMain();
             eliza.readScript(true, "src/main/resources/eliza/script");
+            this.wolframRepository = wolframRepository;
+            wolframRepository.getAnswer("asdfafdsaf");
         }
 
         public RiveScriptBot getRiveScriptBot() {
@@ -72,6 +81,10 @@ public class Application {
 
         public ElizaMain getEliza() {
             return eliza;
+        }
+
+        public WolframRepository getWolframRepository() {
+            return wolframRepository;
         }
     }
 

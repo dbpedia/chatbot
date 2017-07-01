@@ -3,14 +3,13 @@ package chatbot.couchdb;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by ramgathreya on 6/23/17.
  */
 //@Document(expiry=0)
-public class Chat {
+public class ChatModel {
     public static final String ID_SEPARATOR = "_";
 
     private String id;
@@ -24,7 +23,7 @@ public class Chat {
         return userId;
     }
 
-    public Chat setUserId(String userId) {
+    public ChatModel setUserId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -33,7 +32,7 @@ public class Chat {
         return fromBot;
     }
 
-    public Chat setFromBot(boolean fromBot) {
+    public ChatModel setFromBot(boolean fromBot) {
         this.fromBot = fromBot;
         return this;
     }
@@ -42,7 +41,7 @@ public class Chat {
         return timestamp;
     }
 
-    public Chat setTimestamp(long timestamp) {
+    public ChatModel setTimestamp(long timestamp) {
         this.timestamp = timestamp;
         return this;
     }
@@ -51,7 +50,7 @@ public class Chat {
         return request;
     }
 
-    public Chat setRequest(Request request) {
+    public ChatModel setRequest(Request request) {
         this.request = request;
         return this;
     }
@@ -60,7 +59,7 @@ public class Chat {
         return response;
     }
 
-    public Chat setResponse(List<Response> response) {
+    public ChatModel setResponse(List<Response> response) {
         this.response = response;
         return this;
     }
@@ -69,7 +68,7 @@ public class Chat {
         return id;
     }
 
-    public Chat setId(String id) {
+    public ChatModel setId(String id) {
         this.id = id;
         return this;
     }

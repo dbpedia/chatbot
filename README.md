@@ -12,6 +12,7 @@
      cloudant.chatDB = <couchdb-chatdb-name>
      cloudant.feedbackDB = <couchdb-feedback-name>
      
+     wolfram.apiKey = <wolfram-alpha-api-key>     
      logging.level.com.github.messenger4j=<log-level>
 
 ### Development Only Configurations
