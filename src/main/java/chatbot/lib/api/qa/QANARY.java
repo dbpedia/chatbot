@@ -64,6 +64,7 @@ public class QANARY {
 
     // Calls QANARY Service then returns resulting data as a list of Data Objects
     public QAService.Data search(String question) throws Exception {
+        QAService.Data data = new QAService.Data();
         String response = makeRequest(question);
         if(response != null) {
             ObjectMapper mapper = new ObjectMapper();
@@ -72,8 +73,6 @@ public class QANARY {
 
             if (answers != null) {
                 JsonNode bindings = answers.get("results").get("bindings");
-                QAService.Data data = new QAService.Data();
-
                 for(JsonNode binding : bindings) {
                     Iterator<Map.Entry<String, JsonNode>> nodes = binding.getFields();
                     while (nodes.hasNext()) {
@@ -87,16 +86,11 @@ public class QANARY {
                                 data.addLiteral(value.get("value").getTextValue());
                                 break;
                         }
-//                        data.add(new QAService.Data(value.get("type").getTextValue(), value.get("value").getTextValue()));
                     }
                 }
-//                if(data.size() > ResponseData.MAX_DATA_SIZE) {
-//                    data = data.subList(0, ResponseData.MAX_DATA_SIZE);
-//                }
-                return data;
             }
         }
-        return null;
+        return data;
     }
 
 }

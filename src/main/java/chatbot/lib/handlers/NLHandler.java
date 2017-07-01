@@ -72,11 +72,11 @@ public class NLHandler {
                     }
                     break;
                 default:
-                    responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
+//                    responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
             }
         }
         else {
-            responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.FALLBACK_TEXT)[0])).setShowFeedback(false);
+//            responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
         }
         return responseGenerator;
     }
@@ -125,36 +125,6 @@ public class NLHandler {
                     }
                 }
             }
-
-//            for(QAService.Data item : data) {
-//                switch(item.getType()) {
-//                    case QAService.Data.TYPED_LITERAL:
-//                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_TEXT);
-//                        processedResponse.setResponseData(new ArrayList<ResponseData>() {{
-//                            add(new ResponseData(item.getValue()));
-//                        }});
-//                        return processedResponse;
-//                    case QAService.Data.URI:
-//                        uri = item.getValue();
-//                        count = sparql.isDisambiguationPage(uri);
-//                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
-//
-//                        // Not a disambiguation page
-//                        if(count == 0) {
-//                            ResponseData _data = sparql.getEntityInformation(item.getValue());
-//                            if (_data != null) {
-//                                processedResponse.addResponseData(_data);
-//                            }
-//                        }
-//                        // Disambiguation page
-//                        else {
-//                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
-//                            processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
-//                            return processedResponse;
-//                        }
-//                        break;
-//                }
-//            }
         }
         return processedResponse;
     }

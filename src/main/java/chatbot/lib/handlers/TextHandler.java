@@ -56,13 +56,12 @@ public class TextHandler {
                         responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper).handleStatusCheck();
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
-                        textMessage = rootNode.get("query").getTextValue(); // Use processed text message
-
                         // Eliza
-                        if(textMessage.endsWith("!") || textMessage.endsWith(".")) {
+                        if(textMessage.endsWith("!")) {
                             responseGenerator.addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
                         }
                         else {
+                            textMessage = rootNode.get("query").getTextValue(); // Use processed text message
                             responseGenerator = new NLHandler(request, textMessage, helper).answer();
                         }
                         break;
@@ -71,6 +70,11 @@ public class TextHandler {
             else {
                 responseGenerator.addTextResponse(new ResponseData(reply));
             }
+        }
+
+        // Fallback when everything else fails Eliza will answer
+        if(responseGenerator.getResponse().size() == 0) {
+            responseGenerator.addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
         }
         return responseGenerator;
     }
