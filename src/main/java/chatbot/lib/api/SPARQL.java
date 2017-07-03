@@ -89,9 +89,12 @@ public class SPARQL {
 //            }
 //        }
 
-        String summary = processWikipediaAbstract(node.asLiteral().getString());
+        node = result.get(VAR_ABSTRACT);
+        if (node != null) {
+            String summary = processWikipediaAbstract(node.asLiteral().getString());
+            responseData.setText(summary);
+        }
 
-        responseData.setText(summary);
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
         responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
