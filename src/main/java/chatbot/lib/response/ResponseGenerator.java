@@ -95,6 +95,12 @@ public class ResponseGenerator {
         return this;
     }
 
+    public ResponseGenerator setNoResultsResponse(Request request, RiveScriptBot riveScriptBot) {
+        showFeedback = false;
+        addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NO_RESULTS_TEXT)[0]));
+        return this;
+    }
+
     public List<Response> getResponse() {
         return this.response;
     }

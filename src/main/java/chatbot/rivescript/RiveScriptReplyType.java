@@ -11,6 +11,8 @@ public interface RiveScriptReplyType {
 
     // String Scenarios where we just want different kinds of messages from Rive
     String FALLBACK_TEXT = "fallbacktext";
+    String NO_RESULTS_TEXT = "noresultstext";
+
     String HELP_TEXT = "helptext";
     String START_TEXT = "starttext";
     String NL_ANSWER_TEXT = "nlanswertext";

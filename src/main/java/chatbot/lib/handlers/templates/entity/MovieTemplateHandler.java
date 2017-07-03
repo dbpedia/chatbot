@@ -21,14 +21,14 @@ public class MovieTemplateHandler extends OptionsTemplateHandler {
 
     public ResponseData getMovieOptions(String uri, String tvId, String label) {
         ResponseData responseData = new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + label)[0]);
-        responseData.addSmartReply(new ResponseData.SmartReply("Cast", TemplateType.TV_CAST + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
-        responseData.addSmartReply(new ResponseData.SmartReply("Crew", TemplateType.TV_CREW + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
-        responseData.addSmartReply(new ResponseData.SmartReply("Similar", TemplateType.TV_SIMILAR + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
-        responseData.addSmartReply(new ResponseData.SmartReply("Related", TemplateType.TV_RELATED + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
+        responseData.addSmartReply(new ResponseData.SmartReply("Cast", TemplateType.MOVIE_CAST + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
+        responseData.addSmartReply(new ResponseData.SmartReply("Crew", TemplateType.MOVIE_CREW + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
+        responseData.addSmartReply(new ResponseData.SmartReply("Similar", TemplateType.MOVIE_SIMILAR + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
+        responseData.addSmartReply(new ResponseData.SmartReply("Related", TemplateType.MOVIE_RELATED + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + tvId + Utility.STRING_SEPARATOR + label));
         return responseData;
     }
 
-    public ResponseGenerator handMovieTemplateMessage() {
+    public ResponseGenerator handleMovieTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case TemplateType.MOVIE_CAST:

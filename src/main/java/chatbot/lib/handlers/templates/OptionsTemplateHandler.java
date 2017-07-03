@@ -70,7 +70,7 @@ public class OptionsTemplateHandler {
         }
 
         if(results.size() == 0) {
-            responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
+            responseGenerator.setNoResultsResponse(request, helper.getRiveScriptBot());
         }
         else {
             responseGenerator.addCarouselResponse(results);

@@ -9,6 +9,7 @@ import chatbot.lib.api.SPARQL;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
 import chatbot.lib.handlers.templates.DBpediaTemplateHandler;
 import chatbot.lib.handlers.templates.OptionsTemplateHandler;
+import chatbot.lib.handlers.templates.entity.MovieTemplateHandler;
 import chatbot.lib.handlers.templates.entity.TVTemplateHandler;
 import chatbot.lib.request.TemplateType;
 import chatbot.lib.request.Request;
@@ -75,7 +76,16 @@ public class TemplateHandler {
             case TemplateType.TV_CAST:
             case TemplateType.TV_CREW:
             case TemplateType.TV_SIMILAR:
+            case TemplateType.TV_RELATED:
                 responseGenerator = new TVTemplateHandler(request, payload, helper).handTVTemplateMessage();
+                break;
+
+            // Movie Related Scenario
+            case TemplateType.MOVIE_CAST:
+            case TemplateType.MOVIE_CREW:
+            case TemplateType.MOVIE_SIMILAR:
+            case TemplateType.MOVIE_RELATED:
+                responseGenerator = new MovieTemplateHandler(request, payload, helper).handleMovieTemplateMessage();
                 break;
 
             // When User Clicks Yes or No for Feedback Smart Reply
