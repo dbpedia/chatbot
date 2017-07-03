@@ -2,7 +2,7 @@ package chatbot.lib.request;
 
 import chatbot.Application;
 import chatbot.couchdb.ChatModel;
-import chatbot.lib.handlers.ParameterHandler;
+import chatbot.lib.handlers.TemplateHandler;
 import chatbot.lib.handlers.TextHandler;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseGenerator;
@@ -54,7 +54,7 @@ public class RequestRouter {
                     .handleTextMessage();
                 break;
             case RequestType.PARAMETER_MESSAGE:
-                responseGenerator = new ParameterHandler(request, request.getPayload(), helper)
+                responseGenerator = new TemplateHandler(request, request.getPayload(), helper)
                     .handleParameterMessage();
                 break;
         }

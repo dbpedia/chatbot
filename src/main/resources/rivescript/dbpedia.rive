@@ -28,3 +28,10 @@
 
 + how [*] (can|to|do) [*] (help|contribute) [*] [project]
 @ dbpedia contribute
+
+// Fallback
++ * dbpedia *
+- {"type": "template", "name": "dbpedia-fallback|dbpedia"}
+
++ dbpedia *
+- {"type": "template", "name": "dbpedia-fallback|dbpedia"}

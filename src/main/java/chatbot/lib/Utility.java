@@ -12,6 +12,8 @@ import java.text.DecimalFormat;
  * Created by ramgathreya on 5/23/17.
  */
 public class Utility {
+    // Used by RiveScript when it needs to send back multiple parameters as payload to parameter handler
+    public static final String PARAMETER_SEPARATOR = "|";
     public static final String STRING_SEPARATOR = "__";
 
     public static String generateImageUrl(String baseUrl, String imageUrl) {
@@ -55,17 +57,35 @@ public class Utility {
         return formatter.format(amount);
     }
 
-    public static <T> String toJson(T object) throws IOException {
-        org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
-        return mapper.writeValueAsString(object);
+    public static <T> String toJson(T object) {
+        try {
+            org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+            return mapper.writeValueAsString(object);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static <T> T toObject(String json, Class T) throws IOException {
-        org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
-        return (T) mapper.readValue(json, T);
+    public static <T> T toObject(String json, Class T) {
+        try {
+            org.codehaus.jackson.map.ObjectMapper mapper = new org.codehaus.jackson.map.ObjectMapper();
+            return (T) mapper.readValue(json, T);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String urlEncode(String text) throws UnsupportedEncodingException {
-        return URLEncoder.encode(text, "UTF-8");
+        try {
+            return URLEncoder.encode(text, "UTF-8");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

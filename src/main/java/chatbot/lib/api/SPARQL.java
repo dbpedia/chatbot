@@ -2,7 +2,7 @@ package chatbot.lib.api;
 
 import chatbot.lib.Utility;
 import chatbot.lib.api.dbpedia.GenesisService;
-import chatbot.lib.request.ParameterType;
+import chatbot.lib.request.TemplateType;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
 import org.apache.jena.query.*;
@@ -36,6 +36,7 @@ public class SPARQL {
 
     private static final String PREFIXES = new String(
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
             "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
             "PREFIX dbp: <http://dbpedia.org/property/>\n" +
@@ -90,7 +91,7 @@ public class SPARQL {
 
         responseData.setText(summary);
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, ParameterType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
+        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
     }
 
@@ -132,11 +133,9 @@ public class SPARQL {
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            if (results != null) {
-                while(results.hasNext()) {
-                    QuerySolution result = results.next();
-                    count = result.get("count").asLiteral().getInt();
-                }
+            while(results.hasNext()) {
+                QuerySolution result = results.next();
+                count = result.get("count").asLiteral().getInt();
             }
         }
         finally {
@@ -189,6 +188,27 @@ public class SPARQL {
         return getEntities(query);
     }
 
+    public String getRDFTypes(String uri) {
+        String types = null;
+        String query = buildQuery("SELECT (group_concat(?type;separator=' ') as ?types) WHERE {" +
+                "<" + uri + "> rdf:type ?type ." +
+        "}");
+        QueryExecution queryExecution = executeQuery(query);
+
+        try {
+            Iterator<QuerySolution> results = queryExecution.execSelect();
+            if (results != null) {
+                while(results.hasNext()) {
+                    QuerySolution result = results.next();
+                    types = result.get("types").toString();
+                }
+            }
+        }
+        finally {
+            queryExecution.close();
+        }
+        return types;
+    }
 
     public QueryExecution executeQuery(String queryString) {
         logger.info("SPARQL Query is:\n" + queryString);

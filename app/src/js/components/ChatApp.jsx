@@ -77,11 +77,12 @@ class ChatApp extends React.Component {
         }
     }
 
-    showStart() {
+    showStart(restart) {
+        this.removeSmartReplies();
         this.makeRequest({
             messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
             messageData: [{
-                payload: Constants.request.ParameterType.START
+                payload: restart ? Constants.request.ParameterType.HELP : Constants.request.ParameterType.START
             }]
         });
     }
@@ -92,6 +93,14 @@ class ChatApp extends React.Component {
         }, 500);
     }
 
+    removeSmartReplies() {
+        this.state.messages.map((message, index) => {
+            if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
+                delete this.state.messages[index].message.messageData[0].smartReplies;
+            }
+        });
+    }
+
     sendHandler(message) {
         const messageObject = {
             username: this.props.username,
@@ -99,13 +108,7 @@ class ChatApp extends React.Component {
             fromBot: false
         };
 
-        // Remove any smart replies that exist
-        this.state.messages.map((message, index) => {
-            if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
-                delete this.state.messages[index].message.messageData[0].smartReplies;
-            }
-        });
-
+        this.removeSmartReplies();
         this.addMessage(messageObject);
         this.makeRequest(message);
     }

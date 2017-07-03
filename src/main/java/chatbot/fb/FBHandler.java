@@ -78,9 +78,9 @@ public class FBHandler {
 
         MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
 
-        setupClient.setupStartButton(ParameterType.START);
+        setupClient.setupStartButton(TemplateType.START);
         setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
-                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(ParameterType.START).build(),
+                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.START).build(),
                 new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build()
         )));
     }

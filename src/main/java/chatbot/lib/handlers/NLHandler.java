@@ -4,7 +4,7 @@ import chatbot.Application;
 import chatbot.lib.Utility;
 import chatbot.lib.api.qa.QAService;
 import chatbot.lib.api.SPARQL;
-import chatbot.lib.request.ParameterType;
+import chatbot.lib.request.TemplateType;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by ramgathreya on 6/2/17.
@@ -67,7 +66,7 @@ public class NLHandler {
                     if (responseInfo.hasMorePages()) {
                         responseInfo.next();
                         responseGenerator.addButtonTextResponse(new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LOAD_MORE_TEXT)[0], new ArrayList<ResponseData.Button>() {{
-                            add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, ParameterType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
+                            add(new ResponseData.Button("Load More", ResponseType.BUTTON_PARAM, TemplateType.LOAD_MORE + Utility.STRING_SEPARATOR + Utility.toJson(responseInfo)));
                         }}));
                     }
                     break;

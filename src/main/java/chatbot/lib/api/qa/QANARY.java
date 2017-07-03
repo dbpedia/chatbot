@@ -30,7 +30,6 @@ public class QANARY {
     private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core0,%20QueryExecuter/";
 
     private HttpClient client;
-    private String question;
 
     public QANARY() {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(Constants.API_TIMEOUT).build();

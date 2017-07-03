@@ -5,18 +5,13 @@ import chatbot.lib.Utility;
 import chatbot.lib.handlers.dbpedia.LanguageHandler;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
 import chatbot.lib.request.Request;
-import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
-import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
-import codeanticode.eliza.ElizaMain;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Created by ramgathreya on 5/22/17.
@@ -42,10 +37,9 @@ public class TextHandler {
             if(Utility.isJSONObject(reply) == true) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode rootNode = mapper.readTree(reply);
-
                 switch (rootNode.get("type").getTextValue()) {
                     case RiveScriptReplyType.TEMPLATE_SCENARIO:
-                        responseGenerator = new ParameterHandler(request, rootNode.get("name").getTextValue(), helper)
+                        responseGenerator = new TemplateHandler(request, Utility.split(rootNode.get("name").getTextValue(), Utility.PARAMETER_SEPARATOR), helper)
                                 .handleParameterMessage();
                         break;
                     case RiveScriptReplyType.LANGUAGE_SCENARIO:
@@ -57,7 +51,7 @@ public class TextHandler {
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         // Eliza
-                        if(textMessage.endsWith("!")) {
+                        if(textMessage.endsWith("!") || textMessage.endsWith(".")) {
                             responseGenerator.addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
                         }
                         else {

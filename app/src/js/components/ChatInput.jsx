@@ -72,7 +72,7 @@ class ChatInput extends React.Component {
                 this.props.showFeedback();
             break;
             case 'start':
-                this.props.showStart();
+                this.props.showStart(true);
             break;
         }
         this.toggleOverlay(false);

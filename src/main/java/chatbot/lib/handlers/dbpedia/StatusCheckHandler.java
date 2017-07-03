@@ -1,22 +1,19 @@
 package chatbot.lib.handlers.dbpedia;
 
 import chatbot.Application;
+import chatbot.lib.Constants;
 import chatbot.lib.Platform;
 import chatbot.lib.Utility;
 import chatbot.lib.api.StatusCheckService;
 import chatbot.lib.request.Request;
-import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.lib.response.ResponseType;
-import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by ramgathreya on 6/12/17.
@@ -24,40 +21,23 @@ import java.util.List;
 public class StatusCheckHandler {
     private static final Logger logger = LoggerFactory.getLogger(StatusCheckHandler.class);
 
-    // Services that can be tested
-    private static final String DBPEDIA_SERVICE = "dbpedia";
-    private static final String DBPEDIA_RESOURCE_SERVICE = "dbpedia-resource";
-    private static final String DBPEDIA_SPARQL_SERVICE = "dbpedia-sparql";
-
-    // Corresponding Service Names
-    private static final String DBPEDIA = "DBpedia";
-    private static final String DBPEDIA_RESOURCE = "DBpedia Resource";
-    private static final String DBPEDIA_SPARQL = "DBpedia SPARQL";
-
     private StatusCheckService statusCheckService = new StatusCheckService();
     private Request request;
     private ArrayList<String[]> service = new ArrayList<>();
     private Application.Helper helper;
-
-    private static final HashMap<String, String[]> ENDPOINTS = new HashMap<String, String[]>(){{
-        // Service Name, Endpoint URL, Mailing List
-        put(DBPEDIA_SERVICE, new String[]{DBPEDIA, "http://wiki.dbpedia.org", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
-        put(DBPEDIA_RESOURCE_SERVICE, new String[]{DBPEDIA_RESOURCE, "http://dbpedia.org/page/DBpedia", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
-        put(DBPEDIA_SPARQL_SERVICE, new String[]{DBPEDIA_SPARQL, "http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+distinct+%3FConcept+where+%7B%5B%5D+a+%3FConcept%7D+LIMIT+100&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on", "dbpedia-discussion@lists.sourceforge.net", "https://lists.sourceforge.net/lists/listinfo/dbpedia-discussion"});
-    }};
 
     public StatusCheckHandler(Request request, String service, Application.Helper helper) {
         this.request = request;
         this.helper = helper;
 
         switch(service) {
-            case DBPEDIA_SERVICE:
-                this.service.add(ENDPOINTS.get(DBPEDIA_SERVICE));
-                this.service.add(ENDPOINTS.get(DBPEDIA_RESOURCE_SERVICE));
-                this.service.add(ENDPOINTS.get(DBPEDIA_SPARQL_SERVICE));
+            case Constants.DBPEDIA_SERVICE:
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_SERVICE));
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_RESOURCE_SERVICE));
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_SPARQL_SERVICE));
                 break;
             default:
-                this.service.add(ENDPOINTS.get(service));
+                this.service.add(Constants.SERVICES.get(service));
         }
     }
 

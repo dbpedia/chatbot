@@ -52,18 +52,21 @@ public class Application {
         private Database chatDB, feedbackDB;
         private ElizaMain eliza;
         private WolframRepository wolframRepository;
+        private String tmdbApiKey;
 
         @Autowired
         public Helper(final CloudantClient cloudantClient,
                       WolframRepository wolframRepository,
                       @Value("${cloudant.chatDB}") String chatDBName,
-                      @Value("${cloudant.feedbackDB}") String feedbackDBName) {
+                      @Value("${cloudant.feedbackDB}") String feedbackDBName,
+                      @Value("${tmdb.apiKey}") String tmdbApiKey) {
             riveScriptBot = new RiveScriptBot();
             chatDB = cloudantClient.database(chatDBName, true);
             feedbackDB = cloudantClient.database(feedbackDBName, true);
             eliza = new ElizaMain();
             eliza.readScript(true, "src/main/resources/eliza/script");
             this.wolframRepository = wolframRepository;
+            this.tmdbApiKey = tmdbApiKey;
         }
 
         public RiveScriptBot getRiveScriptBot() {
@@ -84,6 +87,10 @@ public class Application {
 
         public WolframRepository getWolframRepository() {
             return wolframRepository;
+        }
+
+        public String getTmdbApiKey() {
+            return tmdbApiKey;
         }
     }
 
