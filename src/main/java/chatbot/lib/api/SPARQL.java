@@ -81,13 +81,15 @@ public class SPARQL {
             responseData.setImage(node.toString());
         }
 
-        String summary = new GenesisService().getSummary(uri);
-        if(summary == null || summary.isEmpty()) {
-            node = result.get(VAR_ABSTRACT);
-            if(node != null) {
-                summary = processWikipediaAbstract(node.asLiteral().getString());
-            }
-        }
+//        String summary = new GenesisService().getSummary(uri);
+//        if(summary == null || summary.isEmpty()) {
+//            node = result.get(VAR_ABSTRACT);
+//            if(node != null) {
+//                summary = processWikipediaAbstract(node.asLiteral().getString());
+//            }
+//        }
+
+        String summary = processWikipediaAbstract(node.asLiteral().getString());
 
         responseData.setText(summary);
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
