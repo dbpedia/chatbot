@@ -26,8 +26,10 @@
 + [how] [*] (contribute|contributing|involved) [*] dbpedia [*]
 @ dbpedia contribute
 
-+ how [*] (can|to|do) [*] (help|contribute) [*] [project]
++ how [*] (can|do) i (help|contribute) [*] [project]
 @ dbpedia contribute
+
++ how [*] to (help|contribute) [*] [project]
 
 // Fallback
 + * dbpedia *

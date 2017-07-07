@@ -2,6 +2,7 @@ package chatbot.lib.handlers;
 
 import chatbot.Application;
 import chatbot.cache.WolframRepository;
+import chatbot.lib.TestUtility;
 import chatbot.lib.request.Request;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.TestResponseBase;
@@ -21,20 +22,10 @@ import static org.junit.Assert.assertNotNull;
  * Created by ramgathreya on 6/13/17.
  */
 public class TestNLHandler {
-    CloudantClient cloudantClient;
-
-    // These need to be standardized based on properties file
-    public TestNLHandler() throws MalformedURLException {
-        cloudantClient = ClientBuilder.url(new URL("http://localhost:9081"))
-                .username("ramgathreya")
-                .password("password")
-                .build();
-    }
 
     // Proper values need to be provided here
     private void checkLiteral(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper(cloudantClient, new WolframRepository(""), "", "", "");
-        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
         List<Response> response = nlHandler.answer().getResponse();
 
         assertNotNull(response);
@@ -43,8 +34,7 @@ public class TestNLHandler {
     }
 
     private void checkEntity(String userId, String question) throws Exception {
-        Application.Helper helper = new Application.Helper(cloudantClient, new WolframRepository(""), "", "", "");
-        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, helper);
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
         List<Response> response = nlHandler.answer().getResponse();
         assertEquals(response.size(), 2);
         TestResponseBase.checkTextMessage(response.get(0));
@@ -60,7 +50,5 @@ public class TestNLHandler {
     @Test
     public void testEntity() throws Exception {
         checkEntity("user", "Barack Obama");
-
     }
-
 }

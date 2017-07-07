@@ -1,5 +1,7 @@
 package chatbot.fb.response;
 
+import chatbot.Application;
+import chatbot.lib.TestUtility;
 import org.junit.Test;
 
 /**
@@ -9,7 +11,7 @@ public class TestResponseHandler {
 
     @Test
     public void testGenericMessage() {
-//        new ResponseHandler(request, sendClient, responseList, baseUrl).generateResponse();
+        Application.Helper helper = TestUtility.getHelper();
     }
 
     private void stub() {
