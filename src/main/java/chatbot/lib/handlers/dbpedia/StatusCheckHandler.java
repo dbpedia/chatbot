@@ -2,7 +2,7 @@ package chatbot.lib.handlers.dbpedia;
 
 import chatbot.Application;
 import chatbot.lib.Constants;
-import chatbot.lib.Platform;
+import chatbot.platforms.Platform;
 import chatbot.lib.Utility;
 import chatbot.lib.api.StatusCheckService;
 import chatbot.lib.request.Request;

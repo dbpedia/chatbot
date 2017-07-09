@@ -10,7 +10,7 @@ class Message extends React.Component {
 
     renderBotDiv() {
         // If message is from bot and messageType not carousel then show the bot icon
-        var excluded = [Constants.response.ResponseType.CAROUSEL_MESSAGE];
+        var excluded = [Constants.response.ResponseType.GENERIC_MESSAGE];
 // , Constants.response.ResponseType.SMART_REPLY_MESSAGE
 
         // Only show DBpedia icon for messages which are from bot and not carousel or smart reply
@@ -92,7 +92,7 @@ class Message extends React.Component {
                     </div>
                 );
             break;
-            case Constants.response.ResponseType.CAROUSEL_MESSAGE:
+            case Constants.response.ResponseType.GENERIC_MESSAGE:
                 msgDiv = (
                     <div className="carousel-container slideLeft">
                         {messageData.map((message, index) => {

@@ -1,7 +1,7 @@
-package chatbot.app;
+package chatbot.platforms.web;
 
 import chatbot.Application;
-import chatbot.lib.Platform;
+import chatbot.platforms.Platform;
 import chatbot.lib.request.Request;
 import chatbot.lib.request.RequestRouter;
 import chatbot.lib.response.Response;
@@ -17,12 +17,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/webhook")
-public class AppHandler {
-    private static final Logger logger = LoggerFactory.getLogger(AppHandler.class);
+public class WebHandler {
+    private static final Logger logger = LoggerFactory.getLogger(WebHandler.class);
     private final Application.Helper helper;
 
     @Autowired
-    AppHandler(final Application.Helper helper) {
+    WebHandler(final Application.Helper helper) {
         this.helper = helper;
     }
 

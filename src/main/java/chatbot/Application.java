@@ -25,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * http://bits-and-kites.blogspot.com/2015/03/spring-and-nodejs.html
  */
 @EnableCaching
+//@SpringBootApplication(scanBasePackages = {"me.ramswaroop.jbot", "chatbot"})
 @SpringBootApplication
 public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

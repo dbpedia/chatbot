@@ -1,4 +1,4 @@
-package chatbot.app.controllers;
+package chatbot.platforms.web.controllers;
 
 import chatbot.Application;
 import chatbot.couchdb.FeedbackModel;

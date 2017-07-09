@@ -1,4 +1,4 @@
-package chatbot.fb.response;
+package chatbot.platforms.fb.response;
 
 import chatbot.Application;
 import chatbot.lib.TestUtility;

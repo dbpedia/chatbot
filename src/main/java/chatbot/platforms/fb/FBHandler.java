@@ -1,8 +1,7 @@
-package chatbot.fb;
+package chatbot.platforms.fb;
 
 import chatbot.Application;
-import chatbot.fb.response.ResponseHandler;
-import chatbot.lib.Platform;
+import chatbot.platforms.Platform;
 import chatbot.lib.request.*;
 import chatbot.lib.response.Response;
 import com.github.messenger4j.MessengerPlatform;
@@ -80,7 +79,7 @@ public class FBHandler {
 
         setupClient.setupStartButton(TemplateType.START);
         setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
-                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.START).build(),
+                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.HELP).build(),
                 new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build()
         )));
     }

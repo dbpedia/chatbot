@@ -14,6 +14,8 @@ import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
 import chatbot.lib.response.ResponseType;
 import chatbot.rivescript.RiveScriptReplyType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,8 @@ import java.util.ArrayList;
  * Created by ramgathreya on 7/3/17.
  */
 public class OptionsTemplateHandler {
+    private static final Logger logger = LoggerFactory.getLogger(OptionsTemplateHandler.class);
+
     protected Request request;
     protected String[] payload;
     protected Application.Helper helper;
@@ -46,7 +50,7 @@ public class OptionsTemplateHandler {
         }
         // Set Fallback when GENESIS returns null or invalid response
         if(uris == null) {
-            return responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
+            return responseGenerator.setNoResultsResponse(request, helper.getRiveScriptBot());
         }
         return responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
     }
@@ -78,10 +82,14 @@ public class OptionsTemplateHandler {
         return responseGenerator;
     }
 
+    private ResponseData getDefaultOptions(String uri, String label) {
+        return new ResponseData(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + label)[0])
+                .addSmartReply(new ResponseData.SmartReply("Similar", TemplateType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label))
+                .addSmartReply(new ResponseData.SmartReply("Related", TemplateType.LOAD_RELATED + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
+    }
+
     private ResponseGenerator getLearnMoreOptions(String uri, String label) {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        ResponseData responseData = new ResponseData();
-
         try {
             SPARQL sparql = new SPARQL();
             String types = sparql.getRDFTypes(uri);
@@ -105,12 +113,7 @@ public class OptionsTemplateHandler {
             e.printStackTrace();
         }
 
-        // Add Genesis Similar and Related for all responses
-        responseData
-                .setText(helper.getRiveScriptBot().answer(request.getUserId(), RiveScriptReplyType.LEARN_MORE_TEXT + " " + payload[2])[0])
-                .addSmartReply(new ResponseData.SmartReply("Similar", TemplateType.LOAD_SIMILAR + Utility.STRING_SEPARATOR + label))
-                .addSmartReply(new ResponseData.SmartReply("Related", TemplateType.LOAD_RELATED + Utility.STRING_SEPARATOR + label));
-        return responseGenerator.addSmartReplyResponse(responseData);
+        return responseGenerator.addSmartReplyResponse(getDefaultOptions(uri, label));
     }
 
     public ResponseGenerator handleOptionsTemplateMessage() {
@@ -131,6 +134,7 @@ public class OptionsTemplateHandler {
             case TemplateType.LOAD_SIMILAR:
             case TemplateType.LOAD_RELATED:
                 responseGenerator = getSimilarOrRelatedEntities(payload[0], payload[1]);
+                responseGenerator.addSmartReplyResponse(getDefaultOptions(payload[1], payload[2]));
                 break;
             // More options for a specific entity
             case TemplateType.LEARN_MORE:

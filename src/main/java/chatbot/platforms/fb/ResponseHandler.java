@@ -1,4 +1,4 @@
-package chatbot.fb.response;
+package chatbot.platforms.fb;
 
 import chatbot.lib.Utility;
 import chatbot.lib.request.Request;
@@ -47,7 +47,7 @@ public class ResponseHandler {
                 case ResponseType.BUTTON_TEXT_MESSAGE:
                     sendButtonMessage(request.getUserId(), response.getMessageData().get(0));
                     break;
-                case ResponseType.CAROUSEL_MESSAGE:
+                case ResponseType.GENERIC_MESSAGE:
                     sendGenericMessage(request.getUserId(), response.getMessageData());
                     break;
                 case ResponseType.SMART_REPLY_MESSAGE:

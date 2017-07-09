@@ -5,7 +5,7 @@ package chatbot.lib.response;
  */
 public interface ResponseType {
     String TEXT_MESSAGE = "text";
-    String CAROUSEL_MESSAGE = "carousel";
+    String GENERIC_MESSAGE = "generic";
     String BUTTON_TEXT_MESSAGE = "button_text";
     String SMART_REPLY_MESSAGE = "smart_reply";
 

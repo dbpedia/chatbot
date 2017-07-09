@@ -1,5 +1,8 @@
 package chatbot.lib.response;
 
+import chatbot.lib.Colors;
+import chatbot.platforms.Platform;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +101,7 @@ public class ResponseData {
         private String title;
         private String buttonType;
         private String uri;
+        private String slackStyle = Platform.SLACK_BUTTON_DEFAULT;
 
         public Button(String title, String buttonType, String uri) {
             this.title = title;
@@ -131,11 +135,21 @@ public class ResponseData {
             this.uri = uri;
             return this;
         }
+
+        public String getSlackStyle() {
+            return slackStyle;
+        }
+
+        public Button setSlackStyle(String slackStyle) {
+            this.slackStyle = slackStyle;
+            return this;
+        }
     }
 
     public static class SmartReply {
         private String title;
         private String uri;
+        private String slackStyle = Platform.SLACK_BUTTON_DEFAULT;
 
         public SmartReply(String title, String uri) {
             this.title = title;
@@ -157,6 +171,15 @@ public class ResponseData {
 
         public SmartReply setUri(String uri) {
             this.uri = uri;
+            return this;
+        }
+
+        public String getSlackStyle() {
+            return slackStyle;
+        }
+
+        public SmartReply setSlackStyle(String slackStyle) {
+            this.slackStyle = slackStyle;
             return this;
         }
     }

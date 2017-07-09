@@ -1,7 +1,7 @@
 export const response = {
     ResponseType: {
         'TEXT_MESSAGE': 'text',
-        'CAROUSEL_MESSAGE': 'carousel',
+        'GENERIC_MESSAGE': 'generic',
         'BUTTON_TEXT_MESSAGE': 'button_text',
         'SMART_REPLY_MESSAGE': 'smart_reply',
         'LOADING_MESSAGE': 'loading',

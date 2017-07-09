@@ -44,18 +44,38 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
+        <!-- Social Network Wrapper Libraries -->
         <dependency>
             <groupId>com.github.messenger4j</groupId>
             <artifactId>messenger4j</artifactId>
             <version>0.8.0</version>
         </dependency>
+
+        <!-- Slack -->
+        <dependency>
+            <groupId>com.github.seratch</groupId>
+            <artifactId>jslack</artifactId>
+            <version>1.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus.bundles</groupId>
+            <artifactId>tyrus-standalone-client</artifactId>
+            <version>1.13</version>
+        </dependency>
+
+        <!-- End Slack -->
+
         <dependency>
             <groupId>com.rivescript</groupId>
             <artifactId>rivescript-core</artifactId>

@@ -1,4 +1,4 @@
-package chatbot.lib.api;
+package chatbot.lib.api.qa;
 
 import chatbot.cache.WolframRepository;
 import chatbot.lib.TestUtility;

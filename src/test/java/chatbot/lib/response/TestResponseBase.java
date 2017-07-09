@@ -38,7 +38,7 @@ public class TestResponseBase {
 
     public static void checkCarouselMessage(Response response) {
         List<ResponseData> messageData = response.getMessageData();
-        assertEquals(response.getMessageType(), ResponseType.CAROUSEL_MESSAGE);
+        assertEquals(response.getMessageType(), ResponseType.GENERIC_MESSAGE);
         assertTrue("Message Data Size Greater Than 0", messageData.size() > 0);
         assertTrue("Message Data Size Less Than Equal to " + ResponseData.MAX_DATA_SIZE, messageData.size() <= ResponseData.MAX_DATA_SIZE);
 

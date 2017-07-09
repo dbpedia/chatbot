@@ -1,8 +1,10 @@
 package chatbot.lib.response;
 
+import chatbot.lib.Colors;
 import chatbot.lib.Utility;
 import chatbot.lib.request.TemplateType;
 import chatbot.lib.request.Request;
+import chatbot.platforms.Platform;
 import chatbot.rivescript.RiveScriptBot;
 import chatbot.rivescript.RiveScriptReplyType;
 
@@ -49,7 +51,7 @@ public class ResponseGenerator {
     }
 
     public ResponseGenerator addCarouselResponse(ResponseData[] data) {
-        this.addResponse(new Response().setMessageType(ResponseType.CAROUSEL_MESSAGE)
+        this.addResponse(new Response().setMessageType(ResponseType.GENERIC_MESSAGE)
                 .addData(data)
         );
         return this;
@@ -75,8 +77,8 @@ public class ResponseGenerator {
             if(!response.getMessageType().equals(ResponseType.SMART_REPLY_MESSAGE)) {
                 addSmartReplyResponse(new ResponseData()
                         .setText("Was this helpful?")
-                        .addSmartReply(new ResponseData.SmartReply("Yes", TemplateType.FEEDBACK + Utility.STRING_SEPARATOR + TemplateType.YES + Utility.STRING_SEPARATOR + msgId))
-                        .addSmartReply(new ResponseData.SmartReply("No", TemplateType.FEEDBACK + Utility.STRING_SEPARATOR + TemplateType.NO + Utility.STRING_SEPARATOR + msgId))
+                        .addSmartReply(new ResponseData.SmartReply("Yes", TemplateType.FEEDBACK + Utility.STRING_SEPARATOR + TemplateType.YES + Utility.STRING_SEPARATOR + msgId).setSlackStyle(Platform.SLACK_BUTTON_PRIMARY))
+                        .addSmartReply(new ResponseData.SmartReply("No", TemplateType.FEEDBACK + Utility.STRING_SEPARATOR + TemplateType.NO + Utility.STRING_SEPARATOR + msgId).setSlackStyle(Platform.SLACK_BUTTON_DANGER))
                 );
             }
 
