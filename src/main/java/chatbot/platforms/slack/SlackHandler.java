@@ -143,12 +143,21 @@ public class SlackHandler {
             String channel = json.get("channel").get("id").asText();
             String user = json.get("user").get("id").asText();
 
-            Request request = new Request(user, RequestType.PARAMETER_MESSAGE, Platform.SLACK)
-                    .setMessageData(new ArrayList<>(
-                            Arrays.asList(new MessageData().setPayload(payload))
-                    ));
-            List<Response> responseList = new RequestRouter(request, helper).routeRequest();
-            sendResponse(channel, responseList);
+            new Thread(){
+                public void run() {
+                    try {
+                        Request request = new Request(user, RequestType.PARAMETER_MESSAGE, Platform.SLACK)
+                                .setMessageData(new ArrayList<>(
+                                        Arrays.asList(new MessageData().setPayload(payload))
+                                ));
+                        List<Response> responseList = new RequestRouter(request, helper).routeRequest();
+                        sendResponse(channel, responseList);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         }
         catch (Exception e) {
             e.printStackTrace();
