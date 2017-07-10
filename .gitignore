@@ -5,7 +5,7 @@ build
 gradlew
 gradlew.bat
 *.yaml
-src/main/resources/application.properties
+src/main/resources/*.properties
 node
 node_modules
 bower_components
