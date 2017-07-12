@@ -25,12 +25,17 @@ public class FeedbackController {
         this.helper = helper;
     }
 
-    @RequestMapping(method= RequestMethod.POST, path="/feedback")
-    public ResponseEntity<Void> actionFeedback(@RequestBody FeedbackModel feedbackModel) {
+    @RequestMapping(method=RequestMethod.POST, path="/feedback")
+    public ResponseEntity<Void> actionFeedbackPost(@RequestBody FeedbackModel feedbackModel) {
         if(feedbackModel.validate()) {
             helper.getFeedbackDB().save(feedbackModel);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @RequestMapping(method=RequestMethod.GET, path="/feedback")
+    public String actionFeedbackGet() {
+        return "feedback";
     }
 }

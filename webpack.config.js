@@ -1,9 +1,12 @@
 const path = require('path');
 module.exports = {
-  entry: './app/src/js/index.js',
+  entry: {
+    app: './app/src/js/index.js',
+    feedback: './app/src/js/feedback.js'
+  },
   output: {
     path: path.resolve('./src/main/app/js/'),
-    filename: 'app.js'
+    filename: '[name].js'
   },
   module: {
     loaders: [

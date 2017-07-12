@@ -12,6 +12,8 @@ public interface TemplateType {
     String DBPEDIA_CONTRIBUTE = "dbpedia-contribute";
     String DBPEDIA_FALLBACK = "dbpedia-fallback";
 
+    String DBPEDIA_DATASET = "dbpedia-dataset";
+
     String TV_CAST = "tv-cast";
     String TV_CREW = "tv-crew";
     String TV_SIMILAR = "tv-similar";

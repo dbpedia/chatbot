@@ -1,4 +1,4 @@
-require('../less/app.less');
+require('../less/pages/app.less');
 
 import React from 'react';
 import ReactDOM from 'react-dom';

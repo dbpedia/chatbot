@@ -80,7 +80,8 @@ public class FBHandler {
         setupClient.setupStartButton(TemplateType.START);
         setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
                 new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.HELP).build(),
-                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build()
+                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build(),
+                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("Feedback").url(new URL(baseUrl + "/feedback")).build()
         )));
     }
 

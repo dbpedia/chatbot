@@ -2,9 +2,20 @@ import React from 'react';
 import Modal from 'react-modal';
 
 class Feedback extends React.Component {
+    getUrlParam(name) {
+        return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(name).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    }
+
     constructor(props) {
         super(props);
         this.state = {submitDisabled: true, title: '', description: ''};
+
+        if(this.props.userId == null) {
+            this.userId = this.getUrlParam("userId");
+        }
+        else {
+            this.userId = this.props.userId;
+        }
 
         this.titleChangeHandler = this.titleChangeHandler.bind(this);
         this.descriptionChangeHandler = this.descriptionChangeHandler.bind(this);
@@ -28,7 +39,9 @@ class Feedback extends React.Component {
 
     onCloseClick(event) {
         event.preventDefault();
-        this.props.hide();
+        if(this.props.hide) {
+            this.props.hide();
+        }
     }
 
     onSubmitClick(event) {
@@ -46,7 +59,7 @@ class Feedback extends React.Component {
                     'Content-Type': 'application/json; charset=utf-8'
                 },
                 dataType: 'text',
-                data: JSON.stringify({title: this.state.title, description: this.state.description, userId: this.props.userId}),
+                data: JSON.stringify({title: this.state.title, description: this.state.description, userId: this.userId}),
                 success: (response) => {
                     this.setState({title: '', description: ''});
                     submit_snackbar.snackbar('hide');
@@ -92,7 +105,7 @@ class Feedback extends React.Component {
 
                                 <div className="form-group">
                                     <button onClick={this.onSubmitClick} className={submitClass}>Submit</button>
-                                    <button onClick={this.onCloseClick} className="btn btn-raised btn-danger">Cancel</button>
+                                    {this.props.hide && (<button onClick={this.onCloseClick} className="btn btn-raised btn-danger">Cancel</button>)}
                                 </div>
                             </fieldset>
                         </form>
@@ -104,6 +117,6 @@ class Feedback extends React.Component {
 }
 
 Feedback.defaultProps = {
-
+    userId: null
 };
 export default Feedback;

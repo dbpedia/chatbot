@@ -11,6 +11,8 @@
 + [*] [dbpedia] [not] running [*]
 @ dbpedia status
 
++ problem with dbpedia [*]
+@ dbpedia status
 
 // DBpedia SPARQL is online or available
 + [dbpedia] sparql status
@@ -23,4 +25,7 @@
 @ dbpedia sparql status
 
 + [*] [dbpedia] sparql [not] running [*]
+@ dbpedia sparql status
+
++ problem with [dbpedia] sparql [*]
 @ dbpedia sparql status
