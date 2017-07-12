@@ -31,7 +31,7 @@ public class TVTemplateHandler extends OptionsTemplateHandler{
         return responseData;
     }
 
-    public ResponseGenerator handTVTemplateMessage() {
+    public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case TemplateType.TV_CAST:

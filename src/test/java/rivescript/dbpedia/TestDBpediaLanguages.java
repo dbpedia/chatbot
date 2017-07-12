@@ -1,6 +1,7 @@
-package rivescript;
+package rivescript.dbpedia;
 
 import org.junit.Test;
+import rivescript.RiveScriptBase;
 
 import java.util.ArrayList;
 

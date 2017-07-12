@@ -1,0 +1,6 @@
+
++ dbpedia lookup
+- {"type": "template", "name": "dbpedia-lookup"}
+
++ [*] (is|about) [dbpedia] lookup
+@ dbpedia lookup

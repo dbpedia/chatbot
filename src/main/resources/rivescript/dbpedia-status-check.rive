@@ -5,10 +5,10 @@
 + [*] dbpedia [is] (@statusup|@statusdown) [*]
 @ dbpedia status
 
-+ [*] [is] dbpedia [*] (@statusup|@statusdown)
++ [*] dbpedia [*] (@statusup|@statusdown)
 @ dbpedia status
 
-+ [*] [dbpedia] [not] running [*]
++ [*] dbpedia [not] running [*]
 @ dbpedia status
 
 + problem with dbpedia [*]
@@ -18,14 +18,30 @@
 + [dbpedia] sparql status
 - {"type": "status_check", "name": "dbpedia-sparql"}
 
-+ [*] [dbpedia] sparql [is] (@statusup|@statusdown) [*]
++ [*] sparql [is] (@statusup|@statusdown) [*]
 @ dbpedia sparql status
 
-+ [*] [is] [dbpedia] sparql [*] (@statusup|@statusdown)
++ [*] sparql [*] (@statusup|@statusdown)
 @ dbpedia sparql status
 
-+ [*] [dbpedia] sparql [not] running [*]
++ [*] sparql [not] running [*]
 @ dbpedia sparql status
 
 + problem with [dbpedia] sparql [*]
 @ dbpedia sparql status
+
+// DBpedia Lookup
++ [dbpedia] lookup status
+- {"type": "status_check", "name": "dbpedia-lookup"}
+
++ [*] lookup [is] (@statusup|@statusdown) [*]
+@ dbpedia lookup status
+
++ [*] lookup [*] (@statusup|@statusdown)
+@ dbpedia lookup status
+
++ [*] lookup [not] running [*]
+@ dbpedia lookup status
+
++ problem with [dbpedia] lookup [*]
+@ dbpedia lookup status

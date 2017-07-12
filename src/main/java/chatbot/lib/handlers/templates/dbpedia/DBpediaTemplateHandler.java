@@ -1,8 +1,9 @@
-package chatbot.lib.handlers.templates;
+package chatbot.lib.handlers.templates.dbpedia;
 
 import chatbot.Application;
 import chatbot.lib.Constants;
 import chatbot.lib.Utility;
+import chatbot.lib.handlers.TemplateHandler;
 import chatbot.lib.request.Request;
 import chatbot.lib.request.TemplateType;
 import chatbot.lib.response.ResponseData;
@@ -15,18 +16,12 @@ import java.util.ArrayList;
 /**
  * Created by ramgathreya on 7/3/17.
  */
-public class DBpediaTemplateHandler {
-    private Request request;
-    private String[] payload;
-    private Application.Helper helper;
-
+public class DBpediaTemplateHandler extends TemplateHandler {
     public DBpediaTemplateHandler(Request request, String[] payload, Application.Helper helper) {
-        this.request = request;
-        this.payload = payload;
-        this.helper = helper;
+        super(request, payload, helper);
     }
 
-    public ResponseGenerator handleDBpediaTemplateMessage() {
+    public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case TemplateType.DBPEDIA_ABOUT:

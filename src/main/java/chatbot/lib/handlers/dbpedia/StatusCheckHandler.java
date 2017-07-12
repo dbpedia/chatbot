@@ -36,6 +36,10 @@ public class StatusCheckHandler {
                 this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_RESOURCE_SERVICE));
                 this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_SPARQL_SERVICE));
                 break;
+            case Constants.DBPEDIA_LOOKUP_SERVICE:
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_LOOKUP_KEYWORD_SEARCH_SERVICE));
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_LOOKUP_PREFIX_SEARCH_SERVICE));
+                break;
             default:
                 this.service.add(Constants.SERVICES.get(service));
         }

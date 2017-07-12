@@ -40,7 +40,7 @@ public class TextHandler {
                 switch (rootNode.get("type").getTextValue()) {
                     case RiveScriptReplyType.TEMPLATE_SCENARIO:
                         responseGenerator = new TemplateHandler(request, Utility.split(rootNode.get("name").getTextValue(), Utility.PARAMETER_SEPARATOR), helper)
-                                .handleParameterMessage();
+                                .handleTemplateMessage();
                         break;
                     case RiveScriptReplyType.LANGUAGE_SCENARIO:
                         responseGenerator = new LanguageHandler(request, rootNode.get("name").getTextValue(), helper)

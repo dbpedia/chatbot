@@ -1,14 +1,12 @@
 package chatbot.lib.handlers;
 
 import chatbot.Application;
-import chatbot.lib.Ontology;
 import chatbot.lib.Utility;
-import chatbot.lib.api.TMDBService;
-import chatbot.lib.api.dbpedia.GenesisService;
-import chatbot.lib.api.SPARQL;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
-import chatbot.lib.handlers.templates.DBpediaTemplateHandler;
+import chatbot.lib.handlers.templates.dbpedia.DatasetTemplateHandler;
+import chatbot.lib.handlers.templates.dbpedia.DBpediaTemplateHandler;
 import chatbot.lib.handlers.templates.OptionsTemplateHandler;
+import chatbot.lib.handlers.templates.dbpedia.LookupTemplateHandler;
 import chatbot.lib.handlers.templates.entity.MovieTemplateHandler;
 import chatbot.lib.handlers.templates.entity.TVTemplateHandler;
 import chatbot.lib.request.TemplateType;
@@ -18,18 +16,15 @@ import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 /**
  * Created by ramgathreya on 5/23/17.
  */
 public class TemplateHandler {
     private static final Logger logger = LoggerFactory.getLogger(TemplateHandler.class);
 
-    private Request request;
-    private String[] payload;
-    private Application.Helper helper;
+    protected Request request;
+    protected String[] payload;
+    protected Application.Helper helper;
     
     public TemplateHandler(Request request, String payload, Application.Helper helper) {
         this.request = request;
@@ -43,7 +38,7 @@ public class TemplateHandler {
         this.helper = helper;
     }
 
-    public ResponseGenerator handleParameterMessage() {
+    public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case TemplateType.START:
@@ -53,15 +48,31 @@ public class TemplateHandler {
                 responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
                 break;
+
+            // Checking if a service is available
             case TemplateType.CHECK_SERVICE:
                 responseGenerator = new StatusCheckHandler(request, payload[1], helper).handleStatusCheck();
                 break;
 
-            // All DBpedia Template Scenarios
+            // DBpedia Template Scenarios
             case TemplateType.DBPEDIA_ABOUT:
             case TemplateType.DBPEDIA_CONTRIBUTE:
             case TemplateType.DBPEDIA_FALLBACK:
-                responseGenerator = new DBpediaTemplateHandler(request, payload, helper).handleDBpediaTemplateMessage();
+                responseGenerator = new DBpediaTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
+            // DBpedia Datset Scenarios
+            case TemplateType.DBPEDIA_DATASET:
+            case TemplateType.DBPEDIA_DATASET_NLP:
+                responseGenerator = new DatasetTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
+            // DBpedia Lookup Scenarios
+            case TemplateType.DBPEDIA_LOOKUP:
+            case TemplateType.DBPEDIA_LOOKUP_KEYWORD_SEARCH:
+            case TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH:
+            case TemplateType.DBPEDIA_LOOKUP_PARAMETERS:
+                responseGenerator = new LookupTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
             // Further Options Scenario
@@ -69,7 +80,7 @@ public class TemplateHandler {
             case TemplateType.LOAD_SIMILAR:
             case TemplateType.LOAD_RELATED:
             case TemplateType.LEARN_MORE:
-                responseGenerator = new OptionsTemplateHandler(request, payload, helper).handleOptionsTemplateMessage();
+                responseGenerator = new OptionsTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
             // TV Related Scenario
@@ -77,7 +88,7 @@ public class TemplateHandler {
             case TemplateType.TV_CREW:
             case TemplateType.TV_SIMILAR:
             case TemplateType.TV_RELATED:
-                responseGenerator = new TVTemplateHandler(request, payload, helper).handTVTemplateMessage();
+                responseGenerator = new TVTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
             // Movie Related Scenario
@@ -85,7 +96,7 @@ public class TemplateHandler {
             case TemplateType.MOVIE_CREW:
             case TemplateType.MOVIE_SIMILAR:
             case TemplateType.MOVIE_RELATED:
-                responseGenerator = new MovieTemplateHandler(request, payload, helper).handleMovieTemplateMessage();
+                responseGenerator = new MovieTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
             // When User Clicks Yes or No for Feedback Smart Reply

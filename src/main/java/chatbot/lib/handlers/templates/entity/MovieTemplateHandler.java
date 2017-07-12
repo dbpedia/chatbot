@@ -28,7 +28,7 @@ public class MovieTemplateHandler extends OptionsTemplateHandler {
         return responseData;
     }
 
-    public ResponseGenerator handleMovieTemplateMessage() {
+    public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch(payload[0]) {
             case TemplateType.MOVIE_CAST:

@@ -55,7 +55,7 @@ public class RequestRouter {
                 break;
             case RequestType.PARAMETER_MESSAGE:
                 responseGenerator = new TemplateHandler(request, request.getPayload(), helper)
-                    .handleParameterMessage();
+                    .handleTemplateMessage();
                 break;
         }
         // Adding Feedback Response if required

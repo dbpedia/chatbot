@@ -1,3 +1,15 @@
++ [*] [dbpedia] dataset@s [*]
+- {"type": "template", "name": "dbpedia-dataset"}
 
-+ [*] [dbpedia] dataset@s
-- {"type": "template", "name": "dbpedia-about"}
++ [*] nlp [*] dataset@s [*]
+- {"type": "template", "name": "dbpedia-dataset-nlp"}
+
++ [*] dataset@s [*] nlp [*]
+@ nlp dataset
+
++ [*] ontology [*] dataset@s [*]
+- {"type": "template", "name": "dbpedia-dataset-ontology"}
+
++ [*] dataset@s [*] ontology [*]
+@ ontology dataset
+

@@ -6,6 +6,7 @@ import chatbot.lib.Utility;
 import chatbot.lib.api.SPARQL;
 import chatbot.lib.api.TMDBService;
 import chatbot.lib.api.dbpedia.GenesisService;
+import chatbot.lib.handlers.TemplateHandler;
 import chatbot.lib.handlers.templates.entity.MovieTemplateHandler;
 import chatbot.lib.handlers.templates.entity.TVTemplateHandler;
 import chatbot.lib.request.Request;
@@ -22,17 +23,11 @@ import java.util.ArrayList;
 /**
  * Created by ramgathreya on 7/3/17.
  */
-public class OptionsTemplateHandler {
+public class OptionsTemplateHandler extends TemplateHandler {
     private static final Logger logger = LoggerFactory.getLogger(OptionsTemplateHandler.class);
 
-    protected Request request;
-    protected String[] payload;
-    protected Application.Helper helper;
-
     public OptionsTemplateHandler(Request request, String[] payload, Application.Helper helper) {
-        this.request = request;
-        this.payload = payload;
-        this.helper = helper;
+        super(request, payload, helper);
     }
 
     protected ResponseGenerator getSimilarOrRelatedEntities(String scenario, String uri) {
@@ -116,7 +111,7 @@ public class OptionsTemplateHandler {
         return responseGenerator.addSmartReplyResponse(getDefaultOptions(uri, label));
     }
 
-    public ResponseGenerator handleOptionsTemplateMessage() {
+    public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch (payload[0]) {
             // Pagination

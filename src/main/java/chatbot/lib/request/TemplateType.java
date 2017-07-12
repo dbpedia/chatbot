@@ -13,6 +13,13 @@ public interface TemplateType {
     String DBPEDIA_FALLBACK = "dbpedia-fallback";
 
     String DBPEDIA_DATASET = "dbpedia-dataset";
+    String DBPEDIA_DATASET_NLP = "dbpedia-dataset-nlp";
+    String DBPEDIA_DATASET_ONTOLOGY = "dbpedia-dataset-ontology";
+
+    String DBPEDIA_LOOKUP = "dbpedia-lookup";
+    String DBPEDIA_LOOKUP_PREFIX_SEARCH = "dbpedia-lookup-prefix-search";
+    String DBPEDIA_LOOKUP_KEYWORD_SEARCH = "dbpedia-lookup-keyword-search";
+    String DBPEDIA_LOOKUP_PARAMETERS = "dbpedia-lookup-parameters";
 
     String TV_CAST = "tv-cast";
     String TV_CREW = "tv-crew";
