@@ -4,3 +4,15 @@
 
 + [*] (is|about) [dbpedia] lookup
 @ dbpedia lookup
+
++ [*] (prefix search|prefixsearch) [*]
+- {"type": "template", "name": "dbpedia-lookup-prefix-search"}
+
++ [*] (keyword search|keywordsearch) [*]
+- {"type": "template", "name": "dbpedia-lookup-keyword-search"}
+
++ [*] lookup parameters [*]
+- {"type": "template", "name": "dbpedia-lookup-parameters"}
+
++ [*] lookup restricting by class // Based on question in mailing list
+@ lookup parameters

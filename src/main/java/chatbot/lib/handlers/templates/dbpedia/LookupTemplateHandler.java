@@ -55,7 +55,7 @@ public class LookupTemplateHandler extends TemplateHandler{
                 }}));
                 break;
             case TemplateType.DBPEDIA_LOOKUP_PARAMETERS:
-                responseGenerator.addTextResponse(new ResponseData("The query parameters accepted by the endpoints are:\n1 - QueryString: a string for which a DBpedia URI should be found.\n2 - QueryClass: a DBpedia class from the Ontology that the results should have (for owl#Thing and untyped resource, leave this parameter empty).\n3 - MaxHits: the maximum number of returned results (default: 5)\n"));
+                responseGenerator.addTextResponse(new ResponseData("The query parameters accepted by DBpedia Lookup are:\n1 - QueryString: a string for which a DBpedia URI should be found.\n2 - QueryClass: a DBpedia class from the Ontology that the results should have (for owl#Thing and untyped resource, leave this parameter empty).\n3 - MaxHits: the maximum number of returned results (default: 5)\n"));
                 responseGenerator.addButtonTextResponse(new ResponseData("Would you like to know about:", new ArrayList<ResponseData.Button>(){{
                     add(new ResponseData.Button("Keyword Search", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_LOOKUP_KEYWORD_SEARCH));
                     add(new ResponseData.Button("Prefix Search", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
