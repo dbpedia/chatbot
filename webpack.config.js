@@ -3,7 +3,8 @@ module.exports = {
   entry: {
     app: './app/src/js/index.js',
     feedback: './app/src/js/feedback.js',
-    login: './app/src/js/login.js'
+    login: './app/src/js/login.js',
+    admin: './app/src/js/admin.js'
   },
   output: {
     path: path.resolve('./src/main/app/js/'),

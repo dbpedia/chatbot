@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Constants from './Constants.jsx';
+import * as Constants from '../Constants.jsx';
 
 class ChatInput extends React.Component {
 
@@ -84,51 +84,55 @@ class ChatInput extends React.Component {
         let moreButtonOptionClass = 'btn btn-raised btn-fab btn-fab-mini';
         let flyoutClass = 'more-button-container' + (this.state.isFlyoutOpen ? ' active' : '');
 
-        return (
-            <form onSubmit={this.submitHandler} id="chat-input-container">
-                <fieldset>
-                    <div className="form-group">
-                        {this.state.inputMargin > 0 && (
-                            <nav className={flyoutClass}>
-                                <a onClick={(event) => this.onFlyoutOptionClick(event, 'start')} className="button">
-                                    <div className={`${moreButtonOptionClass} btn-info`}>
-                                        <img src="/images/icon-restart-32.png" />
-                                    </div>
-                                    <span>Start Over</span>
-                                </a>
-                                <a onClick={(event) => this.onFlyoutOptionClick(event, 'feedback')} className="button">
-                                    <div className={`${moreButtonOptionClass} btn-danger`}>
-                                        <img src="/images/icon-feedback-32.png" />
-                                    </div>
-                                    <span>Feedback</span>
-                                </a>
-                                <a className={moreButtonClass} onClick={this.toggleFlyout}>
-                                    <img src="/images/icon-plus-32.png" />
-                                </a>
-                            </nav>
-                        )}
+        if (this.props.isAdmin) {
+            return (<div></div>)
+        }
+        else {
+            return (<form onSubmit={this.submitHandler} id="chat-input-container">
+                    <fieldset>
+                        <div className="form-group">
+                            {this.state.inputMargin > 0 && (
+                                <nav className={flyoutClass}>
+                                    <a onClick={(event) => this.onFlyoutOptionClick(event, 'start')} className="button">
+                                        <div className={`${moreButtonOptionClass} btn-info`}>
+                                            <img src="/images/icon-restart-32.png" />
+                                        </div>
+                                        <span>Start Over</span>
+                                    </a>
+                                    <a onClick={(event) => this.onFlyoutOptionClick(event, 'feedback')} className="button">
+                                        <div className={`${moreButtonOptionClass} btn-danger`}>
+                                            <img src="/images/icon-feedback-32.png" />
+                                        </div>
+                                        <span>Feedback</span>
+                                    </a>
+                                    <a className={moreButtonClass} onClick={this.toggleFlyout}>
+                                        <img src="/images/icon-plus-32.png" />
+                                    </a>
+                                </nav>
+                            )}
 
-                        <input type="text"
-                               className="form-control"
-                               id="chat-input"
-                               onChange={this.textChangeHandler}
-                               value={this.state.chatInput}
-                               placeholder="Write a message"
-                               autoComplete="off"
-                               style={{marginLeft: this.state.inputMargin}}
-                               onFocus={this.inputFocus}
-                               onBlur={this.inputBlur}
-                               />
+                            <input type="text"
+                                   className="form-control"
+                                   id="chat-input"
+                                   onChange={this.textChangeHandler}
+                                   value={this.state.chatInput}
+                                   placeholder="Write a message"
+                                   autoComplete="off"
+                                   style={{marginLeft: this.state.inputMargin}}
+                                   onFocus={this.inputFocus}
+                                   onBlur={this.inputBlur}
+                                   />
 
-                        {this.state.showSendButton && (
-                            <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
-                                 <img src="/images/icon-send-32.png" />
-                            </a>
-                        )}
-                    </div>
-                </fieldset>
-            </form>
-        );
+                            {this.state.showSendButton && (
+                                <a href="#" onClick={this.submitHandler} className={sendButtonClass}>
+                                     <img src="/images/icon-send-32.png" />
+                                </a>
+                            )}
+                        </div>
+                    </fieldset>
+                </form>
+            );
+        }
     }
 }
 

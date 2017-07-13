@@ -1,14 +1,5 @@
 ! version = 2.0
 
-// Added for testing
-+ my name is *
-- <set name=<formal>> I will remember to call you <get name>
-
-// Added for testing
-+ (what is|do you know) my name
-* <get name> != undefined => Your name is <get name>!
-- I don't know your name.
-
 + (yes|no|maybe)
 - Alright
 - Gotcha

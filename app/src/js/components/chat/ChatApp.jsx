@@ -2,7 +2,7 @@ import React from 'react';
 
 import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
-import * as Constants from './Constants.jsx';
+import * as Constants from '../Constants.jsx';
 import Feedback from './Feedback.jsx';
 
 class ChatApp extends React.Component {
@@ -88,9 +88,11 @@ class ChatApp extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.showStart();
-        }, 500);
+        if (!this.props.isAdmin) {
+            setTimeout(() => {
+                this.showStart();
+            }, 500);
+        }
     }
 
     removeSmartReplies() {
@@ -136,13 +138,31 @@ class ChatApp extends React.Component {
         this.setState({overlay: false});
     }
 
+    clearChatHistory() {
+        this.setState({messages: []});
+    }
+
+    addChatHistory(msgs) {
+        var messages = this.state.messages;
+        for (var index in msgs) {
+            messages.push(msgs[index]);
+        }
+        this.setState({messages: messages});
+    }
+
     render() {
+        var style = {};
+        if(this.props.height) {
+            style.height = this.props.height;
+        }
         return (
-            <div className="card expandOpen" id="chat-app-container">
+            <div className="card expandOpen" id="chat-app-container" style={style}>
                 <Messages messages={this.state.messages}
                     onSend={this.sendHandler}
+                    isAdmin={this.props.isAdmin}
                     loading={this.state.loading} />
                 <ChatInput
+                    isAdmin={this.props.isAdmin}
                     onSend={this.sendHandler}
                     showStart={this.showStart}
                     showFeedback={this.showFeedbackModal}
@@ -161,7 +181,7 @@ class ChatApp extends React.Component {
 }
 
 ChatApp.defaultProps = {
-
+    isAdmin: false
 };
 
 export default ChatApp;

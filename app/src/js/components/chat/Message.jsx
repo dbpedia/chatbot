@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Constants from './Constants.jsx';
+import * as Constants from '../Constants.jsx';
 
 class Message extends React.Component {
 
@@ -11,7 +11,6 @@ class Message extends React.Component {
     renderBotDiv() {
         // If message is from bot and messageType not carousel then show the bot icon
         var excluded = [Constants.response.ResponseType.GENERIC_MESSAGE];
-// , Constants.response.ResponseType.SMART_REPLY_MESSAGE
 
         // Only show DBpedia icon for messages which are from bot and not carousel or smart reply
         if (this.props.fromBot && excluded.indexOf(this.props.message.messageType) == -1) {
@@ -26,10 +25,12 @@ class Message extends React.Component {
     // Label is used internally to show what user has clicked on
     onParamButtonClick(event, uri, label) {
         event.preventDefault();
-        this.props.onSend({
-            messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
-            messageData: [{payload: uri, label: label}]
-        })
+        if (!this.props.isAdmin) {
+            this.props.onSend({
+                messageType: Constants.request.RequestType.PARAMETER_MESSAGE,
+                messageData: [{payload: uri, label: label}]
+            });
+        }
     }
 
     render() {
@@ -40,7 +41,7 @@ class Message extends React.Component {
             case Constants.request.RequestType.PARAMETER_MESSAGE:
                 msgDiv = (
                     <div className={`bubble card pullUp ${fromBot}`}>
-                        {messageData[0].label}
+                        {messageData[0].label || messageData[0].payload}
                     </div>
                 );
             break;
@@ -92,6 +93,7 @@ class Message extends React.Component {
                     </div>
                 );
             break;
+            case 'carousel': // Added for Backwards Compatibility can be removed later if we don't have lot of history for carousel
             case Constants.response.ResponseType.GENERIC_MESSAGE:
                 msgDiv = (
                     <div className="carousel-container slideLeft">

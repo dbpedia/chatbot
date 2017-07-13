@@ -1,6 +1,6 @@
 import React from 'react';
 import Message from './Message.jsx';
-import * as Constants from './Constants.jsx';
+import * as Constants from '../Constants.jsx';
 
 class Messages extends React.Component {
 
@@ -15,6 +15,7 @@ class Messages extends React.Component {
             return (
                 <Message
                     key={i}
+                    isAdmin={this.props.isAdmin}
                     message={message.message}
                     fromBot={message.fromBot}
                     onSend={this.props.onSend} />

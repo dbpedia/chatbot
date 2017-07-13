@@ -3,16 +3,19 @@
 + about
 - I am the <bot name>
 
-+ who are you
++ [*] who are you
 @ about
 
-+ (what is|tell me) your name
++ [*] (what is|tell me) your name
 @ about
 
-+ what are you [*]
++ [*] what are you [*]
 @ about
 
-+ how are you [*]
++ [*] who (made|created) you [*]
+- My makers are from the Open Source DBpedia Organization
+
++ [*] how are you [*]
 - I am fine thanks for asking
 - I am good
 - Never been better
