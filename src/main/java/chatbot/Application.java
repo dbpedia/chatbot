@@ -16,6 +16,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -44,6 +49,34 @@ public class Application {
             registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/");
             registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/");
             super.addResourceHandlers(registry);
+        }
+    }
+
+    @Configuration
+    @EnableWebSecurity
+    static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers("/", "/assets/**/*", "/js/*", "/images/**/*", "/feedback", "/webhook", "/fbwebhook", "/slackwebhook").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin()
+                    .defaultSuccessUrl("/admin")
+                    .loginPage("/login")
+                    .permitAll()
+                    .and()
+                    .logout()
+                    .permitAll();
+        }
+
+        @Autowired
+        public void configureGlobal(AuthenticationManagerBuilder auth, @Value("${admin.username}") String username, @Value("${admin.password}") String password) throws Exception {
+            auth
+                    .inMemoryAuthentication()
+                    .withUser(username).password(password).roles("ADMIN");
         }
     }
 

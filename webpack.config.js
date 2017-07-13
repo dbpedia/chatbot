@@ -2,7 +2,8 @@ const path = require('path');
 module.exports = {
   entry: {
     app: './app/src/js/index.js',
-    feedback: './app/src/js/feedback.js'
+    feedback: './app/src/js/feedback.js',
+    login: './app/src/js/login.js'
   },
   output: {
     path: path.resolve('./src/main/app/js/'),

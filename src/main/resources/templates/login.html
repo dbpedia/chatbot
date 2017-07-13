@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>DBpedia Chatbot - Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:500" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap-material-design/dist/css/bootstrap-material-design.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap-material-design/dist/css/ripples.min.css" />
+
+    <script type="text/javascript" src="assets/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/bootstrap-material-design/dist/js/ripples.min.js"></script>
+    <script type="text/javascript" src="assets/bootstrap-material-design/dist/js/material.min.js"></script>
+</head>
+<body>
+    <div class="login-container col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1">
+        <form class="card" th:action="@{/login}" method="post">
+            <fieldset>
+                <legend>Login</legend>
+
+                <div class="form-group">
+                    <input class="form-control" placeholder="Enter Username" type="text" name="username" />
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" placeholder="Enter Password" type="password" name="password" />
+                </div>
+
+                <div class="form-group">
+                    <input class="btn btn-primary btn-raised" type="submit" value="Sign In"/>
+                </div>
+
+                <div class="label label-danger" th:if="${param.error}">
+                    Invalid username and password.
+                </div>
+                <div class="label label-info" th:if="${param.logout}">
+                    You have been logged out.
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript">
+            $(function() {
+                $.material.init();
+            });
+    </script>
+</body>
+</html>

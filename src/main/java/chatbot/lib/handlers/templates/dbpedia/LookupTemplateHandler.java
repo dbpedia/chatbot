@@ -24,7 +24,7 @@ public class LookupTemplateHandler extends TemplateHandler{
             case TemplateType.DBPEDIA_LOOKUP:
                 responseGenerator.addTextResponse(new ResponseData("DBpedia Lookup is a web service that can be used to look up DBpedia URIs by related keywords. Two APIs are offered: Keyword Search and Prefix Search. A hosted version of the Lookup service is available on the DBpedia server infrastructure."));
                 responseGenerator.addButtonTextResponse(new ResponseData("You can find the official documentation here:", new ArrayList<ResponseData.Button>(){{
-                    add(new ResponseData.Button("GitHub", ResponseType.BUTTON_LINK, "https://github.com/dbpedia/lookup"));
+                    add(new ResponseData.Button("Documentation", ResponseType.BUTTON_LINK, "https://github.com/dbpedia/lookup"));
                 }}));
                 responseGenerator.addButtonTextResponse(new ResponseData("Would you like to know about:", new ArrayList<ResponseData.Button>(){{
                     add(new ResponseData.Button("Keyword Search", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_LOOKUP_KEYWORD_SEARCH));
@@ -44,7 +44,7 @@ public class LookupTemplateHandler extends TemplateHandler{
                 }}));
                 break;
             case TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH:
-                responseGenerator.addTextResponse(new ResponseData("The Prefix Search API can be used to implement autocomplete input boxes. For a given partial keyword like berl the API returns URIs of related DBpedia resources like http://dbpedia.org/resource/Berlin."));
+                responseGenerator.addTextResponse(new ResponseData("The DBpedia Lookup Prefix Search API can be used to implement autocomplete input boxes. For a given partial keyword like berl the API returns URIs of related DBpedia resources like http://dbpedia.org/resource/Berlin."));
                 responseGenerator.addButtonTextResponse(new ResponseData("Example: Top five resources for which a keyword starts with 'berl'", new ArrayList<ResponseData.Button>(){{
                     add(new ResponseData.Button("View Result", ResponseType.BUTTON_LINK, "http://lookup.dbpedia.org/api/search/PrefixSearch?QueryClass=&MaxHits=5&QueryString=berl"));
                 }}));

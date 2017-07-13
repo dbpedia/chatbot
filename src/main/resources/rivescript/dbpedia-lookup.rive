@@ -5,6 +5,14 @@
 + [*] (is|about) [dbpedia] lookup
 @ dbpedia lookup
 
+// Manual Install redirected to about Lookup since the documentation link has information about the same
+// Can be extended to a new scenario in the future if required
++ [*] lookup [*] install [*]
+@ dbpedia lookup
+
++ [*] install [*] lookup [*]
+@ dbpedia lookup
+
 + [*] (prefix search|prefixsearch) [*]
 - {"type": "template", "name": "dbpedia-lookup-prefix-search"}
 
@@ -16,3 +24,7 @@
 
 + [*] lookup restricting by class // Based on question in mailing list
 @ lookup parameters
+
+// Fallback Scenario - can be expanded
++ * lookup *
+- {"type": "template", "name": "dbpedia-fallback|dbpedia-lookup"}

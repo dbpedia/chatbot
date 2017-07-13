@@ -1,6 +1,8 @@
 # DBpedia Chatbot
 
 ## Environment Configurations
+     admin.username = <admin-username>
+     admin.password = <admin-password>
      chatbot.baseUrl = <https-url-to-access-the-bot>
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>

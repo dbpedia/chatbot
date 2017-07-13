@@ -1,6 +1,7 @@
 package chatbot.lib.handlers;
 
 import chatbot.Application;
+import chatbot.lib.Constants;
 import chatbot.lib.Utility;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
 import chatbot.lib.handlers.templates.dbpedia.DatasetTemplateHandler;
@@ -46,7 +47,7 @@ public class TemplateHandler {
                 responseGenerator.setShowFeedback(false);
             case TemplateType.HELP:
                 responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
-                responseGenerator.addCarouselResponse(ResponseTemplates.getHelperTemplate());
+                responseGenerator.addCarouselResponse(getHelperTemplate());
                 break;
 
             // Checking if a service is available
@@ -115,11 +116,38 @@ public class TemplateHandler {
 
             // FAQs across services
             case TemplateType.FAQ:
-                responseGenerator.addSmartReplyResponse(ResponseTemplates.getFAQTemplate(payload[1]));
+                responseGenerator.addSmartReplyResponse(getFAQTemplate(payload[1]));
                 break;
             default:
                 responseGenerator.setFallbackResponse(request, helper.getRiveScriptBot());
         }
         return responseGenerator;
+    }
+
+    public ResponseData[] getHelperTemplate() {
+        return new ResponseData[]{
+                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia", "What is DBpedia?\nHow can I contribute to DBpedia?"),
+                new ResponseData("/images/icon-user-92.png", "Who ?", "Albert Einstein\nTell me about Barack Obama"),
+                new ResponseData("/images/icon-help-92.png", "What ?", "What is a planet?\nWhat is Mathematics?"),
+                new ResponseData("/images/icon-compass-92.png", "Where ?", "Where is the Eiffel Tower?\nWhere is Germany's capital?")
+        };
+    }
+
+    public ResponseData getFAQTemplate(String serviceName) {
+        String[] service = Constants.SERVICES.get(serviceName);
+        ResponseData responseData = new ResponseData("Here are some frequently asked questions about " + service[0] + ":");
+        switch(serviceName) {
+            case Constants.DBPEDIA_SERVICE:
+                responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia?", TemplateType.DBPEDIA_ABOUT));
+                responseData.addSmartReply(new ResponseData.SmartReply("How can I Contribute?", TemplateType.DBPEDIA_CONTRIBUTE));
+                responseData.addSmartReply(new ResponseData.SmartReply("Is DBpedia Working?", TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
+                break;
+            case Constants.DBPEDIA_LOOKUP_SERVICE:
+                responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Lookup?", TemplateType.DBPEDIA_LOOKUP));
+                responseData.addSmartReply(new ResponseData.SmartReply("Tell me about Lookup Parameters.", TemplateType.DBPEDIA_LOOKUP_PARAMETERS));
+                responseData.addSmartReply(new ResponseData.SmartReply("What is Lookup PrefixSearch?", TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
+                break;
+        }
+        return responseData;
     }
 }
