@@ -45,6 +45,7 @@ public class TestNLHandler {
     @Test
     public void testLiteral() throws Exception {
         checkLiteral("user", "What is the population of France?");
+        checkLiteral("user", "When was Angela Merkel born?");
     }
 
     @Test

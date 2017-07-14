@@ -38,7 +38,7 @@ public class QAService {
     // Calls QA Service then returns resulting data as a list of Data Objects. The Data class is defined below as an inner class to be used here locally
     public Data search(String question) throws Exception {
         return qanary.search(question)
-                .addData(wolframAlpha.search(question));
+                .addData(wolframAlpha.search(question), true);
     }
 
     public static class Data {
@@ -62,9 +62,17 @@ public class QAService {
             return this;
         }
 
-        public Data addData(Data data) {
+        public Data addData(Data data, boolean fromWolfram) {
             uris.addAll(data.getUris());
-            literals.addAll(data.getLiterals());
+            // Literal values from WolframAlpha supersede QANARY since they have more detailed information
+            if (fromWolfram) {
+                if(data.getLiterals().size() > 0) {
+                    literals = data.getLiterals();
+                }
+            }
+            else {
+                literals.addAll(data.getLiterals());
+            }
             return this;
         }
 

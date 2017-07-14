@@ -16,6 +16,7 @@ public class TestResponseBase {
         assertEquals(response.getMessageType(), ResponseType.TEXT_MESSAGE);
         assertEquals(messageData.size(), 1);
         assertNotNull(messageData.get(0).getText());
+        assertEquals(messageData.get(0).getText().contains("\n"), false); // Check that we are showing only 1 response and not both responses from both QA Systems
     }
 
     public static void checkButtons(List<ResponseData.Button> buttons) {
