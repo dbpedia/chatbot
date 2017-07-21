@@ -114,7 +114,7 @@ class Message extends React.Component {
 
                                         {message.text && (
                                             <div className="text wrap-word">
-                                                {message.text.split('\n').map((line, index) => {
+                                                {message.text.substr(0, 200).split('\n').map((line, index) => {
                                                     return <div key={index}>{line}</div>;
                                                 })}
                                             </div>

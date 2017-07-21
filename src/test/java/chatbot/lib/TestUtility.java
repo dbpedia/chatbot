@@ -35,6 +35,7 @@ public class TestUtility {
                     wolframRepository,
                     properties.getProperty("cloudant.chatDB"),
                     properties.getProperty("cloudant.feedbackDB"),
+                    properties.getProperty("cloudant.explorerDB"),
                     properties.getProperty("tmdb.apiKey")
             );
         }

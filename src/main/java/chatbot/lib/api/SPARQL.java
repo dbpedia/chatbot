@@ -32,6 +32,7 @@ public class SPARQL {
     private static final String VAR_LABEL = "label";
     private static final String VAR_THUMBNAIL = "thumbnail";
     private static final String VAR_ABSTRACT = "abstract";
+    private static final String VAR_DESCRIPTION = "description";
     private static final String VAR_PRIMARY_TOPIC = "primaryTopic";
 
     private static final String PREFIXES = new String(
@@ -40,10 +41,9 @@ public class SPARQL {
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
             "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
             "PREFIX dbp: <http://dbpedia.org/property/>\n" +
-            "PREFIX dbr: <http://dbpedia.org/resource/>\n"
+            "PREFIX dbr: <http://dbpedia.org/resource/>\n" +
+            "PREFIX dct: <http://purl.org/dc/terms/>\n"
     );
-
-    private static final String BASIC_ENTITY_PROPERTIES = "filter( (?property = rdfs:label && lang(?value) = 'en' ) || (?property = dbo:abstract && lang(?value) = 'en' ) || ?property=dbo:thumbnail || ?property=foaf:isPrimaryTopicOf) .";
 
     public String buildQuery(String query) {
         return PREFIXES + query;
@@ -72,7 +72,7 @@ public class SPARQL {
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
         RDFNode node;
         ResponseData responseData = new ResponseData();
-        String label = result.get(VAR_LABEL).asLiteral().getString();
+        String label = result.get(VAR_LABEL).asLiteral().getString(), text = "";
         responseData.setTitle(label);
         responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
 
@@ -89,10 +89,19 @@ public class SPARQL {
 //            }
 //        }
 
+        node = result.get(VAR_DESCRIPTION);
+        if(node != null) {
+            text += node.asLiteral().getString() + "\n\n";
+        }
+
         node = result.get(VAR_ABSTRACT);
         if (node != null) {
             String summary = processWikipediaAbstract(node.asLiteral().getString());
-            responseData.setText(summary);
+            text += summary;
+        }
+
+        if (!text.equals("")) {
+            responseData.setText(text);
         }
 
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
@@ -100,14 +109,24 @@ public class SPARQL {
         return responseData;
     }
 
+    private String getEntityWhereCondition(String uri) {
+        // URI could either be the actual URI or a variable reference
+        // In case of actual URI it needs to be enclosed with <uri> which is not required for variable reference
+        if(!uri.startsWith("?")) {
+            uri = "<" + uri + ">";
+        }
+        return uri + " rdfs:label ?" + VAR_LABEL + ".\n" +
+                uri + " foaf:isPrimaryTopicOf ?" + VAR_PRIMARY_TOPIC + ".\n" +
+                "OPTIONAL {" + uri + " dbo:thumbnail ?" + VAR_THUMBNAIL + ". }\n" +
+                "OPTIONAL {" + uri + " dbo:abstract ?" + VAR_ABSTRACT + ". FILTER(lang(?" + VAR_ABSTRACT + ")=\"en\") }\n" +
+                "OPTIONAL {" + uri + " dct:description ?" + VAR_DESCRIPTION + ". FILTER(lang(?" + VAR_DESCRIPTION + ")=\"en\") }\n" +
+                "FILTER(lang(?" + VAR_LABEL + ") = \"en\")\n";
+    }
+
     public ResponseData getEntityInformation(String uri) {
-        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'" +
-                "<{0}> rdfs:label ?{1}.\n" +
-                "<{0}> foaf:isPrimaryTopicOf ?{2}.\n" +
-                "OPTIONAL '{' <{0}> dbo:thumbnail ?{3}. '}'\n" +
-                "OPTIONAL '{' <{0}> dbo:abstract ?{4}. FILTER(lang(?{4}) = \"en\"). '}'\n" +
-                "FILTER(lang(?{1}) = \"en\")" +
-            "'}'", uri, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT));
+        String query = buildQuery("SELECT * WHERE {" +
+                getEntityWhereCondition(uri) +
+            "}");
         QueryExecution queryExecution = executeQuery(query);
         ResponseData responseData = null;
 
@@ -170,26 +189,18 @@ public class SPARQL {
     }
 
     public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
-        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
-                "<{0}> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?{1} .\n" +
-                "?{1} rdfs:label ?{2} .\n" +
-                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
-                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
-                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
-                "FILTER(lang(?{2}) = \"en\") .\n" +
-        "'}' ORDER BY ?{1} offset {6} limit {7}", uri, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT, offset, limit));
+        String query = buildQuery("SELECT * WHERE {\n" +
+                "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?" + VAR_URI + " .\n" +
+                getEntityWhereCondition("?" + VAR_URI) +
+        "} ORDER BY ?" + VAR_URI + " OFFSET " + offset + " LIMIT " + limit);
         return getEntities(query);
     }
 
     public ArrayList<ResponseData> getEntitiesByURIs(String uris) {
-        String query = buildQuery(MessageFormat.format("SELECT * WHERE '{'\n" +
-                "VALUES ?{1} '{' {0} '}' .\n" +
-                "?{1} rdfs:label ?{2} .\n" +
-                "?{1} foaf:isPrimaryTopicOf ?{3} .\n" +
-                "OPTIONAL '{' ?{1} dbo:thumbnail ?{4}. '}' .\n" +
-                "OPTIONAL '{' ?{1} dbo:abstract ?{5}. FILTER(lang(?{5}) = \"en\"). '}'\n" +
-                "FILTER(lang(?{2}) = \"en\") .\n" +
-                "'}'", uris, VAR_URI, VAR_LABEL, VAR_PRIMARY_TOPIC, VAR_THUMBNAIL, VAR_ABSTRACT));
+        String query = buildQuery("SELECT * WHERE {\n" +
+                "VALUES ?" + VAR_URI + " { " + uris + "} .\n" +
+                getEntityWhereCondition("?" + VAR_URI) +
+                "}");
         return getEntities(query);
     }
 

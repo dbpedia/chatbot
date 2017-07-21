@@ -271,7 +271,6 @@ public class SlackHandler {
 
     @PreDestroy
     public void destroy() throws IOException {
-        logger.info("coems here to disconnect");
         rtmClient.disconnect();
     }
 }

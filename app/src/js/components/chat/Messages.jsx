@@ -7,7 +7,9 @@ class Messages extends React.Component {
     // Need to study this in more detail later
     componentDidUpdate() {
         const element = document.getElementById("messages-container");
-        element.scrollTop = element.scrollHeight;
+        if(!this.props.isAdmin) {
+            element.scrollTop = element.scrollHeight;
+        }
     }
 
     render() {

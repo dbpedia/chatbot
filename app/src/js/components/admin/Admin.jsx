@@ -44,7 +44,8 @@ class Admin extends React.Component {
                 response = JSON.parse(response);
                 if(response.length == 0) {
                     $.snackbar({content: 'No More Users', timeout: 5000});
-                    this.setState({loading: false});
+                    page = page > 1 ? page - 1 : 1; // Correction for when page parameter is on the last page so that it does not keep incrementing
+                    this.setState({loading: false, userListPage: page});
                 }
                 else {
                     this.setState({userList: response, loading: false});

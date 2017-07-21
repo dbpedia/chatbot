@@ -12,7 +12,8 @@
      cloudant.username = <couchdb-username>
      cloudant.password = <couchdb-password>
      cloudant.chatDB = <couchdb-chatdb-name>
-     cloudant.feedbackDB = <couchdb-feedback-name>
+     cloudant.feedbackDB = <couchdb-feedbackdb-name>
+     cloudant.explorerDB = <couchdb-explorerdb-name>
      
      tmdb.apiKey = <tmdb-api-key>
      

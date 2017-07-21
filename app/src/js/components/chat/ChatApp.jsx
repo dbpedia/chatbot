@@ -98,7 +98,7 @@ class ChatApp extends React.Component {
     removeSmartReplies() {
         this.state.messages.map((message, index) => {
             if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
-                delete this.state.messages[index].message.messageData[0].smartReplies;
+                delete this.state.messages[index];
             }
         });
     }

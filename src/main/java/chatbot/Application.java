@@ -83,7 +83,7 @@ public class Application {
     @Component
     public static class Helper {
         private RiveScriptBot riveScriptBot;
-        private Database chatDB, feedbackDB;
+        private Database chatDB, feedbackDB, explorerDB;
         private ElizaMain eliza;
         private WolframRepository wolframRepository;
         private String tmdbApiKey;
@@ -93,10 +93,14 @@ public class Application {
                       WolframRepository wolframRepository,
                       @Value("${cloudant.chatDB}") String chatDBName,
                       @Value("${cloudant.feedbackDB}") String feedbackDBName,
+                      @Value("${cloudant.explorerDB}") String explorerDBName,
                       @Value("${tmdb.apiKey}") String tmdbApiKey) {
             riveScriptBot = new RiveScriptBot();
+
             chatDB = cloudantClient.database(chatDBName, true);
             feedbackDB = cloudantClient.database(feedbackDBName, true);
+            explorerDB = cloudantClient.database(explorerDBName, true);
+
             eliza = new ElizaMain();
             eliza.readScript(true, "src/main/resources/eliza/script");
             this.wolframRepository = wolframRepository;
