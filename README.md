@@ -23,6 +23,7 @@
 ### Development Only Configurations
      spring.thymeleaf.cache = false
      spring.devtools.livereload.enabled = true
+     logging.level.com.github.messenger4j = DEBUG
 
 ## Deployment
      mvn clean install

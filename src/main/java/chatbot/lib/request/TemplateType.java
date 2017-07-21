@@ -21,6 +21,12 @@ public interface TemplateType {
     String DBPEDIA_LOOKUP_KEYWORD_SEARCH = "dbpedia-lookup-keyword-search";
     String DBPEDIA_LOOKUP_PARAMETERS = "dbpedia-lookup-parameters";
 
+    String DBPEDIA_MAPPINGS = "dbpedia-mappings";
+    String DBPEDIA_MAPPINGS_TOOL = "dbpedia-mappings-tool";
+    String DBPEDIA_MAPPINGS_LOGIN = "dbpedia-mappings-login";
+
+    String DBPEDIA_EXTRACTION_FRAMEWORK = "dbpedia-extraction-framework";
+
     String TV_CAST = "tv-cast";
     String TV_CREW = "tv-crew";
     String TV_SIMILAR = "tv-similar";

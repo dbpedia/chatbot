@@ -40,6 +40,10 @@ public class StatusCheckHandler {
                 this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_LOOKUP_KEYWORD_SEARCH_SERVICE));
                 this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_LOOKUP_PREFIX_SEARCH_SERVICE));
                 break;
+            case Constants.DBPEDIA_MAPPINGS_SERVICE:
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_MAPPINGS_SERVICE));
+                this.service.add(Constants.SERVICES.get(Constants.DBPEDIA_MAPPINGS_SERVER_SERVICE));
+                break;
             default:
                 this.service.add(Constants.SERVICES.get(service));
         }

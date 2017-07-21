@@ -4,10 +4,8 @@ import chatbot.Application;
 import chatbot.lib.Constants;
 import chatbot.lib.Utility;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
-import chatbot.lib.handlers.templates.dbpedia.DatasetTemplateHandler;
-import chatbot.lib.handlers.templates.dbpedia.DBpediaTemplateHandler;
+import chatbot.lib.handlers.templates.dbpedia.*;
 import chatbot.lib.handlers.templates.OptionsTemplateHandler;
-import chatbot.lib.handlers.templates.dbpedia.LookupTemplateHandler;
 import chatbot.lib.handlers.templates.entity.MovieTemplateHandler;
 import chatbot.lib.handlers.templates.entity.TVTemplateHandler;
 import chatbot.lib.request.TemplateType;
@@ -75,6 +73,17 @@ public class TemplateHandler {
             case TemplateType.DBPEDIA_LOOKUP_PARAMETERS:
                 responseGenerator = new LookupTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
+
+            case TemplateType.DBPEDIA_MAPPINGS:
+            case TemplateType.DBPEDIA_MAPPINGS_TOOL:
+            case TemplateType.DBPEDIA_MAPPINGS_LOGIN:
+                responseGenerator = new MappingsTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
+            case TemplateType.DBPEDIA_EXTRACTION_FRAMEWORK:
+                responseGenerator = new ExtractionTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
 
             // Further Options Scenario
             case TemplateType.LOAD_MORE:
@@ -146,6 +155,14 @@ public class TemplateHandler {
                 responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Lookup?", TemplateType.DBPEDIA_LOOKUP));
                 responseData.addSmartReply(new ResponseData.SmartReply("Tell me about Lookup Parameters.", TemplateType.DBPEDIA_LOOKUP_PARAMETERS));
                 responseData.addSmartReply(new ResponseData.SmartReply("What is Lookup PrefixSearch?", TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
+                break;
+            case Constants.DBPEDIA_LIVE_SERVICE:
+//                responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Live?", TemplateType));
+                break;
+            case Constants.DBPEDIA_MAPPINGS_SERVICE:
+                responseData.addSmartReply(new ResponseData.SmartReply("What is Mappings Wiki?", TemplateType.DBPEDIA_MAPPINGS));
+                responseData.addSmartReply(new ResponseData.SmartReply("Where can I find the Mapping Tool?", TemplateType.DBPEDIA_MAPPINGS_TOOL));
+                responseData.addSmartReply(new ResponseData.SmartReply("Is Mappings Wiki Down?", TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
                 break;
         }
         return responseData;

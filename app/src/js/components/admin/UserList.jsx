@@ -28,11 +28,13 @@ class UserList extends React.Component {
                       </thead>
                       <tbody>
                         {this.props.userList.map((row, index) => {
+                            var date = new Date(parseInt(row.last_timestamp));
+                            var date_string = date.toDateString() + " " + date.toTimeString().split(" ")[0];
                             return (
                                 <tr key={index} className="info">
                                     <td className="vertical-align-middle">{row.userId}</td>
                                     <td className="text-center vertical-align-middle">{row.count}</td>
-                                    <td className="text-center vertical-align-middle">{row.last_timestamp}</td>
+                                    <td className="text-center vertical-align-middle">{date_string}</td>
                                     <td className="text-center vertical-align-middle">{row.platform}</td>
                                     <td><a href="#" className="btn btn-primary" onClick={(event) => this.loadMessages(event, row.userId)}>View</a></td>
                                 </tr>

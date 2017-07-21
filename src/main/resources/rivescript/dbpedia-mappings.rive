@@ -1,0 +1,18 @@
+
++ dbpedia mappings [wiki]
+- {"type": "template", "name": "dbpedia-mappings"}
+
++ [*] (is|about) [dbpedia] mappings [wiki]
+@ dbpedia mappings
+
++ [*] mappings tool [*]
+- {"type": "template", "name": "dbpedia-mappings-tool"}
+
++ [*] tool [*] mappings [*]
+@ mappings tool
+
++ [*] how [*] login [*] mappings [*]
+- {"type": "template", "name": "dbpedia-mappings-login"}
+
++ * mappings *
+- {"type": "template", "name": "dbpedia-fallback|dbpedia-mappings"}

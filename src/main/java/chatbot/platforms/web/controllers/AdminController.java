@@ -42,11 +42,15 @@ public class AdminController {
     public @ResponseBody List<UserList> actionUserList(@RequestParam String page) {
         try {
             return helper.getChatDB().getViewRequestBuilder("chats", "getUserList")
-                .newRequest(Key.Type.STRING, UserList.class)
+                .newRequest(Key.Type.COMPLEX, UserList.class)
+                .startKey(Key.complex("z", "\ufff0"))
+                .endKey(Key.complex(""))
                 .limit(MAX_SIZE)
                 .skip((Integer.parseInt(page) - 1) * MAX_SIZE)
                 .reduce(true)
+                .descending(true)
                 .group(true)
+                .groupLevel(1)
                 .build().getResponse().getValues();
         }
         catch (Exception e) {

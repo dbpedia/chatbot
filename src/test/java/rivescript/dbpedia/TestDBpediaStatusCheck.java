@@ -20,4 +20,18 @@ public class TestDBpediaStatusCheck extends RiveScriptBase {
         String[] expectedAnswer = new String[]{"{\"type\": \"status_check\", \"name\": \"dbpedia-sparql\"}"};
         checkAnswers(testCases, expectedAnswer, true);
     }
+
+    @Test
+    public void testDBpediaLookupServiceCheck() {
+        String[] testCases = new String[]{"dbpedia lookup is running", "is dbpedia lookup running", "is lookup down"};
+        String[] expectedAnswer = new String[]{"{\"type\": \"status_check\", \"name\": \"dbpedia-lookup\"}"};
+        checkAnswers(testCases, expectedAnswer, true);
+    }
+
+    @Test
+    public void testDBpediaMappingsServiceCheck() {
+        String[] testCases = new String[]{"dbpedia mappings is running", "is dbpedia mapping running", "is mapping down"};
+        String[] expectedAnswer = new String[]{"{\"type\": \"status_check\", \"name\": \"dbpedia-mappings\"}"};
+        checkAnswers(testCases, expectedAnswer, true);
+    }
 }
