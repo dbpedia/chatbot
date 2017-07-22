@@ -27,6 +27,8 @@ public interface TemplateType {
 
     String DBPEDIA_EXTRACTION_FRAMEWORK = "dbpedia-extraction-framework";
 
+    String DBPEDIA_GSOC = "dbpedia-gsoc";
+
     String TV_CAST = "tv-cast";
     String TV_CREW = "tv-crew";
     String TV_SIMILAR = "tv-similar";

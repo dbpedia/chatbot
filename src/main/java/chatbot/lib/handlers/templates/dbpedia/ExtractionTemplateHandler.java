@@ -22,11 +22,11 @@ public class ExtractionTemplateHandler extends TemplateHandler{
         ResponseGenerator responseGenerator = new ResponseGenerator();
         switch (payload[0]) {
             case TemplateType.DBPEDIA_EXTRACTION_FRAMEWORK:
-                responseGenerator.addTextResponse(new ResponseData("DBpedia Mappings Wiki helps to enhance the information in DBpedia. The DBpedia Extraction Framework uses the mappings defined through the DBpedia Mappings tool to homogenize information extracted from Wikipedia before generating structured information in RDF."));
-                responseGenerator.addButtonTextResponse(new ResponseData("Here are some useful links related to the Mappings Wiki:", new ArrayList<ResponseData.Button>(){{
-                    add(new ResponseData.Button("Wiki", ResponseType.BUTTON_LINK, "http://mappings.dbpedia.org/index.php/Main_Page"));
-                    add(new ResponseData.Button("Mappings Tool", ResponseType.BUTTON_LINK, "http://mappings.dbpedia.org/mappingtool/web/"));
-                    add(new ResponseData.Button("Extraction Framework", ResponseType.BUTTON_PARAM, "http://mappings.dbpedia.org/mappingtool/web/"));
+                responseGenerator.addTextResponse(new ResponseData("The DBpedia community uses a flexible and extensible framework to extract different kinds of structured information from Wikipedia. The DBpedia extraction framework is written using Scala 2.8."));
+                responseGenerator.addButtonTextResponse(new ResponseData("Here are some useful links related to the the Extraction Framework:", new ArrayList<ResponseData.Button>(){{
+                    add(new ResponseData.Button("GitHub", ResponseType.BUTTON_LINK, "https://github.com/dbpedia/extraction-framework"));
+                    add(new ResponseData.Button("Extraction Guide", ResponseType.BUTTON_LINK, "https://github.com/dbpedia/extraction-framework/wiki/Extraction-Instructions"));
+                    add(new ResponseData.Button("How to Contribute", ResponseType.BUTTON_LINK, "https://github.com/dbpedia/extraction-framework/wiki/Contributing"));
                 }}));
 
                 break;

@@ -1,0 +1,8 @@
+
++ [dbpedia] gsoc
+- {"type": "template", "name": "dbpedia-gsoc"}
+
+
+// Fallback
++ [*] gsoc [*]
+- {"type": "template", "name": "dbpedia-gsoc"}

@@ -196,14 +196,18 @@ public class SlackHandler {
                             .token(slackToken)
                             .channel(channel)
                             .username(botData.getUser())
-                            .asUser(true)
+                            .asUser(false)
                             .text(message)
+                            .iconUrl(getIconUrl())
                             .build()
             );
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private String getIconUrl() {
+        return baseUrl + "/images/icon-dbpedia-92.png";
     }
 
     private String processText(String text) {
@@ -259,8 +263,9 @@ public class SlackHandler {
                             .token(slackToken)
                             .channel(channel)
                             .username(botData.getUser())
-                            .asUser(true)
+                            .asUser(false)
                             .attachments(attachments)
+                            .iconUrl(getIconUrl())
                             .build()
             );
         }

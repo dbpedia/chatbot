@@ -10,5 +10,5 @@
 + [*] how (can you|you can) help [me]
 @ help
 
-+ [*] good morning
-@ help
++ [*] good (morning|evening|night)
+- good <star> to you too

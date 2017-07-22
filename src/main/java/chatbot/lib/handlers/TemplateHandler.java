@@ -84,6 +84,10 @@ public class TemplateHandler {
                 responseGenerator = new ExtractionTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
+            case TemplateType.DBPEDIA_GSOC:
+                responseGenerator = new GSOCTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
 
             // Further Options Scenario
             case TemplateType.LOAD_MORE:
@@ -155,9 +159,6 @@ public class TemplateHandler {
                 responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Lookup?", TemplateType.DBPEDIA_LOOKUP));
                 responseData.addSmartReply(new ResponseData.SmartReply("Tell me about Lookup Parameters.", TemplateType.DBPEDIA_LOOKUP_PARAMETERS));
                 responseData.addSmartReply(new ResponseData.SmartReply("What is Lookup PrefixSearch?", TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
-                break;
-            case Constants.DBPEDIA_LIVE_SERVICE:
-//                responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Live?", TemplateType));
                 break;
             case Constants.DBPEDIA_MAPPINGS_SERVICE:
                 responseData.addSmartReply(new ResponseData.SmartReply("What is Mappings Wiki?", TemplateType.DBPEDIA_MAPPINGS));
