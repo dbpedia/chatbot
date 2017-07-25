@@ -1,19 +1,17 @@
 package chatbot.lib.api;
 
 import chatbot.lib.Utility;
-import chatbot.lib.api.dbpedia.GenesisService;
 import chatbot.lib.request.TemplateType;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseType;
+import com.cloudant.client.api.Database;
+import com.cloudant.client.api.views.Key;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ramgathreya on 6/2/17.
@@ -25,16 +23,8 @@ import java.util.List;
 
 public class SPARQL {
     private static final Logger logger = LoggerFactory.getLogger(SPARQL.class);
+
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
-
-    // Variables used in SPARQL Queries
-    private static final String VAR_URI = "uri";
-    private static final String VAR_LABEL = "label";
-    private static final String VAR_THUMBNAIL = "thumbnail";
-    private static final String VAR_ABSTRACT = "abstract";
-    private static final String VAR_DESCRIPTION = "description";
-    private static final String VAR_PRIMARY_TOPIC = "primaryTopic";
-
     private static final String PREFIXES = new String(
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
@@ -44,6 +34,13 @@ public class SPARQL {
             "PREFIX dbr: <http://dbpedia.org/resource/>\n" +
             "PREFIX dct: <http://purl.org/dc/terms/>\n"
     );
+
+    Database explorerDB;
+    public SPARQL(Database explorerDB) {
+        this.explorerDB = explorerDB;
+    }
+
+    private static final String ENTITY_SELECT_PARAMETERS = " ?label ?abstract ?primaryTopic ?thumbnail ?description ";
 
     public String buildQuery(String query) {
         return PREFIXES + query;
@@ -69,14 +66,121 @@ public class SPARQL {
         return abs;
     }
 
+    private class ExplorerProperties {
+        private String className;
+        private String property;
+        private String score;
+
+        public String getClassName() {
+            return className;
+        }
+
+        public ExplorerProperties setClassName(String className) {
+            this.className = className;
+            return this;
+        }
+
+        public String getProperty() {
+            return property;
+        }
+
+        public ExplorerProperties setProperty(String property) {
+            this.property = property;
+            return this;
+        }
+
+        public String getScore() {
+            return score;
+        }
+
+        public ExplorerProperties setScore(String score) {
+            this.score = score;
+            return this;
+        }
+    }
+
+    private List<ResponseData.Field> getRelevantProperties(String uri, List types, String[] properties) {
+        List<ResponseData.Field> fields = new ArrayList<>();
+        try {
+            TreeMap<Float, String> propertyMap = new TreeMap<>();
+            List<ExplorerProperties> explorerProperties = explorerDB.getViewRequestBuilder("explorer", "getProperties")
+                    .newRequest(Key.Type.STRING, ExplorerProperties.class)
+                    .keys(properties)
+                    .inclusiveEnd(true)
+                    .build().getResponse().getValues();
+
+
+            for(ExplorerProperties property : explorerProperties) {
+                // Check if the property matches one of the list of classes(types) found for the entity
+                if(types.contains(property.getClassName())) {
+                    propertyMap.put(Float.parseFloat(property.getScore()), property.getProperty());
+                }
+            }
+
+            if(propertyMap.size() > 0) {
+                int count = 0;
+                Iterator<Float> iterator = propertyMap.descendingKeySet().iterator();
+                String property_uris = "";
+                while (count < ResponseData.MAX_FIELD_SIZE && iterator.hasNext()) {
+                    property_uris += "<" + propertyMap.get(iterator.next()) + "> ";
+                    count++;
+                }
+
+                String query = buildQuery("SELECT ?property_label (group_concat(distinct ?value;separator='__') as ?values) (group_concat(distinct ?value_label;separator='__') as ?value_labels) where {\n" +
+                        "VALUES ?property {" + property_uris + "}\n" +
+                        "<" + uri + "> ?property ?value . \n" +
+                        "?property rdfs:label ?property_label . FILTER(lang(?property_label)='en'). \n" +
+                        "OPTIONAL {?value rdfs:label ?value_label . FILTER(lang(?value_label) = 'en') }\n" +
+                        "} GROUP BY ?property_label");
+                QueryExecution queryExecution = executeQuery(query);
+                try {
+                    Iterator<QuerySolution> results = queryExecution.execSelect();
+                    while(results.hasNext()) {
+                        QuerySolution result = results.next();
+                        ResponseData.Field field = new ResponseData.Field();
+                        field.setName(Utility.capitalizeAll(result.get("property_label").asLiteral().getString()));
+
+                        // If Value Label String is empty then we use Value String instead which means the value is a literal. So we are only taking the first element before space
+                        if(result.get("value_labels").asLiteral().getString().equals("")) {
+                            field.setValue(Utility.capitalizeAll(result.get("values").asLiteral().getString().split("__")[0]));
+                        }
+                        else {
+                            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+                            String[] keyArray = result.get("values").asLiteral().getString().split("__");
+                            String[] valueArray = result.get("value_labels").asLiteral().getString().split("__");
+
+                            for(int index = 0; index < keyArray.length; index++) {
+                                map.put(Utility.convertDBpediaToWikipediaURL(keyArray[index]), valueArray[index]);
+                            }
+                            field.setValues(map);
+                        }
+                        fields.add(field);
+                    }
+                    return fields;
+                }
+                finally {
+                    queryExecution.close();
+                    return fields;
+                }
+            }
+            else {
+                return fields;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fields;
+    }
+
     private ResponseData processEntityInformation(String uri, QuerySolution result) {
         RDFNode node;
         ResponseData responseData = new ResponseData();
-        String label = result.get(VAR_LABEL).asLiteral().getString(), text = "";
+        String label = result.get("label").asLiteral().getString(), text = "";
         responseData.setTitle(label);
-        responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get(VAR_PRIMARY_TOPIC).toString()));
+        responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get("primaryTopic").toString()));
 
-        node = result.get(VAR_THUMBNAIL);
+        node = result.get("thumbnail");
         if(node != null) {
             responseData.setImage(node.toString());
         }
@@ -89,12 +193,12 @@ public class SPARQL {
 //            }
 //        }
 
-        node = result.get(VAR_DESCRIPTION);
+        node = result.get("description");
         if(node != null) {
             text += node.asLiteral().getString() + "\n\n";
         }
 
-        node = result.get(VAR_ABSTRACT);
+        node = result.get("abstract");
         if (node != null) {
             String summary = processWikipediaAbstract(node.asLiteral().getString());
             text += summary;
@@ -102,6 +206,27 @@ public class SPARQL {
 
         if (!text.equals("")) {
             responseData.setText(text);
+        }
+
+        String query = buildQuery(
+                "SELECT (GROUP_CONCAT(distinct ?type;separator=' ') as ?types) (GROUP_CONCAT(distinct ?property;separator=' ') as ?properties) WHERE {\n" +
+                "<" + uri + "> rdf:type ?type . FILTER(STRSTARTS(STR(?type), 'http://dbpedia.org/ontology')) . \n" +
+                "<" + uri + "> ?property ?value . FILTER(STRSTARTS(STR(?property), 'http://dbpedia.org/ontology')) . \n" +
+        "}");
+        QueryExecution queryExecution = executeQuery(query);
+        try {
+            Iterator<QuerySolution> results = queryExecution.execSelect();
+            while(results.hasNext()) {
+                QuerySolution solution = results.next();
+                if(solution.get("types") != null && solution.get("properties") != null) {
+                    List<String> types = Arrays.asList(solution.get("types").asLiteral().getString().split(" "));
+                    String[] properties = solution.get("properties").asLiteral().getString().split(" ");
+                    responseData.setFields(getRelevantProperties(uri, types, properties));
+                }
+            }
+        }
+        finally {
+            queryExecution.close();
         }
 
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
@@ -115,18 +240,18 @@ public class SPARQL {
         if(!uri.startsWith("?")) {
             uri = "<" + uri + ">";
         }
-        return uri + " rdfs:label ?" + VAR_LABEL + ".\n" +
-                uri + " foaf:isPrimaryTopicOf ?" + VAR_PRIMARY_TOPIC + ".\n" +
-                "OPTIONAL {" + uri + " dbo:thumbnail ?" + VAR_THUMBNAIL + ". }\n" +
-                "OPTIONAL {" + uri + " dbo:abstract ?" + VAR_ABSTRACT + ". FILTER(lang(?" + VAR_ABSTRACT + ")=\"en\") }\n" +
-                "OPTIONAL {" + uri + " dct:description ?" + VAR_DESCRIPTION + ". FILTER(lang(?" + VAR_DESCRIPTION + ")=\"en\") }\n" +
-                "FILTER(lang(?" + VAR_LABEL + ") = \"en\")\n";
+        return uri + " rdfs:label ?label .\n" +
+                uri + " foaf:isPrimaryTopicOf ?primaryTopic .\n" +
+                "OPTIONAL {" + uri + " dbo:thumbnail ?thumbnail . }\n" +
+                "OPTIONAL {" + uri + " dbo:abstract ?abstract . FILTER(lang(?abstract)=\"en\") }\n" +
+                "OPTIONAL {" + uri + " dct:description ?description . FILTER(lang(?description)=\"en\") }\n" +
+                "FILTER(lang(?label) = 'en')\n";
     }
 
     public ResponseData getEntityInformation(String uri) {
-        String query = buildQuery("SELECT * WHERE {" +
+        String query = buildQuery("SELECT " + ENTITY_SELECT_PARAMETERS + " WHERE {" +
                 getEntityWhereCondition(uri) +
-            "}");
+        "}");
         QueryExecution queryExecution = executeQuery(query);
         ResponseData responseData = null;
 
@@ -189,17 +314,17 @@ public class SPARQL {
     }
 
     public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
-        String query = buildQuery("SELECT * WHERE {\n" +
-                "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?" + VAR_URI + " .\n" +
-                getEntityWhereCondition("?" + VAR_URI) +
-        "} ORDER BY ?" + VAR_URI + " OFFSET " + offset + " LIMIT " + limit);
+        String query = buildQuery("SELECT ?uri " + ENTITY_SELECT_PARAMETERS + " WHERE {\n" +
+                "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?uri .\n" +
+                getEntityWhereCondition("?uri") +
+        "} ORDER BY ?uri OFFSET " + offset + " LIMIT " + limit);
         return getEntities(query);
     }
 
     public ArrayList<ResponseData> getEntitiesByURIs(String uris) {
-        String query = buildQuery("SELECT * WHERE {\n" +
-                "VALUES ?" + VAR_URI + " { " + uris + "} .\n" +
-                getEntityWhereCondition("?" + VAR_URI) +
+        String query = buildQuery("SELECT ?uri " + ENTITY_SELECT_PARAMETERS + " WHERE {\n" +
+                "VALUES ?uri { " + uris + "} .\n" +
+                getEntityWhereCondition("?uri") +
                 "}");
         return getEntities(query);
     }
@@ -290,8 +415,7 @@ public class SPARQL {
             offset += limit;
         }
 
-        public ArrayList<ResponseData> nextPage() {
-            SPARQL sparql = new SPARQL();
+        public ArrayList<ResponseData> nextPage(SPARQL sparql) {
             return sparql.getDisambiguatedEntities(uri, offset, limit);
         }
 

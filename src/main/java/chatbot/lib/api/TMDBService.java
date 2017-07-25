@@ -30,11 +30,13 @@ public class TMDBService {
 
     private String apiKey;
     private HttpClient client;
+    private SPARQL sparql;
 
-    public TMDBService(String apiKey) {
+    public TMDBService(String apiKey, SPARQL sparql) {
         this.apiKey = apiKey;
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(Constants.API_TIMEOUT).build();
         client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+        this.sparql = sparql;
     }
 
     private JsonNode makeRequest(String url) {
@@ -79,7 +81,6 @@ public class TMDBService {
         try {
             JsonNode people = makeRequest(url).get(type);
             List<String> peopleNames = new ArrayList<>();
-            SPARQL sparql = new SPARQL();
 
             for(JsonNode person : people) {
                 peopleNames.add(person.get("name").getTextValue());

@@ -2,7 +2,6 @@ package chatbot.lib.handlers.templates.entity;
 
 import chatbot.Application;
 import chatbot.lib.Utility;
-import chatbot.lib.api.TMDBService;
 import chatbot.lib.handlers.templates.OptionsTemplateHandler;
 import chatbot.lib.request.Request;
 import chatbot.lib.request.TemplateType;

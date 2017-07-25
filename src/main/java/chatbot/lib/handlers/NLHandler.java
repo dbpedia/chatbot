@@ -25,7 +25,6 @@ public class NLHandler {
 
     private String question;
     private QAService qaService;
-    private SPARQL sparql;
 
     private Request request;
     private Application.Helper helper;
@@ -33,7 +32,6 @@ public class NLHandler {
     public NLHandler(Request request, String question, Application.Helper helper) {
         this.question = question;
         this.qaService = new QAService(helper.getWolframRepository());
-        this.sparql = new SPARQL();
 
         this.request = request;
         this.helper = helper;
@@ -106,12 +104,12 @@ public class NLHandler {
                         break;
                     }
 
-                    count = sparql.isDisambiguationPage(uri);
+                    count = helper.getSparql().isDisambiguationPage(uri);
                     processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
 
                     // Not a disambiguation page
                     if(count == 0) {
-                        ResponseData _data = sparql.getEntityInformation(uri);
+                        ResponseData _data = helper.getSparql().getEntityInformation(uri);
                         if (_data != null) {
                             processedResponse.addResponseData(_data);
                         }
@@ -119,7 +117,7 @@ public class NLHandler {
                     // Disambiguation page
                     else {
                         processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
-                        processedResponse.setResponseData(sparql.getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
+                        processedResponse.setResponseData(helper.getSparql().getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
                         return processedResponse;
                     }
                 }

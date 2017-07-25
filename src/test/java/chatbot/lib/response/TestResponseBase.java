@@ -2,6 +2,7 @@ package chatbot.lib.response;
 
 
 import chatbot.lib.TestUtility;
+import org.junit.Ignore;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by ramgathreya on 6/20/17.
  */
+@Ignore
 public class TestResponseBase {
     public static void checkTextMessage(Response response) {
         List<ResponseData> messageData = response.getMessageData();

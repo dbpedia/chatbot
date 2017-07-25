@@ -22,6 +22,7 @@ import com.github.seratch.jslack.api.methods.response.channels.ChannelsInfoRespo
 import com.github.seratch.jslack.api.methods.response.groups.GroupsInfoResponse;
 import com.github.seratch.jslack.api.model.Action;
 import com.github.seratch.jslack.api.model.Attachment;
+import com.github.seratch.jslack.api.model.Field;
 import com.github.seratch.jslack.api.rtm.RTMClient;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -255,6 +256,19 @@ public class SlackHandler {
                         actions.add(Action.builder().style(smartReply.getSlackStyle()).name("dummy").type("button").text(smartReply.getTitle()).value(smartReply.getUri()).build());
                     }
                 }
+
+                if(data.getFields().size() > 0) {
+                    List<Field> fields = new ArrayList<>();
+                    for(ResponseData.Field field : data.getFields()) {
+                        fields.add(Field.builder()
+                                .title(field.getName())
+                                .value(field.getFieldValue(Platform.SLACK))
+                                .valueShortEnough(field.isShort()).build()
+                        );
+                    }
+                    attachmentBuilder.fields(fields);
+                }
+
                 attachmentBuilder.actions(actions);
                 attachments.add(attachmentBuilder.build());
             }

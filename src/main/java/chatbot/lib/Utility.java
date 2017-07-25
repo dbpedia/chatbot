@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  * Created by ramgathreya on 5/23/17.
@@ -87,5 +88,20 @@ public class Utility {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String capitalizeAll(String text) {
+        String c = (text != null)? text.trim() : "";
+        String[] words = c.split(" ");
+        String result = "";
+        for(String w : words){
+            result += (w.length() > 1? w.substring(0, 1).toUpperCase(Locale.US) + w.substring(1, w.length()).toLowerCase(Locale.US) : w) + " ";
+        }
+        return result.trim();
+    }
+
+    public static String convertDBpediaToWikipediaURL(String url) {
+        String[] urlsParts = url.split("/");
+        return "https://en.wikipedia.org/wiki/" + urlsParts[urlsParts.length - 1];
     }
 }

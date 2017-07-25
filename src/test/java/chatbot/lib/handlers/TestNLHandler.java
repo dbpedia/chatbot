@@ -33,13 +33,24 @@ public class TestNLHandler {
         TestResponseBase.checkTextMessage(response.get(0));
     }
 
-    private void checkEntity(String userId, String question) throws Exception {
-        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
-        List<Response> response = nlHandler.answer().getResponse();
-        assertEquals(response.size(), 2);
-        TestResponseBase.checkTextMessage(response.get(0));
-        assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element
-        TestResponseBase.checkCarouselMessage(response.get(1));
+    private void checkEntity(String userId, String question, boolean single) throws Exception {
+        try {
+            NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
+            List<Response> response = nlHandler.answer().getResponse();
+
+            TestResponseBase.checkTextMessage(response.get(0));
+            if(single) {
+                assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element
+            }
+            else {
+                assertEquals(response.get(1).getMessageData().size() >= 1, true); // Check that Carousel contains atleast 1 element
+            }
+
+            TestResponseBase.checkCarouselMessage(response.get(1));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -50,6 +61,11 @@ public class TestNLHandler {
 
     @Test
     public void testEntity() throws Exception {
-        checkEntity("user", "Barack Obama");
+        checkEntity("user", "Barack Obama", true);
+    }
+
+    @Test
+    public void testDisambiguatedEntity() throws Exception {
+        checkEntity("user", "client", false);
     }
 }

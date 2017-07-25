@@ -1,6 +1,7 @@
 package chatbot;
 
 import chatbot.cache.WolframRepository;
+import chatbot.lib.api.SPARQL;
 import chatbot.rivescript.RiveScriptBot;
 import codeanticode.eliza.ElizaMain;
 import com.cloudant.client.api.CloudantClient;
@@ -87,6 +88,7 @@ public class Application {
         private ElizaMain eliza;
         private WolframRepository wolframRepository;
         private String tmdbApiKey;
+        private SPARQL sparql;
 
         @Autowired
         public Helper(final CloudantClient cloudantClient,
@@ -105,6 +107,7 @@ public class Application {
             eliza.readScript(true, "src/main/resources/eliza/script");
             this.wolframRepository = wolframRepository;
             this.tmdbApiKey = tmdbApiKey;
+            sparql = new SPARQL(explorerDB);
         }
 
         public RiveScriptBot getRiveScriptBot() {
@@ -129,6 +132,14 @@ public class Application {
 
         public String getTmdbApiKey() {
             return tmdbApiKey;
+        }
+
+        public Database getExplorerDB() {
+            return explorerDB;
+        }
+
+        public SPARQL getSparql() {
+            return sparql;
         }
     }
 

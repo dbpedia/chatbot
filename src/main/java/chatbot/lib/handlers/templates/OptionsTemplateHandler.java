@@ -32,7 +32,6 @@ public class OptionsTemplateHandler extends TemplateHandler {
 
     protected ResponseGenerator getSimilarOrRelatedEntities(String scenario, String uri) {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        SPARQL sparql = new SPARQL();
         String uris = null;
 
         switch (scenario) {
@@ -47,7 +46,7 @@ public class OptionsTemplateHandler extends TemplateHandler {
         if(uris == null) {
             return responseGenerator.setNoResultsResponse(request, helper.getRiveScriptBot());
         }
-        return responseGenerator.addCarouselResponse(sparql.getEntitiesByURIs(uris));
+        return responseGenerator.addCarouselResponse(helper.getSparql().getEntitiesByURIs(uris));
     }
 
     protected ResponseGenerator getTMDBData() {
@@ -55,16 +54,16 @@ public class OptionsTemplateHandler extends TemplateHandler {
         ArrayList<ResponseData> results = new ArrayList<>();
         switch(payload[0]) {
             case TemplateType.TV_CAST:
-                results = new TMDBService(helper.getTmdbApiKey()).getTvCast(payload[2]);
+                results = new TMDBService(helper.getTmdbApiKey(), helper.getSparql()).getTvCast(payload[2]);
                 break;
             case TemplateType.TV_CREW:
-                results = new TMDBService(helper.getTmdbApiKey()).getTvCrew(payload[2]);
+                results = new TMDBService(helper.getTmdbApiKey(), helper.getSparql()).getTvCrew(payload[2]);
                 break;
             case TemplateType.MOVIE_CAST:
-                results = new TMDBService(helper.getTmdbApiKey()).getMovieCast(payload[2]);
+                results = new TMDBService(helper.getTmdbApiKey(), helper.getSparql()).getMovieCast(payload[2]);
                 break;
             case TemplateType.MOVIE_CREW:
-                results = new TMDBService(helper.getTmdbApiKey()).getMovieCrew(payload[2]);
+                results = new TMDBService(helper.getTmdbApiKey(), helper.getSparql()).getMovieCrew(payload[2]);
                 break;
         }
 
@@ -86,18 +85,17 @@ public class OptionsTemplateHandler extends TemplateHandler {
     private ResponseGenerator getLearnMoreOptions(String uri, String label) {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         try {
-            SPARQL sparql = new SPARQL();
-            String types = sparql.getRDFTypes(uri);
+            String types = helper.getSparql().getRDFTypes(uri);
 
             if (types.contains(Ontology.DBO_TELEVISION_SHOW)) {
-                TMDBService tmdbService = new TMDBService(helper.getTmdbApiKey());
+                TMDBService tmdbService = new TMDBService(helper.getTmdbApiKey(), helper.getSparql());
                 String tvId = tmdbService.getTvId(label);
                 if (tvId != null) {
                     return responseGenerator.addSmartReplyResponse(new TVTemplateHandler(request, payload, helper).getTVOptions(uri, tvId, label));
                 }
             }
             if (types.contains(Ontology.DBO_FILM)) {
-                TMDBService tmdbService = new TMDBService(helper.getTmdbApiKey());
+                TMDBService tmdbService = new TMDBService(helper.getTmdbApiKey(), helper.getSparql());
                 String movieId = tmdbService.getMovieId(label);
                 if (movieId != null) {
                     return responseGenerator.addSmartReplyResponse(new MovieTemplateHandler(request, payload, helper).getMovieOptions(uri, movieId, label));
@@ -117,7 +115,8 @@ public class OptionsTemplateHandler extends TemplateHandler {
             // Pagination
             case TemplateType.LOAD_MORE:
                 SPARQL.ResponseInfo responseInfo = Utility.toObject(payload[1], SPARQL.ResponseInfo.class);
-                responseGenerator.addCarouselResponse(responseInfo.nextPage());
+
+                responseGenerator.addCarouselResponse(responseInfo.nextPage(helper.getSparql()));
                 // Pagination
                 if (responseInfo.hasMorePages()) {
                     responseInfo.next();
