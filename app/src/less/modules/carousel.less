@@ -1,6 +1,6 @@
 .carousel-container {
     padding: 5px 0;
-    overflow: auto;
+    //overflow: auto;
     white-space: nowrap;
 
     animation-duration: 0.5s;
@@ -8,41 +8,42 @@
 }
 
 .carousel-item {
-    display: inline-block;
-    margin-right: 10px;
+    //display: inline-block;
+    margin-bottom: 15px;
     vertical-align: top;
 
     .card {
-        min-height: 200px;
-        width: 230px;
-        .button-group {
-            border-top: 1px solid #eeeeee;
+        max-width: 90%;
+
+        @media (min-width: 576px) {
+            max-width: 60%;
         }
-        .btn {
-            margin: 0;
+
+        @media (min-width: 992px) {
+            max-width: 50%;
         }
+    }
+
+    .summary {
+        display: flex;
     }
 
     .img-wrapper {
         text-align: center;
-    }
-
-    .img-wrapper:before {
-        content: ' ';
         display: inline-block;
-        vertical-align: middle;
-        min-height: 100px;
+        padding: 5px;
+        width: 30%;
     }
 
     img {
-        display: inline-block;
-        vertical-align: middle;
-        max-height: 150px;
-        max-width: 100%;
+        width: 100%;
+        vertical-align: initial;
     }
 
     .content {
-        margin: 5px 10px;
+        padding: 5px 10px;
+        display: inline-block;
+        width: 70%;
     }
 
     .title {
@@ -63,6 +64,38 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-height: 100px;
+        }
+    }
+
+    .button-group {
+        border-top: 1px solid @border-color;
+        .btn {
+            margin: 0;
+        }
+    }
+
+    .fields-group {
+        border-top: 1px solid @border-color;
+        .field {
+            font-size: 15px;
+            padding: 5px;
+            display: flex;
+        }
+
+        .field-name {
+            display: inline-block;
+            color: @brand-primary;
+            vertical-align: top;
+            width: 30%;
+        }
+        .field-value {
+            display: inline-block;
+            vertical-align: top;
+            color: @black;
+            width: 70%;
+            a {
+                color: @blue !important;
+            }
         }
     }
 }

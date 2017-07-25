@@ -11,7 +11,7 @@ import java.util.List;
  * Created by ramgathreya on 5/22/17.
  */
 public class ResponseData {
-    private String image;
+    private String image = "http://i.imgur.com/044oUKK.png"; // Placeholder Image
     private String title;
     private String text;
     private List<Button> buttons = new ArrayList<>();

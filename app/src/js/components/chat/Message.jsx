@@ -100,26 +100,52 @@ class Message extends React.Component {
                         {messageData.map((message, index) => {
                             return <div key={index} className="carousel-item">
                                 <div className="card">
-                                    {message.image && (
+                                    <div className="summary">
                                         <div className="img-wrapper">
                                             <img src={message.image} />
                                         </div>
-                                    )}
-                                    <div className="content">
-                                        {message.title && (
-                                            <div className="title wrap-word">
-                                                {message.title}
-                                            </div>
-                                        )}
+                                        <div className="content">
+                                            {message.title && (
+                                                <div className="title wrap-word">
+                                                    {message.title}
+                                                </div>
+                                            )}
 
-                                        {message.text && (
-                                            <div className="text wrap-word">
-                                                {message.text.substr(0, 200).split('\n').map((line, index) => {
-                                                    return <div key={index}>{line}</div>;
-                                                })}
-                                            </div>
-                                        )}
+                                            {message.text && (
+                                                <div className="text wrap-word">
+                                                    {message.text.substr(0, 200).split('\n').map((line, index) => {
+                                                        return <div key={index}>{line}</div>;
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
+                                    { message.fields.length > 0 && (
+                                    <div className="fields-group">
+                                        {message.fields.map((field, index) => {
+                                            var valueDiv;
+                                            if(field.value) {
+                                                valueDiv = (
+                                                    <div className="field-value">{field.value}</div>
+                                                );
+                                            }
+                                            else if(field.values) {
+                                                valueDiv = (
+                                                    <div className="field-value">
+                                                        {Object.keys(field.values).map((key, index) => {
+                                                            return <a className="wrap-word" key={index} href={key} target='_blank'>{field.values[key]}<br/></a>;
+                                                        })}
+                                                    </div>
+                                                );
+                                            }
+
+                                            return <div key={index} className="field">
+                                                <div className="field-name">{field.name}:</div>
+                                                {valueDiv}
+                                            </div>
+                                        })}
+                                    </div>
+                                    )}
 
                                     { message.buttons.length > 0 && (
                                     <div className="button-group">
