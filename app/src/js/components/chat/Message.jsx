@@ -139,8 +139,8 @@ class Message extends React.Component {
                                                 );
                                             }
 
-                                            return <div key={index} className="field">
-                                                <div className="field-name">{field.name}:</div>
+                                            return <div key={index} className="field wrap-word">
+                                                <div className="field-name wrap-word">{field.name}:</div>
                                                 {valueDiv}
                                             </div>
                                         })}
