@@ -10,7 +10,7 @@
 
   input {
     margin-right: 10px;
-    z-index: 1; // Added so that input would be above the more button container. This is required since the container is absolute positioned
+    //z-index: 1; // Added so that input would be above the more button container. This is required since the container is absolute positioned
     transition: 0.25s;
     -webkit-transition: 0.25s;
   }
@@ -71,6 +71,11 @@
     }
 
     &:nth-last-of-type(3) {
+        transition-delay: 150ms;
+        -webkit-transition-delay: 150ms;
+    }
+
+    &:nth-last-of-type(4) {
         transition-delay: 200ms;
         -webkit-transition-delay: 200ms;
     }

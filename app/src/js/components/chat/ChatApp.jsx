@@ -4,18 +4,23 @@ import Messages from './Messages.jsx';
 import ChatInput from './ChatInput.jsx';
 import * as Constants from '../Constants.jsx';
 import Feedback from './Feedback.jsx';
+import About from './About.jsx';
 
 class ChatApp extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {messages: [], loading: false, showFeedback: false, overlay: false};
+        this.state = {messages: [], loading: false, showFeedback: false, overlay: false, showAbout: false};
         this.uuid = this.getUuid();
 
         this.sendHandler = this.sendHandler.bind(this);
         this.showStart = this.showStart.bind(this);
+
         this.showFeedbackModal = this.showFeedbackModal.bind(this);
         this.hideFeedbackModal = this.hideFeedbackModal.bind(this);
+        this.showAboutModal = this.showAboutModal.bind(this);
+        this.hideAboutModal = this.hideAboutModal.bind(this);
+
         this.showOverlay = this.showOverlay.bind(this);
         this.hideOverlay = this.hideOverlay.bind(this);
     }
@@ -130,6 +135,14 @@ class ChatApp extends React.Component {
         this.setState({showFeedback: false});
     }
 
+    showAboutModal() {
+        this.setState({showAbout: true});
+    }
+
+    hideAboutModal() {
+        this.setState({showAbout: false});
+    }
+
     showOverlay() {
         this.setState({overlay: true});
     }
@@ -166,12 +179,17 @@ class ChatApp extends React.Component {
                     onSend={this.sendHandler}
                     showStart={this.showStart}
                     showFeedback={this.showFeedbackModal}
+                    showAbout={this.showAboutModal}
                     showOverlay={this.showOverlay}
                     hideOverlay={this.hideOverlay} />
                 <Feedback
                     isOpen={this.state.showFeedback}
                     hide={this.hideFeedbackModal}
                     userId={this.getUuid()} />
+                <About
+                    isOpen={this.state.showAbout}
+                    hide={this.hideAboutModal} />
+
                 {this.state.overlay && (
                     <div className="overlay"></div>
                 )}

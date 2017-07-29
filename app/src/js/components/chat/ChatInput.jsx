@@ -70,10 +70,13 @@ class ChatInput extends React.Component {
         switch(type) {
             case 'feedback':
                 this.props.showFeedback();
-            break;
+                break;
+            case 'about':
+                this.props.showAbout();
+                break;
             case 'start':
                 this.props.showStart(true);
-            break;
+                break;
         }
         this.toggleOverlay(false);
     }
@@ -104,6 +107,12 @@ class ChatInput extends React.Component {
                                             <img src="/images/icon-feedback-32.png" />
                                         </div>
                                         <span>Feedback</span>
+                                    </a>
+                                    <a onClick={(event) => this.onFlyoutOptionClick(event, 'about')} className="button">
+                                        <div className={`${moreButtonOptionClass} btn-success`}>
+                                            <img src="/images/icon-about-32.png" />
+                                        </div>
+                                        <span>About</span>
                                     </a>
                                     <a className={moreButtonClass} onClick={this.toggleFlyout}>
                                         <img src="/images/icon-plus-32.png" />

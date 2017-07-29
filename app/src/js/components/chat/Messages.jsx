@@ -17,6 +17,10 @@ class Messages extends React.Component {
         }
     }
 
+    scrollToMessage() {
+
+    }
+
     render() {
         const messages = this.props.messages.map((message, i) => {
             return (
