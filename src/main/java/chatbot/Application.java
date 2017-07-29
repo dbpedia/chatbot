@@ -9,6 +9,7 @@ import com.cloudant.client.api.Database;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.send.MessengerSendClient;
 import org.languagetool.JLanguageTool;
+import org.languagetool.language.AmericanEnglish;
 import org.languagetool.language.BritishEnglish;
 import org.languagetool.rules.Rule;
 import org.slf4j.Logger;
@@ -112,13 +113,7 @@ public class Application {
             this.wolframRepository = wolframRepository;
             this.tmdbApiKey = tmdbApiKey;
             sparql = new SPARQL(explorerDB);
-
-            languageTool = new JLanguageTool(new BritishEnglish());
-            for (Rule rule : languageTool.getAllRules()) {
-                if (!rule.isDictionaryBasedSpellingRule()) {
-                    languageTool.disableRule(rule.getId());
-                }
-            }
+            languageTool = new JLanguageTool(new AmericanEnglish());
         }
 
         public RiveScriptBot getRiveScriptBot() {
@@ -151,6 +146,10 @@ public class Application {
 
         public SPARQL getSparql() {
             return sparql;
+        }
+
+        public JLanguageTool getLanguageTool() {
+            return languageTool;
         }
     }
 

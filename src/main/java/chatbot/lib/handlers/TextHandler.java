@@ -10,8 +10,11 @@ import chatbot.lib.response.ResponseGenerator;
 import chatbot.rivescript.RiveScriptReplyType;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.languagetool.rules.RuleMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Created by ramgathreya on 5/22/17.
@@ -23,10 +26,25 @@ public class TextHandler {
     private String textMessage;
     private Application.Helper helper;
 
+    private String sanitizeText(String message) {
+        String result = message;
+        try {
+            List<RuleMatch> matches = helper.getLanguageTool().check(message);
+            for (RuleMatch match : matches) {
+                String error = message.substring(match.getFromPos(), match.getToPos());
+                result = result.replace(error, match.getSuggestedReplacements().get(0));
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public TextHandler(Request request, String textMessage, Application.Helper helper) {
         this.request = request;
-        this.textMessage = textMessage;
         this.helper = helper;
+        this.textMessage = sanitizeText(textMessage);
     }
 
     public ResponseGenerator handleTextMessage() throws Exception {
