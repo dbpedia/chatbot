@@ -49,6 +49,9 @@ public class TextHandler {
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
                         responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper).handleStatusCheck();
                         break;
+                    case RiveScriptReplyType.LOCATION_SCENARIO:
+                        responseGenerator = new LocationHandler(request, rootNode.get("query").getTextValue(), helper).getLocation();
+                        break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         // Eliza
                         if(textMessage.endsWith("!") || textMessage.endsWith(".")) {

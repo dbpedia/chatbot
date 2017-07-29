@@ -109,9 +109,9 @@ public class NLHandler {
 
                     // Not a disambiguation page
                     if(count == 0) {
-                        ResponseData _data = helper.getSparql().getEntityInformation(uri);
-                        if (_data != null) {
-                            processedResponse.addResponseData(_data);
+                        ResponseData responseData = helper.getSparql().getEntityInformation(uri);
+                        if (responseData != null) {
+                            processedResponse.addResponseData(responseData);
                         }
                     }
                     // Disambiguation page

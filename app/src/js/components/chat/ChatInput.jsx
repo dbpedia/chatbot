@@ -26,7 +26,7 @@ class ChatInput extends React.Component {
     submitHandler(event) {
         event.preventDefault();
         if(this.state.chatInput != '') {
-            this.setState({chatInput: '', sendDisabled: true, showSendButton: false, inputMargin: this.inputMargin});
+            this.setState({chatInput: '', sendDisabled: true});
             this.props.onSend({
                 messageType: Constants.request.RequestType.TEXT_MESSAGE,
                 messageData: [{text: this.state.chatInput}]

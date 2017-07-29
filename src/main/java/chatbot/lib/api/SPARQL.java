@@ -49,11 +49,18 @@ public class SPARQL {
     // Remove the pronounciation information that appears at the beginning of the article enclosed by ()
     // Additionally can be checked to contain unnecessary characters instead of blindly stripping based on brackets
     private String stripWikiepdiaContent(String text) {
-        int indexStart = text.indexOf("(");
-        if(indexStart != -1) {
-            int indexEnd = text.indexOf(")", indexStart) + 2;
+        int indexStart = text.indexOf("("), indexEnd;
+        if(indexStart > 0) {
+            indexEnd = text.indexOf(")", indexStart) + 2;
             if(indexEnd != -1) {
                 return text.replace(text.substring(indexStart, indexEnd), "");
+            }
+        }
+        else if(indexStart == 0) {
+            // When abstract starts with info on Disambiguation
+            indexEnd = text.lastIndexOf("(disambiguation).)");
+            if(indexEnd != -1) {
+                return text.replace(text.substring(indexStart, indexEnd + 18), "");
             }
         }
         return text;

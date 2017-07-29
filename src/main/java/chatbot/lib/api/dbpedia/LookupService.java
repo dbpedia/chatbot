@@ -34,6 +34,7 @@ public class LookupService {
         client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
+    // Need to be extended for multiple answers
     public String search(String query) {
         try {
             String url = "?QueryString=" + Utility.urlEncode(query) + "&MaxHits=" + String.valueOf(maxHits);

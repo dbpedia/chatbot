@@ -46,6 +46,7 @@ public class DBpediaTemplateHandler extends TemplateHandler {
                     add(new ResponseData.Button("Mailing List", ResponseType.BUTTON_LINK, service[3]));
                     add(new ResponseData.Button("FAQ", ResponseType.BUTTON_PARAM, TemplateType.FAQ + Utility.STRING_SEPARATOR + payload[1]));
                 }}));
+                responseGenerator.setShowFeedback(false);
                 break;
         }
         return responseGenerator;

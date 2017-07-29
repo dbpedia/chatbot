@@ -1,0 +1,3 @@
+// Handles scenarios where user asks for a place
++ [*] where is *
+- {"type": "location", "query": "<star>"}

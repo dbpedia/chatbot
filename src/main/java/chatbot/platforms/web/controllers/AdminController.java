@@ -43,7 +43,7 @@ public class AdminController {
         try {
             return helper.getChatDB().getViewRequestBuilder("chats", "getUserList")
                 .newRequest(Key.Type.COMPLEX, UserList.class)
-                .startKey(Key.complex("z", "\ufff0"))
+                .startKey(Key.complex("\ufff0"))
                 .endKey(Key.complex(""))
                 .limit(MAX_SIZE)
                 .skip((Integer.parseInt(page) - 1) * MAX_SIZE)

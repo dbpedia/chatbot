@@ -107,7 +107,6 @@
             <artifactId>cloudant-spring-boot-starter</artifactId>
             <version>0.9.5</version>
         </dependency>
-
         <dependency>
             <groupId>com.wolfram</groupId>
             <artifactId>alpha</artifactId>

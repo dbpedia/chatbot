@@ -45,7 +45,6 @@ public class WolframModel {
 
         WAQuery query = engine.createQuery();
         query.setInput(question);
-        String result = null;
 
         try {
             // For educational purposes, print out the URL we are about to send:
@@ -84,7 +83,7 @@ public class WolframModel {
 
     public WolframModel getAnswer(String apiKey) {
         String wolframAnswer = queryWolframAlpha(apiKey);
-        if (wolframAnswer != null) {
+        if (wolframAnswer != null && !wolframAnswer.isEmpty() && !wolframAnswer.equals("(data not available)")) {
             String uri = new SpotlightService().search(wolframAnswer);
             // If URI found
             if (uri != null) {

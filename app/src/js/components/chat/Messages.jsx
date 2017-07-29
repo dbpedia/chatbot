@@ -8,7 +8,12 @@ class Messages extends React.Component {
     componentDidUpdate() {
         const element = document.getElementById("messages-container");
         if(!this.props.isAdmin) {
-            element.scrollTop = element.scrollHeight;
+            var target = $('.bubble-user').last().parent();
+            if(target.length) {
+                $(element).animate({
+                    scrollTop: target.offset().top - $(element).offset().top + $(element).scrollTop()
+                });
+            }
         }
     }
 

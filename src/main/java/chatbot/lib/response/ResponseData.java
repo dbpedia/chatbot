@@ -32,6 +32,11 @@ public class ResponseData {
         return this;
     }
 
+    public ResponseData addField(Field field) {
+        this.fields.add(field);
+        return this;
+    }
+
     public ResponseData addButton(Button button) {
         this.buttons.add(button);
         return this;
@@ -206,6 +211,11 @@ public class ResponseData {
 
         }
 
+        public Field(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+
         public String getName() {
             return name;
         }
@@ -222,11 +232,6 @@ public class ResponseData {
         public Field setValue(String value) {
             this.value = value;
             return this;
-        }
-
-        public Field(String name, String value) {
-            this.name = name;
-            this.value = value;
         }
 
         public Field(String name, String value, boolean isShort) {

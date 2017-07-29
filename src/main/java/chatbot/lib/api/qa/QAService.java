@@ -36,9 +36,15 @@ public class QAService {
     }
 
     // Calls QA Service then returns resulting data as a list of Data Objects. The Data class is defined below as an inner class to be used here locally
-    public Data search(String question) throws Exception {
-        return qanary.search(question)
-                .addData(wolframAlpha.search(question), true);
+    public Data search(String question) {
+        try {
+            return qanary.search(question)
+                    .addData(wolframAlpha.search(question), true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static class Data {

@@ -8,6 +8,7 @@ public interface RiveScriptReplyType {
     String TEMPLATE_SCENARIO = "template";
     String STATUS_CHECK_SCENARIO = "status_check";
     String LANGUAGE_SCENARIO = "language";
+    String LOCATION_SCENARIO = "location";
 
     // String Scenarios where we just want different kinds of messages from Rive
     String FALLBACK_TEXT = "fallbacktext";
