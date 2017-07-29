@@ -39,6 +39,8 @@ public interface TemplateType {
     String MOVIE_SIMILAR = "movie-similar";
     String MOVIE_RELATED = "movie-related";
 
+    String ENTITY_INFORMATION = "entity-information";
+
     String LOAD_MORE = "load-more";
     String LOAD_RELATED = "load-related";
     String LOAD_SIMILAR = "load-similar";

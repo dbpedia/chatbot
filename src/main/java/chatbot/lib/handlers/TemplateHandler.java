@@ -15,6 +15,8 @@ import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 /**
  * Created by ramgathreya on 5/23/17.
  */
@@ -111,6 +113,13 @@ public class TemplateHandler {
             case TemplateType.MOVIE_SIMILAR:
             case TemplateType.MOVIE_RELATED:
                 responseGenerator = new MovieTemplateHandler(request, payload, helper).handleTemplateMessage();
+                break;
+
+            // Get Information for specific Entity
+            case TemplateType.ENTITY_INFORMATION:
+                responseGenerator.addCarouselResponse(new ArrayList<ResponseData>(){{
+                    add(helper.getSparql().getEntityInformation(payload[1]));
+                }});
                 break;
 
             // When User Clicks Yes or No for Feedback Smart Reply

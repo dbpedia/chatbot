@@ -1,12 +1,15 @@
 package chatbot.lib.handlers;
 
 import chatbot.Application;
+import chatbot.lib.Utility;
 import chatbot.lib.api.NominatimService;
 import chatbot.lib.api.dbpedia.LookupService;
 import chatbot.lib.api.qa.QAService;
 import chatbot.lib.request.Request;
+import chatbot.lib.request.TemplateType;
 import chatbot.lib.response.ResponseData;
 import chatbot.lib.response.ResponseGenerator;
+import chatbot.lib.response.ResponseType;
 import chatbot.rivescript.RiveScriptReplyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +38,15 @@ public class LocationHandler {
 
     private List<ResponseData> getResponseData(String uri) {
         List<ResponseData> responseDataList = new ArrayList<>();
+        // Instead of getting all entity information this could be optimized to get just the label by
+        // having a separate function for that in SPARQL
         ResponseData entityData = helper.getSparql().getEntityInformation(uri);
         ResponseData data = new NominatimService().reverseGeoCode(entityData.getTitle());
 
         if(data != null) {
+            data.addButton(new ResponseData.Button("Basic Information", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + uri));
             responseDataList.add(data);
         }
-        responseDataList.add(entityData);
         return responseDataList;
     }
 

@@ -8,6 +8,9 @@ import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.send.MessengerSendClient;
+import org.languagetool.JLanguageTool;
+import org.languagetool.language.BritishEnglish;
+import org.languagetool.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +92,7 @@ public class Application {
         private WolframRepository wolframRepository;
         private String tmdbApiKey;
         private SPARQL sparql;
+        private JLanguageTool languageTool;
 
         @Autowired
         public Helper(final CloudantClient cloudantClient,
@@ -108,6 +112,13 @@ public class Application {
             this.wolframRepository = wolframRepository;
             this.tmdbApiKey = tmdbApiKey;
             sparql = new SPARQL(explorerDB);
+
+            languageTool = new JLanguageTool(new BritishEnglish());
+            for (Rule rule : languageTool.getAllRules()) {
+                if (!rule.isDictionaryBasedSpellingRule()) {
+                    languageTool.disableRule(rule.getId());
+                }
+            }
         }
 
         public RiveScriptBot getRiveScriptBot() {

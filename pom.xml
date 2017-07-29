@@ -100,6 +100,11 @@
             <artifactId>jena-arq</artifactId>
             <version>3.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.languagetool</groupId>
+            <artifactId>language-en</artifactId>
+            <version>3.8</version>
+        </dependency>
 
         <!-- CouchDB -->
         <dependency>
