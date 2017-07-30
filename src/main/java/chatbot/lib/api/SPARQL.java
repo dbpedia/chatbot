@@ -336,6 +336,24 @@ public class SPARQL {
         return getEntities(query);
     }
 
+    public String getLabel(String uri) {
+        String label = null;
+        String query = buildQuery("SELECT * WHERE {\n" +
+                "<" + uri + "> rdfs:label ?label .\n" +
+                "FILTER(lang(?label) = 'en') ." +
+                "}");
+        QueryExecution queryExecution = executeQuery(query);
+
+        try {
+            Iterator<QuerySolution> results = queryExecution.execSelect();
+            label = results.next().get("label").asLiteral().getString();
+        }
+        finally {
+            queryExecution.close();
+        }
+        return label;
+    }
+
     public String getRDFTypes(String uri) {
         String types = null;
         String query = buildQuery("SELECT (group_concat(?type;separator=' ') as ?types) WHERE {" +

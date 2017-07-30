@@ -29,6 +29,8 @@ public interface TemplateType {
 
     String DBPEDIA_GSOC = "dbpedia-gsoc";
 
+    String GET_LOCATION = "get-location";
+
     String TV_CAST = "tv-cast";
     String TV_CREW = "tv-crew";
     String TV_SIMILAR = "tv-similar";

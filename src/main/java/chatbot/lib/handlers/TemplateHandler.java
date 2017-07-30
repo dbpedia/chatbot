@@ -122,6 +122,10 @@ public class TemplateHandler {
                 }});
                 break;
 
+            case TemplateType.GET_LOCATION:
+                responseGenerator = new LocationHandler(request, payload[1], helper).getLocation();
+                break;
+
             // When User Clicks Yes or No for Feedback Smart Reply
             case TemplateType.FEEDBACK:
                 // Responses can be converted to rivescript
@@ -148,10 +152,14 @@ public class TemplateHandler {
 
     public ResponseData[] getHelperTemplate() {
         return new ResponseData[]{
-                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia", "What is DBpedia?\nHow can I contribute to DBpedia?"),
-                new ResponseData("/images/icon-user-92.png", "Who ?", "Albert Einstein\nTell me about Barack Obama"),
-                new ResponseData("/images/icon-help-92.png", "What ?", "What is a planet?\nWhat is Mathematics?"),
-                new ResponseData("/images/icon-compass-92.png", "Where ?", "Where is the Eiffel Tower?\nWhere is Germany's capital?")
+                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia", "You can ask me questions related to DBpedia such as:")
+                        .addButton(new ResponseData.Button("What is DBpedia?", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_ABOUT))
+                        .addButton(new ResponseData.Button("How do I contribute?", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_CONTRIBUTE))
+                        .addButton(new ResponseData.Button("Is DBpedia down?", ResponseType.BUTTON_PARAM, TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + Constants.DBPEDIA_SERVICE)),
+                new ResponseData("/images/icon-help-92.png", "Factoid Questions", "You can also ask me simple factual questions/trivia:")
+                        .addButton(new ResponseData.Button("Who is Einstein?", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + "http://dbpedia.org/resource/Albert_Einstein"))
+                        .addButton(new ResponseData.Button("What is a planet?", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + "http://dbpedia.org/resource/Planet"))
+                        .addButton(new ResponseData.Button("Where is Berlin?", ResponseType.BUTTON_PARAM, TemplateType.GET_LOCATION + Utility.STRING_SEPARATOR + "Berlin"))
         };
     }
 

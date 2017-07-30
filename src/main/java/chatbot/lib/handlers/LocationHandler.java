@@ -38,10 +38,7 @@ public class LocationHandler {
 
     private List<ResponseData> getResponseData(String uri) {
         List<ResponseData> responseDataList = new ArrayList<>();
-        // Instead of getting all entity information this could be optimized to get just the label by
-        // having a separate function for that in SPARQL
-        ResponseData entityData = helper.getSparql().getEntityInformation(uri);
-        ResponseData data = new NominatimService().reverseGeoCode(entityData.getTitle());
+        ResponseData data = new NominatimService().reverseGeoCode(helper.getSparql().getLabel(uri));
 
         if(data != null) {
             data.addButton(new ResponseData.Button("Basic Information", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + uri));
