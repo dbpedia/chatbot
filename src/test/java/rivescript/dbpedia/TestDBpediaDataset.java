@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class TestDBpediaDataset extends RiveScriptBase {
     @Test
     public void testDBpediaDataset() {
-        String[] testCases = new String[]{"I'm starting my master research work on NLP. I want to use DBpedia dataset. But I don't know how to use it. Who can help me?"};
+        String[] testCases = new String[]{"I'm starting my master research work on NLP. I want to use DBpedia dataset. But I don't know how to use it. Who can help me?", "Download nlp dataset"};
         ArrayList<String[]> expectedAnswer = new ArrayList<String[]>(){{
             add(new String[]{"{\"type\": \"template\", \"name\": \"dbpedia-dataset-nlp\"}"});
         }};

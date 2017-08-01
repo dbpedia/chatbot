@@ -2,6 +2,7 @@ package chatbot.lib.handlers;
 
 import chatbot.Application;
 import chatbot.lib.Utility;
+import chatbot.lib.api.StatusCheckService;
 import chatbot.lib.api.qa.QAService;
 import chatbot.lib.api.SPARQL;
 import chatbot.lib.request.TemplateType;
@@ -39,6 +40,12 @@ public class NLHandler {
 
     public ResponseGenerator answer() throws Exception {
         ResponseGenerator responseGenerator = new ResponseGenerator();
+
+        // Check if DBpedia is Live
+        if(!new StatusCheckService().isDBpediaOnline()) {
+            return responseGenerator.setDBpediaFallbackResponse(request, helper.getRiveScriptBot());
+        }
+
         QAService.Data data = qaService.search(question);
         SPARQL.ProcessedResponse processedResponse = processResponseData(data);
         List<ResponseData> responseDatas = processedResponse.getResponseData();

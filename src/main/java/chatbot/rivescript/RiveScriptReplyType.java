@@ -12,6 +12,7 @@ public interface RiveScriptReplyType {
 
     // String Scenarios where we just want different kinds of messages from Rive
     String FALLBACK_TEXT = "fallbacktext";
+    String DBPEDIA_FALLBACK_TEXT = "dbpediafallbacktext";
     String NO_RESULTS_TEXT = "noresultstext";
 
     String HELP_TEXT = "helptext";

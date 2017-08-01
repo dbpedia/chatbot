@@ -1,5 +1,6 @@
 package chatbot.lib.api;
 
+import chatbot.lib.Constants;
 import chatbot.lib.Utility;
 import chatbot.lib.request.TemplateType;
 import chatbot.lib.response.ResponseData;
@@ -8,6 +9,7 @@ import com.cloudant.client.api.Database;
 import com.cloudant.client.api.views.Key;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -379,7 +381,9 @@ public class SPARQL {
     public QueryExecution executeQuery(String queryString) {
         logger.info("SPARQL Query is:\n" + queryString);
         Query query = QueryFactory.create(queryString);
-        return QueryExecutionFactory.sparqlService(ENDPOINT, query);
+        QueryEngineHTTP queryEngine = (QueryEngineHTTP) QueryExecutionFactory.sparqlService(ENDPOINT, query);
+        queryEngine.addParam("timeout", String.valueOf(Constants.API_TIMEOUT));
+        return queryEngine;
     }
 
     public static class ProcessedResponse {

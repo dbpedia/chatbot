@@ -93,4 +93,8 @@ public class TextHandler {
         }
         return responseGenerator;
     }
+
+    public String getTextMessage() {
+        return textMessage;
+    }
 }

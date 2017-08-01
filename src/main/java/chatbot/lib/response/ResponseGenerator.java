@@ -97,6 +97,13 @@ public class ResponseGenerator {
         return this;
     }
 
+    // Needs to be used when DBpedia is down
+    public ResponseGenerator setDBpediaFallbackResponse(Request request, RiveScriptBot riveScriptBot) {
+        showFeedback = false;
+        addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.DBPEDIA_FALLBACK_TEXT)[0]));
+        return this;
+    }
+
     public ResponseGenerator setNoResultsResponse(Request request, RiveScriptBot riveScriptBot) {
         showFeedback = false;
         addTextResponse(new ResponseData(riveScriptBot.answer(request.getUserId(), RiveScriptReplyType.NO_RESULTS_TEXT)[0]));

@@ -1,5 +1,6 @@
 package chatbot.lib.api;
 
+import chatbot.lib.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,6 @@ import java.util.HashMap;
 public class StatusCheckService {
     private static final Logger logger = LoggerFactory.getLogger(StatusCheckService.class);
 
-    private static final int TIMEOUT = 50000;
-
     private String url;
 
     public String getUrl() {
@@ -33,8 +32,8 @@ public class StatusCheckService {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url)
                     .openConnection();
-            connection.setConnectTimeout(TIMEOUT);
-            connection.setReadTimeout(TIMEOUT);
+            connection.setConnectTimeout(Constants.API_TIMEOUT);
+            connection.setReadTimeout(Constants.API_TIMEOUT);
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
@@ -44,5 +43,9 @@ public class StatusCheckService {
             return false;
         }
         return true;
+    }
+
+    public boolean isDBpediaOnline() {
+        return this.setUrl(Constants.SERVICES.get(Constants.DBPEDIA_SPARQL_SERVICE)[1]).isOnline();
     }
 }

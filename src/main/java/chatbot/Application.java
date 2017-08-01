@@ -12,6 +12,7 @@ import org.languagetool.JLanguageTool;
 import org.languagetool.language.AmericanEnglish;
 import org.languagetool.language.BritishEnglish;
 import org.languagetool.rules.Rule;
+import org.languagetool.rules.spelling.SpellingCheckRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by ramgathreya on 5/10/17.
@@ -114,6 +118,12 @@ public class Application {
             this.tmdbApiKey = tmdbApiKey;
             sparql = new SPARQL(explorerDB);
             languageTool = new JLanguageTool(new AmericanEnglish());
+            for (Rule rule : languageTool.getAllActiveRules()) {
+                if (rule instanceof SpellingCheckRule) {
+                    List<String> wordsToIgnore = Arrays.asList("nlp");
+                    ((SpellingCheckRule)rule).addIgnoreTokens(wordsToIgnore);
+                }
+            }
         }
 
         public RiveScriptBot getRiveScriptBot() {
