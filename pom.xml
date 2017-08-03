@@ -165,6 +165,9 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
+                        <configuration>
+                            <arguments>run build-portable-package</arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
