@@ -34,31 +34,24 @@ public class TestUtility {
         assertTrue("Check If URL is Proper", url.matches("^(((http|https)://)|mailto:).*$"));
     }
 
-    public static Application.Helper getHelper() {
-        try {
-            if(systemProperties.containsKey("PROP_FILE")) {
-                properties.load(new FileInputStream(systemProperties.get("PROP_FILE")));
-            }
-
-            CloudantClient cloudantClient = ClientBuilder
-                    .url(new URL(getProperty("cloudant.url")))
-                    .username(getProperty("cloudant.username"))
-                    .password(getProperty("cloudant.password"))
-                    .build();
-            WolframRepository wolframRepository = new WolframRepository(getProperty("wolfram.apiKey"));
-            return new Application.Helper(
-                    cloudantClient,
-                    wolframRepository,
-                    getProperty("cloudant.chatDB"),
-                    getProperty("cloudant.feedbackDB"),
-                    getProperty("cloudant.explorerDB"),
-                    getProperty("tmdb.apiKey")
-            );
+    public static Application.Helper getHelper() throws Exception {
+        if(systemProperties.containsKey("PROP_FILE")) {
+            properties.load(new FileInputStream(systemProperties.get("PROP_FILE")));
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
 
+        CloudantClient cloudantClient = ClientBuilder
+                .url(new URL(getProperty("cloudant.url")))
+                .username(getProperty("cloudant.username"))
+                .password(getProperty("cloudant.password"))
+                .build();
+        WolframRepository wolframRepository = new WolframRepository(getProperty("wolfram.apiKey"));
+        return new Application.Helper(
+                cloudantClient,
+                wolframRepository,
+                getProperty("cloudant.chatDB"),
+                getProperty("cloudant.feedbackDB"),
+                getProperty("cloudant.explorerDB"),
+                getProperty("tmdb.apiKey")
+        );
     }
 }

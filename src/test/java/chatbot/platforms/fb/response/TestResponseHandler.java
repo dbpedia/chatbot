@@ -11,7 +11,7 @@ public class TestResponseHandler {
 
     @Test
     public void testGenericMessage() {
-        Application.Helper helper = TestUtility.getHelper();
+        //Application.Helper helper = TestUtility.getHelper();
     }
 
     private void stub() {

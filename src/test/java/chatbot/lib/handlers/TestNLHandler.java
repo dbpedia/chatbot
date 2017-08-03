@@ -56,7 +56,7 @@ public class TestNLHandler {
 
     @Test
     public void testEntity() throws Exception {
-        checkEntity("user", "Barack Obama", true);
+//        checkEntity("user", "Barack Obama", true);
     }
 
     @Test
