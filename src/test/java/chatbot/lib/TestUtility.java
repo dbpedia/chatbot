@@ -23,7 +23,7 @@ public class TestUtility {
 
     private static String getProperty(String propertyName) {
         if(properties.size() == 0) {
-            return systemProperties.get(propertyName);
+            return System.getProperty(propertyName);
         }
         else {
             return properties.getProperty(propertyName);
