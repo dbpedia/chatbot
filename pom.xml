@@ -156,7 +156,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v4.3.0</nodeVersion>
-                            <npmVersion>2.1.8</npmVersion>
+                            <npmVersion>5.3.0</npmVersion>
                         </configuration>
                     </execution>
                     <!-- Install npm modules -->
@@ -165,9 +165,6 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
-                        <configuration>
-                            <arguments>run build-portable-package</arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

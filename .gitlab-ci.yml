@@ -1,4 +1,4 @@
-image: maven:3.3-jdk-8-alpine
+image: maven:3.3-jdk-8
 
 cache:
   key: "$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME"
@@ -17,10 +17,6 @@ unit_test:
   stage: test
   script:
     - mvn clean test -B
-  artifacts:
-    name: "node"
-    paths:
-      - ./node/*
 
 #check_style:
 #  stage: test

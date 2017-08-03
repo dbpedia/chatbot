@@ -11,6 +11,7 @@
     "babel-preset-react": "^6.24.1",
     "bootstrap": "3.3.7",
     "bootstrap-material-design": "0.5.10",
+    "less": "2.7.2",
     "css-loader": "^0.28.1",
     "jquery": "3.2.1",
     "less-loader": "^4.0.3",
