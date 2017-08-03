@@ -13,6 +13,6 @@ public class TestTextHandler {
     @Test
     public void testSanitizeText() throws Exception {
         // Request and Helper do not matter for this test case
-        assertEquals("download nlp dataset", new TextHandler(null, "download nlp dataset", null));
+        assertEquals("download nlp dataset", new TextHandler(null, "download nlp dataset", null).getTextMessage());
     }
 }
