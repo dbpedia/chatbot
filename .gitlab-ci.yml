@@ -7,56 +7,6 @@ cache:
 
 before_script:
   - mkdir -p $HOME/.m2/
-  - echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <localRepository>'$PWD'/.m2</localRepository>
-            <servers>
-              <server>
-                <id>private-maven</id>
-                <username>${MAVEN_USER}</username>
-                <password>${MAVEN_PASS}</password>
-              </server>
-            </servers>
-            <profiles>
-              <profile>
-                <id>default</id>
-                <repositories>
-                  <repository>
-                    <id>nexus-snapshots</id>
-                    <url>https://example.com/repository/maven-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                  </repository>
-                  <repository>
-                    <id>nexus-releases</id>
-                    <url>https://example.com/repository/maven-releases/</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                  </repository>
-                </repositories>
-              </profile>
-            </profiles>
-            <activeProfiles>
-              <activeProfile>default</activeProfile>
-            </activeProfiles>
-            <mirrors>
-              <mirror>
-                <id>nexus-maven</id>
-                <url>https://example.com/repository/maven-public/</url>
-                <mirrorOf>*</mirrorOf>
-              </mirror>
-            </mirrors>
-          </settings>' > $HOME/.m2/settings.xml
 
 stages:
   - test
@@ -68,10 +18,10 @@ unit_test:
   script:
     - mvn clean test -B
 
-check_style:
-  stage: test
-  script:
-    - mvn clean checkstyle:check -B
+#check_style:
+#  stage: test
+#  script:
+#    - mvn clean checkstyle:check -B
 
 .build: &build_template
   stage: build
