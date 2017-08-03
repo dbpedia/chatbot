@@ -30,6 +30,13 @@
 @ dbpedia contribute
 
 + how [*] to (help|contribute) [*] [project]
+@ dbpedia contribute
+
++ [*] dbpedia association
+- {"type": "template", "name": "dbpedia-association"}
+
++ [*] (who|what) is behind dbpedia
+@ dbpedia association
 
 // Fallback
 + * dbpedia *

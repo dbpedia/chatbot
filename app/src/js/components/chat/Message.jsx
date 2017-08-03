@@ -82,7 +82,10 @@ class Message extends React.Component {
                                 {message.buttons.map((button, index) => {
                                     switch(button.buttonType) {
                                         case Constants.response.ResponseType.BUTTON_LINK:
-                                            return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">{button.title}</a>
+                                            return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-raised btn-info">
+                                                {button.title}
+                                                <i className="material-icons">launch</i>
+                                            </a>
                                         case Constants.response.ResponseType.BUTTON_PARAM:
                                             return <a key={index} href="#" data-param={button.uri} onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-raised btn-info">{button.title}</a>
                                     }
@@ -152,7 +155,10 @@ class Message extends React.Component {
                                         {message.buttons.map((button, index) => {
                                             switch(button.buttonType) {
                                                 case Constants.response.ResponseType.BUTTON_LINK:
-                                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">{button.title}</a>
+                                                    return <a key={index} href={button.uri} target="_blank" className="btn btn-block btn-primary">
+                                                        {button.title}
+                                                        <i className="material-icons">launch</i>
+                                                    </a>
                                                 case Constants.response.ResponseType.BUTTON_PARAM:
                                                     return <a key={index} href="#" onClick={(event) => this.onParamButtonClick(event, button.uri, button.title)} className="btn btn-block btn-primary">{button.title}</a>
                                             }

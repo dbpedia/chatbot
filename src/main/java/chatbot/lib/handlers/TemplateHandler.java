@@ -58,6 +58,7 @@ public class TemplateHandler {
             // DBpedia Template Scenarios
             case TemplateType.DBPEDIA_ABOUT:
             case TemplateType.DBPEDIA_CONTRIBUTE:
+            case TemplateType.DBPEDIA_ASSOCIATION:
             case TemplateType.DBPEDIA_FALLBACK:
                 responseGenerator = new DBpediaTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
@@ -134,7 +135,7 @@ public class TemplateHandler {
                         responseGenerator.addTextResponse(new ResponseData("Glad that you like it."));
                         break;
                     case TemplateType.NO:
-                        responseGenerator.addTextResponse(new ResponseData("Sorry, I will try better."));
+                        responseGenerator.addTextResponse(new ResponseData("Sorry, I will try to become better."));
                         break;
                 }
                 responseGenerator.setShowFeedback(false);

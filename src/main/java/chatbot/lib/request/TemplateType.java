@@ -11,6 +11,7 @@ public interface TemplateType {
     String DBPEDIA_ABOUT = "dbpedia-about";
     String DBPEDIA_CONTRIBUTE = "dbpedia-contribute";
     String DBPEDIA_FALLBACK = "dbpedia-fallback";
+    String DBPEDIA_ASSOCIATION = "dbpedia-association";
 
     String DBPEDIA_DATASET = "dbpedia-dataset";
     String DBPEDIA_DATASET_NLP = "dbpedia-dataset-nlp";

@@ -7,18 +7,18 @@
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
-     
+
      cloudant.url = <couchdb-url>
      cloudant.username = <couchdb-username>
      cloudant.password = <couchdb-password>
      cloudant.chatDB = <couchdb-chatdb-name>
      cloudant.feedbackDB = <couchdb-feedbackdb-name>
      cloudant.explorerDB = <couchdb-explorerdb-name>
-     
+
      tmdb.apiKey = <tmdb-api-key>
-     
-     wolfram.apiKey = <wolfram-alpha-api-key>     
-     
+
+     wolfram.apiKey = <wolfram-alpha-api-key>
+
      logging.level.com.github.messenger4j=<log-level>
 
 ### Development Only Configurations
@@ -28,7 +28,8 @@
 
 ## Deployment
      mvn clean install
-     java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar // $PORT is the port number you want the server to run in for example 8080         
- 
+     java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar // $PORT is the port number you want the server to run in for example 8080
+
 ## Development
+     mvn spring-boot:run
      node/node node_modules/.bin/webpack --watch

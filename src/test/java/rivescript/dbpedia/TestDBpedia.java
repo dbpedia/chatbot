@@ -25,4 +25,11 @@ public class TestDBpedia extends RiveScriptBase {
         checkAnswers(testCases, expectedAnswer, true);
     }
 
+    @Test
+    public void testDBpediaAssociation() {
+        String[] testCases = new String[]{"Who is behind DBpedia"};
+        String[] expectedAnswer = new String[]{"{\"type\": \"template\", \"name\": \"dbpedia-association\"}"};
+        checkAnswers(testCases, expectedAnswer, true);
+    }
+
 }
