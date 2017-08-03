@@ -16,7 +16,11 @@ stages:
 unit_test:
   stage: test
   script:
-    - mvn clean test -B -X
+    - mvn clean test -B
+  artifacts:
+    name: "node"
+    paths:
+      - ./node/*
 
 #check_style:
 #  stage: test
