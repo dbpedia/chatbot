@@ -1,102 +1,113 @@
----
-# Build JAVA applications using Apache Maven (http://maven.apache.org)
-# For docker image tags see https://hub.docker.com/_/maven/
-#
-# For general lifecycle information see https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
-#
-# This template will build and test your projects as well as create the documentation.
-#
-# * Caches downloaded dependencies and plugins between invocation.
-# * Does only verify merge requests but deploy built artifacts of the
-#   master branch.
-# * Shows how to use multiple jobs in test stage for verifying functionality
-#   with multiple JDKs.
-# * Uses site:stage to collect the documentation for multi-module projects.
-# * Publishes the documentation for `master` branch.
+image: maven:3.3-jdk-8-alpine
 
-variables:
-  # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
-  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
-  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
-  # when running from the command line.
-  # `installAtEnd` and `deployAtEnd`are only effective with recent version of the corresponding plugins.
-  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-
-# Cache downloaded dependencies and plugins between builds.
-# To keep cache across branches add 'key: "$CI_JOB_REF_NAME"'
 cache:
+  key: "$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME"
   paths:
-    - .m2/repository
+    - .m2/
 
-# This will only validate and compile stuff and run e.g. maven-enforcer-plugin.
-# Because some enforcer rules might check dependency convergence and class duplications
-# we use `test-compile` here instead of `validate`, so the correct classpath is picked up.
-.validate: &validate
+before_script:
+  - mkdir -p $HOME/.m2/
+  - echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+            <localRepository>'$PWD'/.m2</localRepository>
+            <servers>
+              <server>
+                <id>private-maven</id>
+                <username>${MAVEN_USER}</username>
+                <password>${MAVEN_PASS}</password>
+              </server>
+            </servers>
+            <profiles>
+              <profile>
+                <id>default</id>
+                <repositories>
+                  <repository>
+                    <id>nexus-snapshots</id>
+                    <url>https://example.com/repository/maven-snapshots/</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                  </repository>
+                  <repository>
+                    <id>nexus-releases</id>
+                    <url>https://example.com/repository/maven-releases/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                  </repository>
+                </repositories>
+              </profile>
+            </profiles>
+            <activeProfiles>
+              <activeProfile>default</activeProfile>
+            </activeProfiles>
+            <mirrors>
+              <mirror>
+                <id>nexus-maven</id>
+                <url>https://example.com/repository/maven-public/</url>
+                <mirrorOf>*</mirrorOf>
+              </mirror>
+            </mirrors>
+          </settings>' > $HOME/.m2/settings.xml
+
+stages:
+  - test
+  - build
+  - deploy
+
+unit_test:
+  stage: test
+  script:
+    - mvn clean test -B
+
+check_style:
+  stage: test
+  script:
+    - mvn clean checkstyle:check -B
+
+.build: &build_template
   stage: build
   script:
-    - 'mvn $MAVEN_CLI_OPTS test-compile'
+    - mvn package -B
 
-# For merge requests do not `deploy` but only run `verify`.
-# See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
-.verify: &verify
-  stage: test
-  script:
-    - 'mvn $MAVEN_CLI_OPTS verify site site:stage'
+develop_build:
+  <<: *build_template
+  only:
+    - branches
   except:
     - master
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - target/*.jar
 
-# Validate merge requests using JDK7
-validate:jdk7:
-  <<: *validate
-  image: maven:3.3.9-jdk-7
-
-# Validate merge requests using JDK8
-validate:jdk8:
-  <<: *validate
-  image: maven:3.3.9-jdk-8
-
-# Verify merge requests using JDK7
-verify:jdk7:
-  <<: *verify
-  image: maven:3.3.9-jdk-7
-
-# Verify merge requests using JDK8
-verify:jdk8:
-  <<: *verify
-  image: maven:3.3.9-jdk-8
-
-
-# For `master` branch run `mvn deploy` automatically.
-# Here you need to decide whether you want to use JDK7 or 8.
-# To get this working you need to define a volume while configuring your gitlab-ci-multi-runner.
-# Mount your `settings.xml` as `/root/.m2/settings.xml` which holds your secrets.
-# See https://maven.apache.org/settings.html
-deploy:jdk8:
-  # Use stage test here, so the pages job may later pickup the created site.
-  stage: test
-  script:
-    - 'mvn $MAVEN_CLI_OPTS deploy site site:stage'
+master_build:
+  <<: *build_template
   only:
     - master
-  # Archive up the built documentation site.
+    - tags
   artifacts:
+    expire_in: 1 month
     paths:
-    - target/staging
-  image: maven:3.3.9-jdk-8
+      - target/*.jar
 
-
-pages:
-  image: busybox:latest
+build_image:
   stage: deploy
-  script:
-    # Because Maven appends the artifactId automatically to the staging path if you did define a parent pom,
-    # you might need to use `mv target/staging/YOUR_ARTIFACT_ID public` instead.
-    - mv target/staging public
-  dependencies:
-    - deploy:jdk8
-  artifacts:
-    paths:
-    - public
+  image: docker:latest
   only:
-    - master
+    - tags
+  script:
+    - mkdir -p target/docker/
+    - cp src/main/docker/* target/docker/
+    - unzip -oq target/*.jar -d target/docker/
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
