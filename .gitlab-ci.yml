@@ -21,6 +21,7 @@ stages:
 unit_test:
   stage: test
   script:
+    - echo $ENV_TEST
     - mvn clean test $ENV_TEST -Dtest=Runner
 
 .build: &build_template
