@@ -34,23 +34,18 @@ public class TestNLHandler {
     }
 
     private void checkEntity(String userId, String question, boolean single) throws Exception {
-        try {
-            NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
-            List<Response> response = nlHandler.answer().getResponse();
+        NLHandler nlHandler = new NLHandler(new Request().setUserId(userId), question, TestUtility.getHelper());
+        List<Response> response = nlHandler.answer().getResponse();
 
-            TestResponseBase.checkTextMessage(response.get(0));
-            if(single) {
-                assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element
-            }
-            else {
-                assertEquals(response.get(1).getMessageData().size() >= 1, true); // Check that Carousel contains atleast 1 element
-            }
+        TestResponseBase.checkTextMessage(response.get(0));
+        if(single) {
+            assertEquals(response.get(1).getMessageData().size(), 1); // Check that Carousel contains only 1 element
+        }
+        else {
+            assertEquals(response.get(1).getMessageData().size() >= 1, true); // Check that Carousel contains atleast 1 element
+        }
 
-            TestResponseBase.checkCarouselMessage(response.get(1));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        TestResponseBase.checkCarouselMessage(response.get(1));
     }
 
     @Test

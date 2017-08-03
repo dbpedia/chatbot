@@ -12,7 +12,7 @@ public class TestTextHandler {
 
     @Test
     public void testSanitizeText() throws Exception {
-        System.out.println(new TextHandler(null, "download nlp dataset", TestUtility.getHelper()).getTextMessage());
-        assertEquals("download nlp dataset", new TextHandler(null, "download nlp dataset", TestUtility.getHelper()).getTextMessage());
+        // Request and Helper do not matter for this test case
+        assertEquals("download nlp dataset", new TextHandler(null, "download nlp dataset", null));
     }
 }
