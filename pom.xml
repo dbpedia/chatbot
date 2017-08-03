@@ -146,7 +146,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>0.0.22</version>
+                <version>1.4</version>
                 <executions>
                     <!-- Install Node and npm -->
                     <execution>
