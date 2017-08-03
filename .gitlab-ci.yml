@@ -16,7 +16,7 @@ stages:
 unit_test:
   stage: test
   script:
-    - mvn clean test -B
+    - mvn clean test -B -X
 
 #check_style:
 #  stage: test
