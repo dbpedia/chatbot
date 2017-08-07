@@ -33,6 +33,12 @@ public class GenesisService {
         client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
+    // Created for tests since they fail because Genesis cannot produce results before timeout occurs
+    public GenesisService(int timeout) {
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout).build();
+        client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+    }
+
     private String makeRequest(String endpoint, String uri, String requestType) {
         try {
             HttpPost httpPost = new HttpPost(endpoint);

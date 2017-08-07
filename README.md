@@ -1,6 +1,8 @@
 # DBpedia Chatbot
 
-## [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
+[![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
+
+For more information about this project and **GSoC Progress** please refer to [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
 
 ## Environment Configurations
      admin.username = <admin-username>

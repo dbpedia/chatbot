@@ -39,7 +39,6 @@ master_build:
   <<: *build_template
   only:
     - master
-    - tags
   artifacts:
     expire_in: 1 month
     paths:
