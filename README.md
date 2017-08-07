@@ -1,6 +1,6 @@
 # DBpedia Chatbot
 
-[![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
+[![Project Stats](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif) [![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
 
 For more information about this project and **GSoC Progress** please refer to [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
 
@@ -41,18 +41,29 @@ For more information about this project and **GSoC Progress** please refer to [G
 ## Embed Code
 Add the following snippet to the `<head>` section of the webpage where you want to embed the ChatBot.
 ``` javascript
- <script type="text/javascript">
-    window.onload = function() {
-        var iframe = document.createElement("iframe");
-        iframe.setAttribute("src", "http://chat.dbpedia.org/embed");
-        iframe.setAttribute("frameBorder", 0);
-        iframe.style.zIndex = 10000000;
-        iframe.style.height = "100%";
-        iframe.style.width = "40%";
-        iframe.style.position = "fixed";
-        iframe.style.bottom = "20px";
-        iframe.style.right = "20px";
-        document.body.appendChild(iframe);
-    }
- </script>
+<script type="text/javascript">
+    (function() {
+        var URL = "https://chat.dbpedia.org"
+        window.onload = function() {
+          var iframe = document.createElement("iframe");
+          iframe.setAttribute("src", URL + "/embed");
+          iframe.setAttribute("frameBorder", 0);
+          iframe.style.zIndex = 10000000;
+          iframe.style.height = "100%";
+          iframe.style.width = "40%";
+          iframe.style.position = "fixed";
+          iframe.style.bottom = "20px";
+          iframe.style.right = "20px";
+          iframe.style.display = "none";
+
+          document.body.appendChild(iframe);
+          window.addEventListener("message", receiveMessage, false);
+          function receiveMessage(event) {
+            if(event.origin == URL && event.data == "dbpedia-chatbot-embed-loaded") {
+              iframe.style.display = "block";
+            }
+          }
+        }
+    })();
+</script>
 ```
