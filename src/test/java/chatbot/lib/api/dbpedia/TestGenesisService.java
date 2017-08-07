@@ -15,14 +15,14 @@ import static org.junit.Assert.assertNotNull;
 public class TestGenesisService {
     @Test
     public void checkSimilar() throws Exception {
-        String uris = new GenesisService().getSimilarEntities("http://dbpedia.org/resource/Barack_Obama");
+        String uris = new GenesisService(0).getSimilarEntities("http://dbpedia.org/resource/Barack_Obama");
         assertNotNull(uris);
         assertNotEquals(uris.trim(), "");
     }
 
     @Test
     public void checkRelated() throws Exception {
-        String uris = new GenesisService().getRelatedEntities("http://dbpedia.org/resource/Barack_Obama");
+        String uris = new GenesisService(0).getRelatedEntities("http://dbpedia.org/resource/Barack_Obama");
         assertNotNull(uris);
         assertNotEquals(uris.trim(), "");
     }

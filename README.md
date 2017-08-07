@@ -1,6 +1,8 @@
 # DBpedia Chatbot
 
-## [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
+[![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
+
+For more information about this project and **GSoC Progress** please refer to [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
 
 ## Environment Configurations
      admin.username = <admin-username>
@@ -35,3 +37,22 @@
 ## Development
      mvn spring-boot:run
      node/node node_modules/.bin/webpack --watch
+
+## Embed Code
+Add the following snippet to the `<head>` section of the webpage where you want to embed the ChatBot.
+``` javascript
+ <script type="text/javascript">
+    window.onload = function() {
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("src", "http://chat.dbpedia.org/embed");
+        iframe.setAttribute("frameBorder", 0);
+        iframe.style.zIndex = 10000000;
+        iframe.style.height = "100%";
+        iframe.style.width = "40%";
+        iframe.style.position = "fixed";
+        iframe.style.bottom = "20px";
+        iframe.style.right = "20px";
+        document.body.appendChild(iframe);
+    }
+ </script>
+```

@@ -79,6 +79,7 @@ public class Application {
                     .and()
                     .logout()
                     .permitAll();
+            http.headers().frameOptions().disable();
         }
 
         @Autowired

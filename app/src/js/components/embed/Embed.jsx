@@ -26,7 +26,7 @@ class Embed extends React.Component {
                     </div>
                 </div>
                 <div className="embed-chat-button-container">
-                    <a className="embed-chat-button btn btn-raised btn-fab btn-primary" onClick={this.toggleChat}>
+                    <a className="embed-chat-button btn btn-raised btn-fab" onClick={this.toggleChat}>
                         <i className="material-icons">
                             {this.state.isChatOpen ? "clear" : "chat"}
                         </i>
