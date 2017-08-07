@@ -1,6 +1,6 @@
 # DBpedia Chatbot
 
-[![Project Stats](https://www.openhub.net/p/dbpedia-chatbot)](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif) [![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
+[![Project Stats](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif)](https://www.openhub.net/p/dbpedia-chatbot) [![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
 
 For more information about this project and **GSoC Progress** please refer to [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
 
