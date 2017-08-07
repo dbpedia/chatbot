@@ -44,7 +44,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
  <script type="text/javascript">
     window.onload = function() {
         var iframe = document.createElement("iframe");
-        iframe.setAttribute("src", "http://localhost:8080/embed");
+        iframe.setAttribute("src", "http://chat.dbpedia.org/embed");
         iframe.setAttribute("frameBorder", 0);
         iframe.style.zIndex = 10000000;
         iframe.style.height = "100%";
