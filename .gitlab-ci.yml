@@ -13,11 +13,6 @@ stages:
   - build
   - deploy
 
-# install:
-#   stage: test
-#   script:
-#     - mvn clean install
-
 unit_test:
   stage: test
   script:
@@ -26,6 +21,7 @@ unit_test:
 .build: &build_template
   stage: build
   script:
+    - mvn clean install
     - mvn package -B
 
 develop_build:
