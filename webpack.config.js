@@ -4,7 +4,8 @@ module.exports = {
     app: './app/src/js/index.js',
     feedback: './app/src/js/feedback.js',
     login: './app/src/js/login.js',
-    admin: './app/src/js/admin.js'
+    admin: './app/src/js/admin.js',
+    embed: './app/src/js/embed.js'
   },
   output: {
     path: path.resolve('./src/main/app/js/'),

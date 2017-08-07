@@ -1,5 +1,7 @@
 # DBpedia Chatbot
 
+## [GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)
+
 ## Environment Configurations
      admin.username = <admin-username>
      admin.password = <admin-password>

@@ -69,7 +69,7 @@ public class Application {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/", "/assets/**/*", "/js/*", "/images/**/*", "/feedback", "/webhook", "/fbwebhook", "/slackwebhook").permitAll()
+                    .antMatchers("/", "/assets/**/*", "/js/*", "/images/**/*", "/feedback", "/webhook", "/fbwebhook", "/slackwebhook", "/embed").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
