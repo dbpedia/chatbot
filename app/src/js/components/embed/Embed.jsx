@@ -9,7 +9,7 @@ class Embed extends React.Component {
             isChatOpen: false,
             startChat: false
         }
-
+        window.parent.postMessage('dbpedia-chatbot-embed-loaded', document.referrer);
         this.toggleChat = this.toggleChat.bind(this);
     }
 
