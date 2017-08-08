@@ -8,63 +8,32 @@ cache:
 before_script:
   - mkdir -p $HOME/.m2/
 
+#variables:
+#  DOCKER_DRIVER: overlay
+#  SPRING_PROFILES_ACTIVE: gitlab-ci
+
 stages:
-  - test
   - build
+  - package
   - deploy
 
-unit_test:
-  stage: test
-  script:
-    - mvn clean test $ENV_TEST -Dtest=Runner
-
-.build: &build_template
+# Needs to be split into stage and production
+maven-build:
   stage: build
-  script:
-    - mvn clean install -B
-
-develop_build:
-  <<: *build_template
-  only:
-    - branches
-  except:
-    - master
+  script: mvn package $ENV_TEST
   artifacts:
-    expire_in: 1 day
     paths:
       - target/*.jar
 
-master_build:
-  <<: *build_template
-  only:
-    - master
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - target/*.jar
-
-deploy_stage:
-  stage: deploy
-  except:
-    - master
-  image: docker:latest
+docker-build:
+  stage: package
   script:
-#    - mkdir -p target/docker/
-#    - cp src/main/docker/* target/docker/
-#    - unzip -oq target/*.jar -d target/docker/
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
-    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
+  - docker build -t registry.gitlab.com/marcolenzo/actuator-sample .
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker push registry.gitlab.com/marcolenzo/actuator-sample
 
-deploy_production:
-  stage: deploy
-  only:
-    - master
+deploy:
   image: docker:latest
+  stage: deploy
   script:
-#      - mkdir -p target/docker/
-#      - cp src/main/docker/* target/docker/
-#      - unzip -oq target/*.jar -d target/docker/
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
-    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
+  - echo "Need to write deployment scripts here"
