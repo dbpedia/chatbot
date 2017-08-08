@@ -61,10 +61,10 @@ deploy_production:
   only:
     - master
   image: docker:latest
-    script:
+  script:
 #      - mkdir -p target/docker/
 #      - cp src/main/docker/* target/docker/
 #      - unzip -oq target/*.jar -d target/docker/
-      - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-      - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
-      - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
