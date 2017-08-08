@@ -21,8 +21,7 @@ unit_test:
 .build: &build_template
   stage: build
   script:
-    - mvn clean install
-    - mvn package -B
+    - mvn clean install -B
 
 develop_build:
   <<: *build_template
@@ -44,15 +43,28 @@ master_build:
     paths:
       - target/*.jar
 
-build_image:
+deploy_stage:
   stage: deploy
+  except:
+    - master
   image: docker:latest
-  only:
-    - tags
   script:
-    - mkdir -p target/docker/
-    - cp src/main/docker/* target/docker/
-    - unzip -oq target/*.jar -d target/docker/
+#    - mkdir -p target/docker/
+#    - cp src/main/docker/* target/docker/
+#    - unzip -oq target/*.jar -d target/docker/
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
     - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
+
+deploy_production:
+  stage: deploy
+  only:
+    - master
+  image: docker:latest
+    script:
+#      - mkdir -p target/docker/
+#      - cp src/main/docker/* target/docker/
+#      - unzip -oq target/*.jar -d target/docker/
+      - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+      - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
+      - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
