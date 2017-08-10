@@ -1,5 +1,3 @@
-image: maven:3.3-jdk-8
-
 cache:
   key: "$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME"
   paths:
@@ -8,32 +6,37 @@ cache:
 before_script:
   - mkdir -p $HOME/.m2/
 
-#variables:
-#  DOCKER_DRIVER: overlay
-#  SPRING_PROFILES_ACTIVE: gitlab-ci
-
 stages:
-  - build
+  - test
   - package
   - deploy
 
-# Needs to be split into stage and production
-maven-build:
-  stage: build
-  script: mvn package $ENV_TEST
-  artifacts:
-    paths:
-      - target/*.jar
+maven-test:
+  image: maven:3.3-jdk-8
+  stage: test
+  script:
+    - mvn clean test $ENV_TEST -Dtest=Runner
 
 docker-build:
+  image: docker:latest
   stage: package
+  services:
+    - docker:dind
   script:
-  - docker build -t registry.gitlab.com/marcolenzo/actuator-sample .
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-  - docker push registry.gitlab.com/marcolenzo/actuator-sample
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/ram-g-athreya/chatbot:latest .
+    - docker push registry.gitlab.com/ram-g-athreya/chatbot:latest
 
+# Needs to be split into stage and production
 deploy:
   image: docker:latest
   stage: deploy
+  services:
+    - docker:dind
   script:
-  - echo "Need to write deployment scripts here"
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker pull registry.gitlab.com/ram-g-athreya/chatbot:latest
+    - docker logout registry.gitlab.com
+    - docker login --username=$HEROKU_USERNAME --password=$HEROKU_PASSWORD registry.heroku.com
+    - docker tag registry.gitlab.com/ram-g-athreya/chatbot:latest registry.heroku.com/dbpedia-bot-test/web
+    - docker push registry.heroku.com/dbpedia-bot-test/web
