@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +34,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by ramgathreya on 5/10/17.
@@ -53,9 +55,10 @@ public class Application {
     static class AssetsConfiguration extends WebMvcConfigurerAdapter {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/");
-            registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/");
-            registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/");
+            registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/images/**").addResourceLocations("file:src/main/resources/static/images/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
             super.addResourceHandlers(registry);
         }
     }

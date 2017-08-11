@@ -32,7 +32,10 @@ public class TextHandler {
             List<RuleMatch> matches = helper.getLanguageTool().check(message);
             for (RuleMatch match : matches) {
                 String error = message.substring(match.getFromPos(), match.getToPos());
-                result = result.replace(error, match.getSuggestedReplacements().get(0));
+                List<String> replacements = match.getSuggestedReplacements();
+                if(replacements.size() > 0) {
+                    result = result.replace(error, match.getSuggestedReplacements().get(0));
+                }
             }
         }
         catch(Exception e) {

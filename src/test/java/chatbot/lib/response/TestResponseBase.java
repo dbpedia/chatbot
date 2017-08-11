@@ -57,4 +57,23 @@ public class TestResponseBase {
             }
         }
     }
+
+    // Place Messages are also carousel messages
+    public static void checkPlaceMessage(Response response) {
+        checkCarouselMessage(response);
+
+        for(ResponseData responseData : response.getMessageData()) {
+            assertEquals(true, responseData.getTitle().endsWith("(Location Info)"));
+            List<ResponseData.Button> buttons = responseData.getButtons();
+
+            ResponseData.Button mapButton = buttons.get(0);
+            assertEquals("View Map", mapButton.getTitle());
+            assertEquals(ResponseType.BUTTON_LINK, mapButton.getButtonType());
+            assertEquals(true, mapButton.getUri().startsWith("http://nominatim.openstreetmap.org/search"));
+
+            ResponseData.Button moreInfoButton = buttons.get(1);
+            assertEquals("Basic Information", moreInfoButton.getTitle());
+            assertEquals(ResponseType.BUTTON_PARAM, moreInfoButton.getButtonType());
+        }
+    }
 }
