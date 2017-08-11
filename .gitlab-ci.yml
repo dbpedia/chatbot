@@ -1,5 +1,3 @@
-image: maven:3.3-jdk-8
-
 cache:
   key: "$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME"
   paths:
@@ -10,49 +8,35 @@ before_script:
 
 stages:
   - test
-  - build
+  - package
   - deploy
 
-unit_test:
+maven-test:
+  image: maven:3.3-jdk-8
   stage: test
   script:
     - mvn clean test $ENV_TEST -Dtest=Runner
 
-.build: &build_template
-  stage: build
-  script:
-    - mvn clean install
-    - mvn package -B
-
-develop_build:
-  <<: *build_template
-  only:
-    - branches
-  except:
-    - master
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - target/*.jar
-
-master_build:
-  <<: *build_template
-  only:
-    - master
-  artifacts:
-    expire_in: 1 month
-    paths:
-      - target/*.jar
-
-build_image:
-  stage: deploy
+docker-build:
   image: docker:latest
-  only:
-    - tags
+  stage: package
+  services:
+    - docker:dind
   script:
-    - mkdir -p target/docker/
-    - cp src/main/docker/* target/docker/
-    - unzip -oq target/*.jar -d target/docker/
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_TAG target/docker/
-    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_TAG
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/ram-g-athreya/chatbot:latest .
+    - docker push registry.gitlab.com/ram-g-athreya/chatbot:latest
+
+# Needs to be split into stage and production
+deploy:
+  image: docker:latest
+  stage: deploy
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker pull registry.gitlab.com/ram-g-athreya/chatbot:latest
+    - docker logout registry.gitlab.com
+    - docker login --username=$HEROKU_USERNAME --password=$HEROKU_PASSWORD registry.heroku.com
+    - docker tag registry.gitlab.com/ram-g-athreya/chatbot:latest registry.heroku.com/dbpedia-bot-test/web
+    - docker push registry.heroku.com/dbpedia-bot-test/web

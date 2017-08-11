@@ -64,7 +64,6 @@ public class LocationHandler {
                 Iterator iterator = data.getUris().iterator();
                 uri = (String) iterator.next();
                 responseDataList = getResponseData(uri);
-
             }
         }
 

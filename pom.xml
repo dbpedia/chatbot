@@ -31,7 +31,7 @@
         </repository>
         <repository>
             <id>local repository</id>
-            <url>file:${project.basedir}/repo</url>
+            <url>file://${project.basedir}/repo</url>
         </repository>
     </repositories>
 
@@ -165,6 +165,10 @@
                         <goals>
                             <goal>npm</goal>
                         </goals>
+                        <!-- Added Specifically for GitLab which runs as root -->
+                        <configuration>
+	                         <arguments>install --unsafe-perm</arguments>
+	                      </configuration>
                     </execution>
                 </executions>
             </plugin>

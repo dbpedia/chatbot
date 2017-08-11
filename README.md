@@ -40,10 +40,10 @@ For more information about this project and **GSoC Progress** please refer to [G
 
 ## Embed Code
 Add the following snippet to the `<head>` section of the webpage where you want to embed the ChatBot.
-``` javascript
+```javascript
 <script type="text/javascript">
     (function() {
-        var URL = "https://chat.dbpedia.org"
+        var URL = "http://chat.dbpedia.org"
         window.onload = function() {
           var iframe = document.createElement("iframe");
           iframe.setAttribute("src", URL + "/embed");
