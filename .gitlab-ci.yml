@@ -7,21 +7,24 @@ before_script:
   - mkdir -p $HOME/.m2/
 
 stages:
-#  - test
+  - test
   - package
   - deploy
 
-#maven-test:
-#  image: maven:3.3-jdk-8
-#  stage: test
-#  script:
-#    - mvn clean test $ENV_TEST -Dtest=Runner
-#
-docker-build-stage:
+maven-test:
+  image: maven:3.3-jdk-8
+  stage: test
+  only:
+    - develop
+    - master
+  script:
+    - mvn clean test $ENV_TEST -Dtest=Runner
+
+docker-build-staging:
   image: docker:latest
   stage: package
-  except:
-    - master
+  only:
+    - develop
   services:
     - docker:dind
   script:
@@ -44,8 +47,8 @@ docker-build:
 deploy-staging:
   image: rastasheep/ubuntu-sshd
   stage: deploy
-  except:
-      - master
+  only:
+    - develop
   environment:
     name: staging
     url: http://akswnc9.aksw.uni-leipzig.de:1983
