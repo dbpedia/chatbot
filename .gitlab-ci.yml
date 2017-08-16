@@ -48,7 +48,7 @@ deploy-staging:
   image: rastasheep/ubuntu-sshd
   stage: deploy
   only:
-      - develop
+    - develop
   environment:
     name: staging
     url: http://akswnc9.aksw.uni-leipzig.de:1983
