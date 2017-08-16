@@ -2,7 +2,7 @@
 
 [![Project Stats](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif)](https://www.openhub.net/p/dbpedia-chatbot) [![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
 
-**[Final Application](http://chat.dbepdia.org)**
+**[Final Application](http://chat.dbpedia.org)**
 
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
@@ -55,7 +55,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
           iframe.style.width = "40%";
           iframe.style.position = "fixed";
           iframe.style.bottom = "20px";
-          iframe.style.right = "20px";
+          iframe.style.left = "20px";
           iframe.style.display = "none";
 
           document.body.appendChild(iframe);
