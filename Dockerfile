@@ -9,4 +9,5 @@ RUN mvn clean install
 FROM java:8
 WORKDIR /app
 COPY --from=0 /app .
-CMD java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar
+EXPOSE 8080
+CMD java $JAVA_OPTS -jar target/*.jar
