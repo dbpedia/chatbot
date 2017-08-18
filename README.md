@@ -7,9 +7,13 @@
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
 ## Environment Configurations
+When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder.  
+
      admin.username = <admin-username>
      admin.password = <admin-password>
+     
      chatbot.baseUrl = <https-url-to-access-the-bot>
+     
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
@@ -25,7 +29,7 @@ For more information about this project and **GSoC Progress** please refer to **
 
      wolfram.apiKey = <wolfram-alpha-api-key>
 
-     logging.level.com.github.messenger4j=<log-level>
+     logging.level.com.github.messenger4j = <log-level>
 
 ### Development Only Configurations
      spring.thymeleaf.cache = false
@@ -45,7 +49,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
 ```javascript
 <script type="text/javascript">
     (function() {
-        var URL = "http://chat.dbpedia.org"
+        var URL = "http://akswnc9.informatik.uni-leipzig.de:1984"
         window.onload = function() {
           var iframe = document.createElement("iframe");
           iframe.setAttribute("src", URL + "/embed");
