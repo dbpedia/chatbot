@@ -95,7 +95,7 @@ public class Application {
     @Component
     public static class Helper {
         private RiveScriptBot riveScriptBot;
-        private Database chatDB, feedbackDB, explorerDB;
+        private Database chatDB = null, feedbackDB = null, explorerDB = null;
         private ElizaMain eliza;
         private WolframRepository wolframRepository;
         private String tmdbApiKey;
@@ -109,22 +109,30 @@ public class Application {
                       @Value("${cloudant.feedbackDB}") String feedbackDBName,
                       @Value("${cloudant.explorerDB}") String explorerDBName,
                       @Value("${tmdb.apiKey}") String tmdbApiKey) {
-            riveScriptBot = new RiveScriptBot();
+            try {
+                chatDB = cloudantClient.database(chatDBName, true);
+                feedbackDB = cloudantClient.database(feedbackDBName, true);
+                explorerDB = cloudantClient.database(explorerDBName, true);
+            }
+            catch(Exception e) {
+                logger.info("ERROR HERE");
+                e.printStackTrace();
+            }
+            finally {
+                this.tmdbApiKey = tmdbApiKey;
+                this.wolframRepository = wolframRepository;
 
-            chatDB = cloudantClient.database(chatDBName, true);
-            feedbackDB = cloudantClient.database(feedbackDBName, true);
-            explorerDB = cloudantClient.database(explorerDBName, true);
+                riveScriptBot = new RiveScriptBot();
+                eliza = new ElizaMain();
+                eliza.readScript(true, "src/main/resources/eliza/script");
 
-            eliza = new ElizaMain();
-            eliza.readScript(true, "src/main/resources/eliza/script");
-            this.wolframRepository = wolframRepository;
-            this.tmdbApiKey = tmdbApiKey;
-            sparql = new SPARQL(explorerDB);
-            languageTool = new JLanguageTool(new AmericanEnglish());
-            for (Rule rule : languageTool.getAllActiveRules()) {
-                if (rule instanceof SpellingCheckRule) {
-                    List<String> wordsToIgnore = Arrays.asList("nlp");
-                    ((SpellingCheckRule)rule).addIgnoreTokens(wordsToIgnore);
+                sparql = new SPARQL(explorerDB);
+                languageTool = new JLanguageTool(new AmericanEnglish());
+                for (Rule rule : languageTool.getAllActiveRules()) {
+                    if (rule instanceof SpellingCheckRule) {
+                        List<String> wordsToIgnore = Arrays.asList("nlp");
+                        ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore);
+                    }
                 }
             }
         }

@@ -41,48 +41,50 @@ import java.util.List;
 @RequestMapping("/fbwebhook")
 public class FBHandler {
     private static final Logger logger = LoggerFactory.getLogger(FBHandler.class);
-    private final MessengerReceiveClient receiveClient;
-    private final MessengerSendClient sendClient;
-    private final Application.Helper helper;
+    private MessengerReceiveClient receiveClient = null;
+    private MessengerSendClient sendClient = null;
+    private Application.Helper helper = null;
 
-    private final String appSecret;
-    private final String verifyToken;
-    private final String pageAccessToken;
+    private String appSecret = null;
+    private String verifyToken = null;
+    private String pageAccessToken = null;
 
-    private final String baseUrl;
+    private String baseUrl = null;
 
     @Autowired
-    FBHandler(@Value("${chatbot.fb.appSecret}") final String appSecret,
-              @Value("${chatbot.fb.verifyToken}") final String verifyToken,
-              @Value("${chatbot.fb.pageAccessToken}") final String pageAccessToken,
-              @Value("${chatbot.baseUrl}") final String baseUrl,
+    FBHandler(@Value("${chatbot.fb.appSecret}") String appSecret,
+              @Value("${chatbot.fb.verifyToken}") String verifyToken,
+              @Value("${chatbot.fb.pageAccessToken}") String pageAccessToken,
+              @Value("${chatbot.baseUrl}") String baseUrl,
               final MessengerSendClient sendClient,
               final Application.Helper helper) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        logger.debug("App Secret is " + appSecret);
-        logger.debug("Verification Token is " + verifyToken);
+        try {
+            this.appSecret = appSecret;
+            this.verifyToken = verifyToken;
+            this.pageAccessToken = pageAccessToken;
+            this.baseUrl = baseUrl;
 
-        this.appSecret = appSecret;
-        this.verifyToken = verifyToken;
-        this.pageAccessToken = pageAccessToken;
-        this.baseUrl = baseUrl;
+            this.receiveClient = MessengerPlatform.newReceiveClientBuilder(this.appSecret, this.verifyToken)
+                    .onTextMessageEvent(textMessageEventHandler())
+                    .onPostbackEvent(postbackEventHandler())
+                    .onQuickReplyMessageEvent(quickReplyMessageEventHandler())
+                    .build();
 
-        this.receiveClient = MessengerPlatform.newReceiveClientBuilder(this.appSecret, this.verifyToken)
-                .onTextMessageEvent(textMessageEventHandler())
-                .onPostbackEvent(postbackEventHandler())
-                .onQuickReplyMessageEvent(quickReplyMessageEventHandler())
-                .build();
+            this.sendClient = sendClient;
+            this.helper = helper;
 
-        this.sendClient = sendClient;
-        this.helper = helper;
+            MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
 
-        MessengerSetupClient setupClient = MessengerPlatform.newSetupClientBuilder(this.pageAccessToken).build();
+            setupClient.setupStartButton(TemplateType.START);
+            setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
+                    new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.HELP).build(),
+                    new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build(),
+                    new CallToAction.Builder().type(CallToActionType.WEB_URL).title("Feedback").url(new URL(baseUrl + "/feedback")).build()
+            )));
+        }
+        catch (Exception e) {
 
-        setupClient.setupStartButton(TemplateType.START);
-        setupClient.setupPersistentMenu(new ArrayList<>(Arrays.asList(
-                new CallToAction.Builder().type(CallToActionType.POSTBACK).title("Start Over").payload(TemplateType.HELP).build(),
-                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("View on Web").url(new URL("http://www.dbpedia.org")).build(),
-                new CallToAction.Builder().type(CallToActionType.WEB_URL).title("Feedback").url(new URL(baseUrl + "/feedback")).build()
-        )));
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET)
