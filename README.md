@@ -7,7 +7,7 @@
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
 ## Environment Configurations
-When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder. In case you don't have a proper CouchDB instance or API keys please use the following [dummy configuration file](https://gist.github.com/ram-g-athreya/ba25de412bf7146ccbf25c3c881ff161). Please note that using the dummy configuration file can result in some features being unavailable since they may require the requisite API services.   
+When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder. In case you don't have a proper CouchDB instance or API keys please use the following **[dummy configuration file](https://gist.github.com/ram-g-athreya/ba25de412bf7146ccbf25c3c881ff161)**. Please note that using the dummy configuration file can result in some features being unavailable since they may require the requisite API services.   
 
      admin.username = <admin-username>
      admin.password = <admin-password>
