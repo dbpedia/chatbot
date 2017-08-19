@@ -6,6 +6,7 @@ import chatbot.lib.handlers.TemplateHandler;
 import chatbot.lib.handlers.TextHandler;
 import chatbot.lib.response.Response;
 import chatbot.lib.response.ResponseGenerator;
+import com.cloudant.client.api.Database;
 
 import java.util.Date;
 import java.util.List;
@@ -27,22 +28,28 @@ public class RequestRouter {
     }
 
     private void addRequestChatHistory() {
-        helper.getChatDB().save(new ChatModel()
-                .setId(msgId + ChatModel.ID_SEPARATOR + "request")
-                .setUserId(request.getUserId())
-                .setRequest(request)
-                .setTimestamp(timestamp)
-        );
+        Database chatDB = helper.getChatDB();
+        if(chatDB != null) {
+            chatDB.save(new ChatModel()
+                    .setId(msgId + ChatModel.ID_SEPARATOR + "request")
+                    .setUserId(request.getUserId())
+                    .setRequest(request)
+                    .setTimestamp(timestamp)
+            );
+        }
     }
 
     private void addResponseChatHistory(List<Response> responseList) {
-        helper.getChatDB().save(new ChatModel()
-                .setId(msgId + ChatModel.ID_SEPARATOR + "response")
-                .setUserId(request.getUserId())
-                .setFromBot(true)
-                .setResponse(responseList)
-                .setTimestamp(new Date().getTime())
-        );
+        Database chatDB = helper.getChatDB();
+        if(chatDB != null) {
+            chatDB.save(new ChatModel()
+                    .setId(msgId + ChatModel.ID_SEPARATOR + "response")
+                    .setUserId(request.getUserId())
+                    .setFromBot(true)
+                    .setResponse(responseList)
+                    .setTimestamp(new Date().getTime())
+            );
+        }
     }
 
     public List<Response> routeRequest() throws Exception {

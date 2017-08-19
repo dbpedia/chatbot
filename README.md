@@ -7,7 +7,7 @@
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
 ## Environment Configurations
-When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder.  
+When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder. In case you don't have a proper CouchDB instance or API keys please use the following [dummy configuration file](https://gist.github.com/ram-g-athreya/ba25de412bf7146ccbf25c3c881ff161). Please note that using the dummy configuration file can result in some features being unavailable since they may require the requisite API services.   
 
      admin.username = <admin-username>
      admin.password = <admin-password>
@@ -17,6 +17,7 @@ When running locally or in development include the following configuration as a 
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>
      chatbot.fb.pageAccessToken = <access-token>
+     chatbot.slack.botToken = <bot-token>
 
      cloudant.url = <couchdb-url>
      cloudant.username = <couchdb-username>
@@ -27,14 +28,13 @@ When running locally or in development include the following configuration as a 
 
      tmdb.apiKey = <tmdb-api-key>
 
-     wolfram.apiKey = <wolfram-alpha-api-key>
-
-     logging.level.com.github.messenger4j = <log-level>
+     wolfram.apiKey = <wolfram-alpha-api-key>     
 
 ### Development Only Configurations
      spring.thymeleaf.cache = false
      spring.devtools.livereload.enabled = true
      logging.level.com.github.messenger4j = DEBUG
+     logging.level.com.github.messenger4j = <log-level>
 
 ## Deployment
      mvn clean install
@@ -49,7 +49,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
 ```javascript
 <script type="text/javascript">
     (function() {
-        var URL = "http://akswnc9.informatik.uni-leipzig.de:1984"
+        var URL = "http://chat.dbpedia.org"
         window.onload = function() {
           var iframe = document.createElement("iframe");
           iframe.setAttribute("src", URL + "/embed");
