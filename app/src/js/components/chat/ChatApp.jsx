@@ -25,6 +25,18 @@ class ChatApp extends React.Component {
         this.hideOverlay = this.hideOverlay.bind(this);
     }
 
+    scrollToMessage() {
+        const element = document.getElementById("messages-container");
+        if(!this.props.isAdmin) {
+          var target = $('.bubble-user').last().parent();
+          if(target.length) {
+            $(element).animate({
+              scrollTop: target.offset().top - $(element).offset().top + $(element).scrollTop()
+            });
+          }
+        }
+    }
+
     generateUuid() {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -64,6 +76,11 @@ class ChatApp extends React.Component {
             success: (response) => {
                 this.renderMessages(JSON.parse(response));
                 this.state.loading = false;
+                // Scroll to user's message which gets attached to the top. Written to execute after some delay since
+                // new messages may be in the process of creation
+                //setTimeout(() => {
+                //  this.scrollToMessage();
+                //}, 100);
             },
             error: () => {
                 this.state.loading = false;
