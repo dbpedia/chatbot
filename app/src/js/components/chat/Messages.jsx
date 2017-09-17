@@ -4,21 +4,21 @@ import * as Constants from '../Constants.jsx';
 
 class Messages extends React.Component {
 
-    // Need to study this in more detail later
-    componentDidUpdate() {
-        const element = document.getElementById("messages-container");
-        if(!this.props.isAdmin) {
-            var target = $('.bubble-user').last().parent();
-            if(target.length) {
-                $(element).animate({
-                    scrollTop: target.offset().top - $(element).offset().top + $(element).scrollTop()
-                });
-            }
-        }
+    constructor(props) {
+        super();
+        this.messageLength = 0;
     }
 
     scrollToMessage() {
-
+      const element = document.getElementById("messages-container");
+      if(!this.props.isAdmin) {
+        var target = $('.bubble-user').last().parent();
+        if(target.length) {
+          $(element).animate({
+            scrollTop: target.offset().top - $(element).offset().top + $(element).scrollTop()
+          });
+        }
+      }
     }
 
     render() {
@@ -32,6 +32,11 @@ class Messages extends React.Component {
                     onSend={this.props.onSend} />
             );
         });
+
+        if(this.messageLength < messages.length) {
+          this.scrollToMessage();
+          this.messageLength = messages.length;
+        }
 
         return (
             <div id="messages-container">
