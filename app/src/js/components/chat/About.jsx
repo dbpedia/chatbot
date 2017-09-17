@@ -30,7 +30,25 @@ class About extends React.Component {
                     <div className="card feedback-container slideDown">
                         <form>
                             <fieldset>
-                                <legend>About</legend>
+                                <legend>DATENSCHUTZRICHTLINIE</legend>
+                                Datenschutzerklärung
+
+                                Diese App ist ein Service der DBpedia Association.
+
+                                Für externe Links zu fremden Inhalten können wir dabei trotz sorgfältiger inhaltlicher Kontrolle keine Haftung übernehmen. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.
+
+                                Jeder Zugriff unserer App auf Internetseiten und Webservices dient dazu, Inhalte für die App bereit zu stellen bzw. diese zu aktualisieren. Weitergehende personenbezogene Daten werden nur erfasst, wenn Sie diese Angaben freiwillig, etwa im Rahmen einer Anfrage, einer Antwort oder Registrierung, machen. Zugriffe auf die App und jeder Abruf einer auf der Homepage hinterlegten Datei werden protokolliert. Die Speicherung dient internen systembezogenen, wissenschaftlichen und statistischen Zwecken oder zur Optimierung unserer Apps und Services. Ihre Daten werden dabei nicht an Dritte weitergegeben.
+
+                                Für Anfragen wenden Sie sich bitte an die DBpedia Association.
+
+                                <legend>Privacy Policy</legend>
+                                The responsibility involved with handling of personal information is important to us. Your personal data will only be used in conjunction with the use of the platform.
+
+                                We do not collect any data to identify you. We raise information to optimize the quality of our apps and services and to do research.
+
+                                Requests to our websites and webservices are required to provide actual content and updates to you. All data input from your side are optional.
+
+                                For questions please refer to the DBpedia association.
 
                                 <h5>DBpedia Projects</h5>
                                 <ol>
