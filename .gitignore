@@ -13,3 +13,4 @@ npm-debug.log
 target
 src/main/app
 *.iml
+/bin/

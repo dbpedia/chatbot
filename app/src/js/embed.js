@@ -5,4 +5,4 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Embed from './components/embed/Embed.jsx';
 
-ReactDOM.render(<Embed />, document.getElementById('embed-container'));
+ReactDOM.render('<Embed />', document.getElementById('embed-container'));
