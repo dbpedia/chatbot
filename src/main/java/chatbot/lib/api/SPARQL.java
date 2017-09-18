@@ -434,10 +434,7 @@ public class SPARQL {
         private int offset = 0;
 
         public boolean hasMorePages() {
-            if (offset + limit < count) {
-                return true;
-            }
-            return false;
+            return offset + limit < count;
         }
 
         public void next() {

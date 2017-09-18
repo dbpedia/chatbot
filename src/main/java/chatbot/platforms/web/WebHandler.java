@@ -29,6 +29,6 @@ public class WebHandler {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody List<Response> handleRequest(@RequestBody final Request request) throws Exception {
         request.setPlatform(Platform.WEB);
-        return (List<Response>) new RequestRouter(request, helper).routeRequest();
+        return new RequestRouter(request, helper).routeRequest();
     }
 }

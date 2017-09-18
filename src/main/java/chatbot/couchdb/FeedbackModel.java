@@ -46,9 +46,6 @@ public class FeedbackModel {
     }
 
     public boolean validate() {
-        if(title.length() >= MIN_TITLE_LENGTH && description.length() >= MIN_DESCRIPTION_LENGTH) {
-            return true;
-        }
-        return false;
+        return title.length() >= MIN_TITLE_LENGTH && description.length() >= MIN_DESCRIPTION_LENGTH;
     }
 }

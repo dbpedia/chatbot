@@ -1,3 +1,10 @@
+
+
+.classpath
+.project
+.settings/
+
+
 .idea
 gradle
 .gradle
