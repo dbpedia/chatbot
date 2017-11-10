@@ -21,6 +21,17 @@
     <script type="text/javascript" src="assets/bootstrap-material-design/dist/js/ripples.min.js"></script>
     <script type="text/javascript" src="assets/bootstrap-material-design/dist/js/material.min.js"></script>
     <script type="text/javascript" src="assets/snackbarjs/dist/snackbar.min.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script type="text/javascript" async="true" src="https://www.googletagmanager.com/gtag/js?id=UA-109517818-2"></script>
+    <script th:inline="javascript">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+
+        gtag('js', new Date());
+        gtag('config', /*[[${gaID}]]*/);
+    </script>
+
 </head>
 <body>
     <div class="container full-height" style="padding: 20px 5px;">

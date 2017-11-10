@@ -9,7 +9,7 @@ For more information about this project and **GSoC Progress** please refer to **
 ## Environment Configurations
 When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder. 
 
-In case you don't have a proper CouchDB instance or API keys please use the following **[dummy configuration file](https://github.com/dbpedia/chatbot/wiki/Chatbot-Dummy-Configuration)**. 
+In case you do not have a proper CouchDB instance or API keys please use the following **[dummy configuration file](https://github.com/dbpedia/chatbot/wiki/Chatbot-Dummy-Configuration)**. 
 
 *Please note that using the dummy configuration file can result in some features being unavailable since they may require the requisite API services.*   
 
@@ -17,6 +17,7 @@ In case you don't have a proper CouchDB instance or API keys please use the foll
      admin.password = <admin-password>
      
      chatbot.baseUrl = <https-url-to-access-the-bot>
+     chatbot.gaID = <google-analytics-id>
      
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>
@@ -46,7 +47,7 @@ In case you don't have a proper CouchDB instance or API keys please use the foll
 
 ## Development
      mvn spring-boot:run
-     node/node node_modules/.bin/webpack --watch
+     node/node node_modules/.bin/webpack --env.NODE_ENV=dev --watch
 
 ## Embed Code
 Add the following snippet to the `<head>` section of the webpage where you want to embed the ChatBot.

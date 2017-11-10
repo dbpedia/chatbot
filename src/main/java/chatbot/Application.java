@@ -66,6 +66,9 @@ public class Application {
     @Configuration
     @EnableWebSecurity
     static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        protected static String baseUrl;
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
@@ -85,7 +88,8 @@ public class Application {
         }
 
         @Autowired
-        public void configureGlobal(AuthenticationManagerBuilder auth, @Value("${admin.username}") String username, @Value("${admin.password}") String password) throws Exception {
+        protected void configureGlobal(AuthenticationManagerBuilder auth, @Value("${admin.username}") String username, @Value("${admin.password}") String password, @Value("${chatbot.baseUrl}") String baseUrl) throws Exception {
+            this.baseUrl = baseUrl;
             auth
                     .inMemoryAuthentication()
                     .withUser(username).password(password).roles("ADMIN");
