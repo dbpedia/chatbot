@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class QANARY {
     private static final Logger logger = LoggerFactory.getLogger(QANARY.class);
-    private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core0,%20QueryExecuter/";
+    private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core1,%20QueryExecuter/";
 
     private HttpClient client;
 
@@ -41,6 +41,8 @@ public class QANARY {
             HttpPost httpPost = new HttpPost(URL);
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("query", question));
+//            params.add(new BasicNameValuePair("lang", "it"));
+            params.add(new BasicNameValuePair("kb", "dbpedia"));
 
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
             httpPost.setEntity(entity);
