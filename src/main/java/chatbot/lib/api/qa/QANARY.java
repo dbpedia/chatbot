@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class QANARY {
     private static final Logger logger = LoggerFactory.getLogger(QANARY.class);
-    private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core0,%20QueryExecuter/";
+    private static final String URL = "https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core1,%20QueryExecuter/";
 
     private HttpClient client;
 
