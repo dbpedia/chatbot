@@ -17,6 +17,7 @@ In case you do not have a proper CouchDB instance or API keys please use the fol
      admin.password = <admin-password>
      
      chatbot.baseUrl = <https-url-to-access-the-bot>
+     chatbot.gaID = <google-analytics-id>
      
      chatbot.fb.appSecret = <secret>
      chatbot.fb.verifyToken = <token>
@@ -46,7 +47,7 @@ In case you do not have a proper CouchDB instance or API keys please use the fol
 
 ## Development
      mvn spring-boot:run
-     node/node node_modules/.bin/webpack --watch
+     node/node node_modules/.bin/webpack --env.NODE_ENV=dev --watch
 
 ## Embed Code
 Add the following snippet to the `<head>` section of the webpage where you want to embed the ChatBot.
