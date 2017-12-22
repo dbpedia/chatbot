@@ -6,6 +6,8 @@
 
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
+[![DBpedia Chatbot YouTube Video](https://img.youtube.com/vi/Wk-UUufDpZs/0.jpg)](https://www.youtube.com/watch?v=Wk-UUufDpZs)
+
 ## Environment Configurations
 When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder. 
 
