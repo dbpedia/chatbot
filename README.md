@@ -6,7 +6,7 @@
 
 <p>For more information about this project and <strong>GSoC Progress</strong> please refer to <strong><a href="https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia">GSoC Wiki</a></strong></p>
 
-<p align="center"><a href="https://www.youtube.com/watch?v=Wk-UUufDpZs"><img src="https://thumbs.gfycat.com/WeirdDefiniteInchworm-size_restricted.gif" alt="DBpedia Chatbot YouTube Video" /></a></p>
+<p align="center"><a href="https://www.youtube.com/watch?v=Wk-UUufDpZs"><img src="https://media.giphy.com/media/26CaLmhBRmHjSb3Hy/giphy.gif" alt="DBpedia Chatbot YouTube Video" /></a></p>
 
 <h2 id="environmentconfigurations">Environment Configurations</h2>
 
