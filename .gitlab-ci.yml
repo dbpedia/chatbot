@@ -1,5 +1,5 @@
 cache:
-  key: "$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME"
+  key: "$CI_PROJECT_NAMESPACE-$CI_PROJECT_NAME"
   paths:
     - $HOME/.m2/
 
