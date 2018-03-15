@@ -134,7 +134,7 @@ public class Application {
                 languageTool = new JLanguageTool(new AmericanEnglish());
                 for (Rule rule : languageTool.getAllActiveRules()) {
                     if (rule instanceof SpellingCheckRule) {
-                        List<String> wordsToIgnore = Arrays.asList("nlp");
+                        List<String> wordsToIgnore = Arrays.asList(new String[] {"nlp", "merkel"});
                         ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore);
                     }
                 }
