@@ -97,3 +97,26 @@ Add the following snippet to the `<head>` section of the webpage where you want 
   })();
 </script>
 ```
+
+## Citation
+```
+@inproceedings{ramngongausbeck2018,
+  added-at = {2018-03-13T17:17:01.000+0100},
+  address = {Republic and Canton of Geneva, Switzerland},
+  author = {Athreya, Ram G and Ngonga, Axel and Usbeck, Ricardo},
+  biburl = {https://www.bibsonomy.org/bibtex/23a322bf36add17f87c3f30277e7f7bd7/aksw},
+  booktitle = {WWW '18 Companion: The 2018 Web Conference Companion, April 23--27, 2018, Lyon, France},
+  doi = {10.1145/3184558.3186964},
+  interhash = {c0b6fa8c1ae37f6ffa369da2d313649b},
+  intrahash = {3a322bf36add17f87c3f30277e7f7bd7},
+  isbn = {978-1-4503-5640-4/18/04},
+  keywords = {2018 group_aksw limbo limboproject ngonga opal simba solide usbeck},
+  location = {Lyon, France},
+  numpages = {4},
+  publisher = {International World Wide Web Conferences Steering Committee},
+  timestamp = {2018-03-13T17:17:01.000+0100},
+  title = {{Enhancing Community Interactions with Data-Driven Chatbots - The DBpedia Chatbot}},
+  url = {https://svn.aksw.org/papers/2018/WWW_dbpedia_chatbot/public.pdf},
+  year = 2018
+}
+```
