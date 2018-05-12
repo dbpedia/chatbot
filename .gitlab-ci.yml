@@ -53,7 +53,7 @@ deploy-staging:
     name: staging
     url: http://akswnc9.aksw.uni-leipzig.de:1983
   script:
-    - mkdir ~/.ssh
+    - mkdir -p ~/.ssh
     - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE staging"
 
@@ -66,6 +66,6 @@ deploy:
     name: production
     url: http://akswnc9.aksw.uni-leipzig.de:1984
   script:
-    - mkdir ~/.ssh
+    - mkdir -p ~/.ssh
     - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE production"
