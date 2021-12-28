@@ -7,7 +7,7 @@ before_script:
   - mkdir -p $HOME/.m2/
 
 stages:
-  - test
+#  - test
   - package
   - deploy
 
