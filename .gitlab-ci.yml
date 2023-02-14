@@ -44,28 +44,37 @@ docker-build:
     - docker build -t registry.gitlab.com/$CI_PROJECT_NAMESPACE/chatbot:latest .
     - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/chatbot:latest
 
-deploy-staging:
-  image: rastasheep/ubuntu-sshd
-  stage: deploy
-  only:
-    - develop
-  environment:
-    name: staging
-    url: http://akswnc9.aksw.uni-leipzig.de:1983
-  script:
-    - mkdir -p ~/.ssh
-    - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-    - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE staging"
-
 deploy:
-  image: rastasheep/ubuntu-sshd
   stage: deploy
-  only:
+   only:
     - master
-  environment:
+   environment:
     name: production
-    url: http://akswnc9.aksw.uni-leipzig.de:1984
-  script:
-    - mkdir -p ~/.ssh
-    - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-    - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE production"
+   script:
+    - curl titan.aksw.uni-leipzig.de:9000/hooks/redeploy-chatbot?token=$DEPLOY_TOKEN -L
+
+# deploy-staging:
+#   image: rastasheep/ubuntu-sshd
+#   stage: deploy
+#   only:
+#     - develop
+#   environment:
+#     name: staging
+#     url: http://akswnc9.aksw.uni-leipzig.de:1983
+#   script:
+#     - mkdir -p ~/.ssh
+#     - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+#     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE staging"
+
+# deploy:
+#   image: rastasheep/ubuntu-sshd
+#   stage: deploy
+#   only:
+#     - master
+#   environment:
+#     name: production
+#     url: http://akswnc9.aksw.uni-leipzig.de:1984
+#   script:
+#     - mkdir -p ~/.ssh
+#     - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+#     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE production"
