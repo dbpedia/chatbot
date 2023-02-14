@@ -46,11 +46,11 @@ docker-build:
 
 deploy:
   stage: deploy
-   only:
+  only:
     - master
-   environment:
+  environment:
     name: production
-   script:
+  script:
     - curl titan.aksw.uni-leipzig.de:9000/hooks/redeploy-chatbot?token=$DEPLOY_TOKEN -L
 
 # deploy-staging:
@@ -77,4 +77,4 @@ deploy:
 #   script:
 #     - mkdir -p ~/.ssh
 #     - echo "$AKSW_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-#     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo $AKSW_PASSWORD | sudo -S ./deploy_chatbot $CI_BUILD_TOKEN $CI_PROJECT_NAMESPACE production"
+#     - ssh -o StrictHostKeyChecking=no -tt $AKSW_USERNAME@$AKSW_HOST "echo
