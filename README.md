@@ -73,7 +73,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
 ```html
 <script type="text/javascript">
   (function() {
-    var URL = "http://chat.dbpedia.org"
+    var URL = "https://chat.dbpedia.org"
     window.onload = function() {
       var iframe = document.createElement("iframe");
       iframe.setAttribute("src", URL + "/embed");
