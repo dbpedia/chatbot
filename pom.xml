@@ -59,7 +59,7 @@
             <groupId>com.github.messenger4j</groupId>
             <artifactId>messenger4j</artifactId>
             <version>0.8.0</version>
-           
+
         </dependency>
 
         <!-- Slack -->
@@ -68,10 +68,10 @@
             <artifactId>jslack</artifactId>
             <version>1.0.11</version>
             <exclusions>
-            	<exclusion>
-            		<groupId>com.squareup.okhttp3</groupId>
-            		<artifactId>okhttp</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -174,8 +174,8 @@
                         </goals>
                         <!-- Added Specifically for GitLab which runs as root -->
                         <configuration>
-	                         <arguments>install --unsafe-perm</arguments>
-	                      </configuration>
+                            <arguments>install --unsafe-perm</arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
