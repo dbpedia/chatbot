@@ -22,12 +22,12 @@
         <repository>
             <id>maven.aksw.internal</id>
             <name>University Leipzig, AKSW Maven2 Repository</name>
-            <url>http://maven.aksw.org/archiva/repository/internal</url>
+            <url>https://maven.aksw.org/archiva/repository/internal</url>
         </repository>
         <repository>
             <id>maven.aksw.snapshots</id>
             <name>University Leipzig, AKSW Maven2 Repository</name>
-            <url>http://maven.aksw.org/archiva/repository/snapshots</url>
+            <url>https://maven.aksw.org/archiva/repository/snapshots</url>
         </repository>
         <repository>
             <id>local repository</id>
@@ -162,8 +162,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v8.5.0</nodeVersion>
-                            <npmVersion>5.3.0</npmVersion>
+                            <nodeVersion>v16.0.0</nodeVersion>
+                            <npmVersion>7.10.0</npmVersion>
                         </configuration>
                     </execution>
                     <!-- Install npm modules -->
