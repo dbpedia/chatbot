@@ -4,7 +4,7 @@
 [![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
 [![pipeline status](https://gitlab.com/ram-g-athreya/chatbot/badges/master/pipeline.svg)](https://gitlab.com/ram-g-athreya/chatbot/commits/master)
 
-**[Final Application](http://chat.dbpedia.org)**
+**[Final Application](https://chat.dbpedia.org)**
 
 For more information about this project and **GSoC Progress** please refer to **[GSoC Wiki](https://github.com/dbpedia/chatbot/wiki/GSoC-2017:-Chatbot-for-DBpedia)**
 
