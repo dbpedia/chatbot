@@ -25,18 +25,6 @@ class ChatApp extends React.Component {
         this.hideOverlay = this.hideOverlay.bind(this);
     }
 
-    scrollToMessage() {
-        const element = document.getElementById("messages-container");
-        if(!this.props.isAdmin) {
-          var target = $('.bubble-user').last().parent();
-          if(target.length) {
-            $(element).animate({
-              scrollTop: target.offset().top - $(element).offset().top + $(element).scrollTop()
-            });
-          }
-        }
-    }
-
     generateUuid() {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -63,7 +51,7 @@ class ChatApp extends React.Component {
 
     makeRequest(data) {
         data.userId = this.uuid;
-        this.state.loading = true;
+        this.setState({loading: true});
         $.ajax({
             type: 'POST',
             url: '/webhook',
@@ -75,15 +63,10 @@ class ChatApp extends React.Component {
             data: JSON.stringify(data),
             success: (response) => {
                 this.renderMessages(JSON.parse(response));
-                this.state.loading = false;
-                // Scroll to user's message which gets attached to the top. Written to execute after some delay since
-                // new messages may be in the process of creation
-                //setTimeout(() => {
-                //  this.scrollToMessage();
-                //}, 100);
+                this.setState({loading: false});
             },
             error: () => {
-                this.state.loading = false;
+                this.setState({loading: false});
             }
         });
     }
@@ -93,7 +76,8 @@ class ChatApp extends React.Component {
             setTimeout(() => {
                 this.addMessage({
                     fromBot: true,
-                    message: messages[index]
+                    message: messages[index],
+                    timestamp: new Date().toLocaleTimeString()
                 });
             }, 500 * index);
         }
@@ -118,18 +102,17 @@ class ChatApp extends React.Component {
     }
 
     removeSmartReplies() {
-        this.state.messages.map((message, index) => {
-            if(message.message.messageType == Constants.response.ResponseType.SMART_REPLY_MESSAGE) {
-                delete this.state.messages[index];
-            }
-        });
+        this.setState(prevState => ({
+            messages: prevState.messages.filter(message => message.message.messageType !== Constants.response.ResponseType.SMART_REPLY_MESSAGE)
+        }));
     }
 
     sendHandler(message) {
         const messageObject = {
             username: this.props.username,
             message: message,
-            fromBot: false
+            fromBot: false,
+            timestamp: new Date().toLocaleTimeString()
         };
 
         this.removeSmartReplies();
@@ -138,34 +121,9 @@ class ChatApp extends React.Component {
     }
 
     addMessage(message) {
-        // Append the message to the component state
-        let messages = this.state.messages;
-        messages.push(message);
-        this.setState({ messages });
-    }
-
-    showFeedbackModal() {
-        this.setState({showFeedback: true});
-    }
-
-    hideFeedbackModal() {
-        this.setState({showFeedback: false});
-    }
-
-    showAboutModal() {
-        this.setState({showAbout: true});
-    }
-
-    hideAboutModal() {
-        this.setState({showAbout: false});
-    }
-
-    showOverlay() {
-        this.setState({overlay: true});
-    }
-
-    hideOverlay() {
-        this.setState({overlay: false});
+        this.setState(prevState => ({
+            messages: [...prevState.messages, message]
+        }));
     }
 
     clearChatHistory() {
@@ -173,11 +131,9 @@ class ChatApp extends React.Component {
     }
 
     addChatHistory(msgs) {
-        var messages = this.state.messages;
-        for (var index in msgs) {
-            messages.push(msgs[index]);
-        }
-        this.setState({messages: messages});
+        this.setState(prevState => ({
+            messages: [...prevState.messages, ...msgs]
+        }));
     }
 
     render() {
@@ -194,22 +150,7 @@ class ChatApp extends React.Component {
                 <ChatInput
                     isAdmin={this.props.isAdmin}
                     onSend={this.sendHandler}
-                    showStart={this.showStart}
-                    showFeedback={this.showFeedbackModal}
-                    showAbout={this.showAboutModal}
-                    showOverlay={this.showOverlay}
-                    hideOverlay={this.hideOverlay} />
-                <Feedback
-                    isOpen={this.state.showFeedback}
-                    hide={this.hideFeedbackModal}
-                    userId={this.getUuid()} />
-                <About
-                    isOpen={this.state.showAbout}
-                    hide={this.hideAboutModal} />
-
-                {this.state.overlay && (
-                    <div className="overlay"></div>
-                )}
+                    showStart={this.showStart} />
             </div>
         );
     }

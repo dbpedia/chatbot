@@ -44,7 +44,7 @@ class Admin extends React.Component {
                 response = JSON.parse(response);
                 if(response.length == 0) {
                     $.snackbar({content: 'No More Users', timeout: 5000});
-                    page = page > 1 ? page - 1 : 1; // Correction for when page parameter is on the last page so that it does not keep incrementing
+                    page = page > 1 ? page - 1 : 1;
                     this.setState({loading: false, userListPage: page});
                 }
                 else {
@@ -76,16 +76,17 @@ class Admin extends React.Component {
                 response = JSON.parse(response);
                 for(var index in response) {
                     message = response[index].request ? response[index].request : response[index].response;
+                    var timestamp = response[index].timestamp || new Date().toLocaleString();
 
                     // Array
                     if(message.length) {
                         for(var index2 in message) {
-                            messages.push({fromBot: response[index].fromBot, message: message[index2]});
+                            messages.push({fromBot: response[index].fromBot, message: message[index2], timestamp: timestamp});
                         }
                     }
                     // Object
                     else {
-                        messages.push({fromBot: response[index].fromBot, message: message});
+                        messages.push({fromBot: response[index].fromBot, message: message, timestamp: timestamp});
                     }
                 }
                 if(page == 1) {
