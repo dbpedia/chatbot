@@ -293,11 +293,7 @@ key: what
     reasmb: I could not find a confident answer for that. Maybe try rephrasing or asking about a particular entity (person, place, concept).
     reasmb: I am still learning and may not know this one. Can you ask about a specific DBpedia resource?
     reasmb: I do not have a precise answer right now, but I can help with questions about DBpedia data and topics.
-key: how
-  decomp: *
-    reasmb: I am not certain how that works, based on what I know.
-    reasmb: I may not have enough information to explain that. Can you ask about a specific example?
-    reasmb: I do not have a detailed “how” answer, but I can look up facts about DBpedia topics.      
+      
 
 
 key: because
@@ -306,22 +302,29 @@ key: because
     reasmb: Don't any other reasons come to mind ?
     reasmb: Does that reason seem to explain anything else ?
     reasmb: What other reasons might there be ?
-    key: why
-    decomp: * why don't you *
-      reasmb: I might not be able to do (2) yet. I am limited to the data and services I can reach.
-      reasmb: I am not sure I can (2) directly. Maybe try asking about a specific DBpedia topic instead.
-      reasmb: Sometimes I dont have enough information from DBpedia to (2).
-      reasmb: I may not support (2) yet, but I can help answer questions about DBpedia data.
-      reasmb: goto what
-    decomp: * why can't i *
-      reasmb: I am not sure why that is not possible right now. I may not have enough context.
-      reasmb: That is a bit hard for me to explain. Could you give more details?
-      reasmb: I do not have a clear explanation for that yet.
-      reasmb: Maybe try asking about a specific example so I can look it up.
-      reasmb: goto what
-    decomp: *
-      reasmb: That is a good “why” question. I may not have the full answer, but I can help with DBpedia facts if you ask about something specific.
-      reasmb: I might not understand the reason behind that. Try asking about a particular entity or fact.
+key: why
+  decomp: * why don't you *
+    reasmb: I might not be able to do (2) yet. I am limited to the data and services I can reach.
+    reasmb: I am not sure I can (2) directly. Maybe try asking about a specific DBpedia topic instead.
+    reasmb: Sometimes I don't have enough information from DBpedia to (2).
+    reasmb: I may not support (2) yet, but I can help answer questions about DBpedia data.
+    reasmb: goto what
+  decomp: * why can't i *
+    reasmb: I am not sure why that is not possible right now. I may not have enough context.
+    reasmb: That is a bit hard for me to explain. Could you give more details?
+    reasmb: I do not have a clear explanation for that yet.
+    reasmb: Maybe try asking about a specific example so I can look it up.
+    reasmb: goto what
+  decomp: *
+    reasmb: That is a good "why" question. I may not have the full answer, but I can help with DBpedia facts if you ask about something specific.
+    reasmb: I might not understand the reason behind that. Try asking about a particular entity or fact.
+key: how
+  decomp: *
+    reasmb: I'm not certain how that works, based on what I know from DBpedia.
+    reasmb: I may not have enough information to explain that process. Can you ask about a specific example?
+    reasmb: I don't have a detailed "how" answer right now, but I can look up facts about DBpedia topics if you ask about something specific.
+    reasmb: That's a good "how" question. I might not know the exact process, but I can help with factual information about DBpedia entities.
+    reasmb: I'm not sure I can explain how that works. Try asking about a particular topic or entity from DBpedia.
 key: everyone 2
   decomp: * @everyone *
     reasmb: Realy, (2) ?
