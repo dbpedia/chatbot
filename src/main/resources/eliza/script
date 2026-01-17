@@ -10,7 +10,6 @@ pre: recollect remember
 pre: dreamt dreamed
 pre: dreams dream
 pre: maybe perhaps
-pre: how what
 pre: when what
 pre: certainly yes
 pre: machine computer
@@ -288,15 +287,14 @@ key: can
     reasmb: goto what
 key: what
   decomp: *
-    reasmb: Why do you ask ?
-    reasmb: Does that question interest you ?
-    reasmb: What is it you really wanted to know ?
-    reasmb: Are such questions much on your mind ?
-    reasmb: What answer would please you most ?
-    reasmb: What do you think ?
-    reasmb: What comes to mind when you ask that ?
-    reasmb: Have you asked such questions before ?
-    reasmb: Have you asked anyone else ?
+    reasmb: I am not completely sure how to answer that yet. DBpedia only gives answers on facts and not on opinions. Could you try asking about a specific topic from DBpedia or try to rephrase the question?
+    reasmb: That is a good question. I might not have enough information to answer it clearly.
+    reasmb: I could not find a confident answer for that. Maybe try rephrasing or asking about a particular entity (person, place, concept).
+    reasmb: I am still learning and may not know this one. Can you ask about a specific DBpedia resource?
+    reasmb: I do not have a precise answer right now, but I can help with questions about DBpedia data and topics.
+      
+
+
 key: because
   decomp: *
     reasmb: Is that the real reason ?
@@ -305,19 +303,27 @@ key: because
     reasmb: What other reasons might there be ?
 key: why
   decomp: * why don't you *
-    reasmb: Do you believe I don't (2) ?
-    reasmb: Perhaps I will (2) in good time.
-    reasmb: Should you (2) yourself ?
-    reasmb: You want me to (2) ?
+    reasmb: I might not be able to do (2) yet. I am limited to the data and services I can reach.
+    reasmb: I am not sure I can (2) directly. Maybe try asking about a specific DBpedia topic instead.
+    reasmb: Sometimes I don't have enough information from DBpedia to (2).
+    reasmb: I may not support (2) yet, but I can help answer questions about DBpedia data.
     reasmb: goto what
   decomp: * why can't i *
-    reasmb: Do you think you should be able to (2) ?
-    reasmb: Do you want to be able to (2) ?
-    reasmb: Do you believe this will help you to (2) ?
-    reasmb: Have you any idea why you can't (2) ?
+    reasmb: I am not sure why that is not possible right now. I may not have enough context.
+    reasmb: That is a bit hard for me to explain. Could you give more details?
+    reasmb: I do not have a clear explanation for that yet.
+    reasmb: Maybe try asking about a specific example so I can look it up.
     reasmb: goto what
   decomp: *
-    reasmb: goto what
+    reasmb: That is a good "why" question. I may not have the full answer, but I can help with DBpedia facts if you ask about something specific.
+    reasmb: I might not understand the reason behind that. Try asking about a particular entity or fact.
+key: how
+  decomp: *
+    reasmb: I'm not certain how that works, based on what I know from DBpedia.
+    reasmb: I may not have enough information to explain that process. Can you ask about a specific example?
+    reasmb: I don't have a detailed "how" answer right now, but I can look up facts about DBpedia topics if you ask about something specific.
+    reasmb: That's a good "how" question. I might not know the exact process, but I can help with factual information about DBpedia entities.
+    reasmb: I'm not sure I can explain how that works. Try asking about a particular topic or entity from DBpedia.
 key: everyone 2
   decomp: * @everyone *
     reasmb: Realy, (2) ?
