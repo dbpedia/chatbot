@@ -1,0 +1,17 @@
++ [*] (databus|recommend|recommendation) [*] (dataset|datasets) [*]
+- {"type": "template", "name": "dbpedia-databus-recommendation"}
+
++ recommend datasets for *
+- {"type": "template", "name": "dbpedia-databus-recommendation__<star>"}
+
++ find * dataset
+- {"type": "template", "name": "dbpedia-databus-recommendation__<star>"}
+
++ search databus for *
+- {"type": "template", "name": "dbpedia-databus-recommendation__<star>"}
+
++ recommend * data
+- {"type": "template", "name": "dbpedia-databus-recommendation__<star>"}
+
++ dataset recommendation system [*]
+- {"type": "template", "name": "dbpedia-databus-recommendation"}

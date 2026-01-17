@@ -26,7 +26,7 @@ public class TemplateHandler {
     protected Request request;
     protected String[] payload;
     protected Application.Helper helper;
-    
+
     public TemplateHandler(Request request, String payload, Application.Helper helper) {
         this.request = request;
         this.payload = Utility.split(payload);
@@ -41,12 +41,14 @@ public class TemplateHandler {
 
     public ResponseGenerator handleTemplateMessage() {
         ResponseGenerator responseGenerator = new ResponseGenerator();
-        switch(payload[0]) {
+        switch (payload[0]) {
             case TemplateType.START:
-                responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(
+                        helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.START_TEXT)[0]));
                 responseGenerator.setShowFeedback(false);
             case TemplateType.HELP:
-                responseGenerator.addTextResponse(new ResponseData(helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
+                responseGenerator.addTextResponse(new ResponseData(
+                        helper.getRiveScriptBot().answer(this.request.getUserId(), RiveScriptReplyType.HELP_TEXT)[0]));
                 responseGenerator.addCarouselResponse(getHelperTemplate());
                 break;
 
@@ -66,6 +68,7 @@ public class TemplateHandler {
             // DBpedia Datset Scenarios
             case TemplateType.DBPEDIA_DATASET:
             case TemplateType.DBPEDIA_DATASET_NLP:
+            case TemplateType.DBPEDIA_DATABUS_RECOMMENDATION:
                 responseGenerator = new DatasetTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
 
@@ -90,7 +93,6 @@ public class TemplateHandler {
             case TemplateType.DBPEDIA_GSOC:
                 responseGenerator = new GSOCTemplateHandler(request, payload, helper).handleTemplateMessage();
                 break;
-
 
             // Further Options Scenario
             case TemplateType.LOAD_MORE:
@@ -118,9 +120,11 @@ public class TemplateHandler {
 
             // Get Information for specific Entity
             case TemplateType.ENTITY_INFORMATION:
-                responseGenerator.addCarouselResponse(new ArrayList<ResponseData>(){{
-                    add(helper.getSparql().getEntityInformation(payload[1]));
-                }});
+                responseGenerator.addCarouselResponse(new ArrayList<ResponseData>() {
+                    {
+                        add(helper.getSparql().getEntityInformation(payload[1]));
+                    }
+                });
                 break;
 
             case TemplateType.GET_LOCATION:
@@ -152,36 +156,55 @@ public class TemplateHandler {
     }
 
     public ResponseData[] getHelperTemplate() {
-        return new ResponseData[]{
-                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia", "You can ask me questions related to DBpedia such as:")
-                        .addButton(new ResponseData.Button("What is DBpedia?", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_ABOUT))
-                        .addButton(new ResponseData.Button("How do I contribute?", ResponseType.BUTTON_PARAM, TemplateType.DBPEDIA_CONTRIBUTE))
-                        .addButton(new ResponseData.Button("Is DBpedia down?", ResponseType.BUTTON_PARAM, TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + Constants.DBPEDIA_SERVICE)),
-                new ResponseData("/images/icon-help-92.png", "Factoid Questions", "You can also ask me simple factual questions/trivia:")
-                        .addButton(new ResponseData.Button("Who is Einstein?", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + "http://dbpedia.org/resource/Albert_Einstein"))
-                        .addButton(new ResponseData.Button("What is a planet?", ResponseType.BUTTON_PARAM, TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR + "http://dbpedia.org/resource/Planet"))
-                        .addButton(new ResponseData.Button("Where is Berlin?", ResponseType.BUTTON_PARAM, TemplateType.GET_LOCATION + Utility.STRING_SEPARATOR + "Berlin"))
+        return new ResponseData[] {
+                new ResponseData("/images/icon-dbpedia-92.png", "About DBpedia",
+                        "You can ask me questions related to DBpedia such as:")
+                        .addButton(new ResponseData.Button("What is DBpedia?", ResponseType.BUTTON_PARAM,
+                                TemplateType.DBPEDIA_ABOUT))
+                        .addButton(new ResponseData.Button("How do I contribute?", ResponseType.BUTTON_PARAM,
+                                TemplateType.DBPEDIA_CONTRIBUTE))
+                        .addButton(new ResponseData.Button("Is DBpedia down?", ResponseType.BUTTON_PARAM,
+                                TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + Constants.DBPEDIA_SERVICE)),
+                new ResponseData("/images/icon-help-92.png", "Factoid Questions",
+                        "You can also ask me simple factual questions/trivia:")
+                        .addButton(new ResponseData.Button("Who is Einstein?", ResponseType.BUTTON_PARAM,
+                                TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR
+                                        + "http://dbpedia.org/resource/Albert_Einstein"))
+                        .addButton(new ResponseData.Button("What is a planet?", ResponseType.BUTTON_PARAM,
+                                TemplateType.ENTITY_INFORMATION + Utility.STRING_SEPARATOR
+                                        + "http://dbpedia.org/resource/Planet"))
+                        .addButton(new ResponseData.Button("Where is Berlin?", ResponseType.BUTTON_PARAM,
+                                TemplateType.GET_LOCATION + Utility.STRING_SEPARATOR + "Berlin"))
         };
     }
 
     public ResponseData getFAQTemplate(String serviceName) {
         String[] service = Constants.SERVICES.get(serviceName);
-        ResponseData responseData = new ResponseData("Here are some frequently asked questions about " + service[0] + ":");
-        switch(serviceName) {
+        ResponseData responseData = new ResponseData(
+                "Here are some frequently asked questions about " + service[0] + ":");
+        switch (serviceName) {
             case Constants.DBPEDIA_SERVICE:
                 responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia?", TemplateType.DBPEDIA_ABOUT));
-                responseData.addSmartReply(new ResponseData.SmartReply("How can I Contribute?", TemplateType.DBPEDIA_CONTRIBUTE));
-                responseData.addSmartReply(new ResponseData.SmartReply("Is DBpedia Working?", TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
+                responseData.addSmartReply(
+                        new ResponseData.SmartReply("How can I Contribute?", TemplateType.DBPEDIA_CONTRIBUTE));
+                responseData.addSmartReply(new ResponseData.SmartReply("Is DBpedia Working?",
+                        TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
                 break;
             case Constants.DBPEDIA_LOOKUP_SERVICE:
-                responseData.addSmartReply(new ResponseData.SmartReply("What is DBpedia Lookup?", TemplateType.DBPEDIA_LOOKUP));
-                responseData.addSmartReply(new ResponseData.SmartReply("Tell me about Lookup Parameters.", TemplateType.DBPEDIA_LOOKUP_PARAMETERS));
-                responseData.addSmartReply(new ResponseData.SmartReply("What is Lookup PrefixSearch?", TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
+                responseData.addSmartReply(
+                        new ResponseData.SmartReply("What is DBpedia Lookup?", TemplateType.DBPEDIA_LOOKUP));
+                responseData.addSmartReply(new ResponseData.SmartReply("Tell me about Lookup Parameters.",
+                        TemplateType.DBPEDIA_LOOKUP_PARAMETERS));
+                responseData.addSmartReply(new ResponseData.SmartReply("What is Lookup PrefixSearch?",
+                        TemplateType.DBPEDIA_LOOKUP_PREFIX_SEARCH));
                 break;
             case Constants.DBPEDIA_MAPPINGS_SERVICE:
-                responseData.addSmartReply(new ResponseData.SmartReply("What is Mappings Wiki?", TemplateType.DBPEDIA_MAPPINGS));
-                responseData.addSmartReply(new ResponseData.SmartReply("Where can I find the Mapping Tool?", TemplateType.DBPEDIA_MAPPINGS_TOOL));
-                responseData.addSmartReply(new ResponseData.SmartReply("Is Mappings Wiki Down?", TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
+                responseData.addSmartReply(
+                        new ResponseData.SmartReply("What is Mappings Wiki?", TemplateType.DBPEDIA_MAPPINGS));
+                responseData.addSmartReply(new ResponseData.SmartReply("Where can I find the Mapping Tool?",
+                        TemplateType.DBPEDIA_MAPPINGS_TOOL));
+                responseData.addSmartReply(new ResponseData.SmartReply("Is Mappings Wiki Down?",
+                        TemplateType.CHECK_SERVICE + Utility.STRING_SEPARATOR + serviceName));
                 break;
         }
         return responseData;
