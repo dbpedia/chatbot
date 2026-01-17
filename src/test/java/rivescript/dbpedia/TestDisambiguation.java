@@ -162,7 +162,9 @@ public class TestDisambiguation {
         String uri = "http://dbpedia.org/resource/Mercury_(planet)";
         ResponseData entity = sparql.getEntityInformation(uri);
         
-        assertNotNull("Entity should exist", entity);
-        assertNotNull("Should handle entity correctly", entity.getTitle());
+        assertNotNull("Entity with special characters should be retrievable", entity);
+        if (entity != null) {
+            assertNotNull("Entity should have a title", entity.getTitle());
+        }
     }
 }
