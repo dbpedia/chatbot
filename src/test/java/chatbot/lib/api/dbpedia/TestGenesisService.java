@@ -24,7 +24,7 @@ public class TestGenesisService {
     public void checkSimilar() throws Exception {
         String uris = new GenesisService(0).getSimilarEntities("http://dbpedia.org/resource/Barack_Obama");
         assertNotNull(uris);
-        assertNotEquals(uris.trim(), "");
+        assertNotEquals("", uris.trim());
     }
 
     /**
@@ -35,7 +35,7 @@ public class TestGenesisService {
     public void checkRelated() throws Exception {
         String uris = new GenesisService(0).getRelatedEntities("http://dbpedia.org/resource/Barack_Obama");
         assertNotNull(uris);
-        assertNotEquals(uris.trim(), "");
+        assertNotEquals("", uris.trim());
     }
 
     /**
@@ -113,15 +113,15 @@ public class TestGenesisService {
     }
 
     /**
-     * Test disambiguation distinction from related entities
-     * A disambiguation page should not return similar entities in the same way
+     * Test similar entities for a specific location entity
+     * Verifies similar entity retrieval works for geographic entities
      */
     @Test
-    public void checkDisambiguationVsSimilar() throws Exception {
-        // Test with a specific entity (not a disambiguation page)
-        String specificEntityUris = new GenesisService(0).getSimilarEntities("http://dbpedia.org/resource/Paris");
+    public void checkSimilarEntitiesForLocation() throws Exception {
+        // Test with a specific location (not a disambiguation page)
+        String similarCities = new GenesisService(0).getSimilarEntities("http://dbpedia.org/resource/Paris");
         
-        // Verify that we can distinguish specific entities
-        assertNotNull("Similar entities for specific location should be retrievable", specificEntityUris);
+        // Verify that similar cities are retrievable
+        assertNotNull("Similar entities for specific location should be retrievable", similarCities);
     }
 }

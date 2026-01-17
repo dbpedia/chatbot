@@ -132,7 +132,7 @@ public class TestDisambiguation {
         // Verify different entities in pagination
         if (page2 != null && page1.size() > 0 && page2.size() > 0) {
             assertNotNull("Second page should exist", page2);
-            assertTrue("Pages should be different", !page1.get(0).getTitle().equals(page2.get(0).getTitle()));
+            assertNotEquals("Pages should be different", page1.get(0).getTitle(), page2.get(0).getTitle());
         }
     }
 
@@ -159,7 +159,7 @@ public class TestDisambiguation {
         if (sparql == null) return;
         
         // Test with an entity that has parentheses in the name
-        String uri = "http://dbpedia.org/resource/Albert_Einstein";
+        String uri = "http://dbpedia.org/resource/Mercury_(planet)";
         ResponseData entity = sparql.getEntityInformation(uri);
         
         assertNotNull("Entity should exist", entity);

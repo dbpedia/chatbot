@@ -192,7 +192,7 @@ public class TestDBpediaSparql {
     public void testEntityURIWithSpecialCharacters() {
         if (sparql == null) return;
         
-        // Entity with parentheses in name
+        // Entity with parentheses in name that requires proper URI encoding
         String uri = "http://dbpedia.org/resource/Mercury_(planet)";
         ResponseData entity = sparql.getEntityInformation(uri);
         
