@@ -46,7 +46,8 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     @Bean
-    public MessengerSendClient initializeFBMessengerSendClient(@Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
+    public MessengerSendClient initializeFBMessengerSendClient(
+            @Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
         logger.info("Initializing MessengerSendClient - pageAccessToken: {}", pageAccessToken);
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
     }
@@ -55,10 +56,14 @@ public class Application {
     static class AssetsConfiguration extends WebMvcConfigurerAdapter {
         @Override
         public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
-            registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
-            registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
-            registry.addResourceHandler("/images/**").addResourceLocations("file:src/main/resources/static/images/").setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/assets/**").addResourceLocations("file:node_modules/")
+                    .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/js/**").addResourceLocations("file:src/main/app/js/")
+                    .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/css/**").addResourceLocations("file:src/main/app/css/")
+                    .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
+            registry.addResourceHandler("/images/**").addResourceLocations("file:src/main/resources/static/images/")
+                    .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS));
             super.addResourceHandlers(registry);
         }
     }
@@ -74,7 +79,9 @@ public class Application {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/", "/assets/**/*", "/js/*", "/images/**/*", "/feedback", "/webhook", "/fbwebhook", "/slackwebhook", "/embed").permitAll()
+                    .antMatchers("/", "/assets/**/*", "/js/*", "/images/**/*", "/feedback", "/webhook", "/fbwebhook",
+                            "/slackwebhook", "/embed")
+                    .permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .formLogin()
@@ -88,7 +95,9 @@ public class Application {
         }
 
         @Autowired
-        protected void configureGlobal(AuthenticationManagerBuilder auth, @Value("${admin.username}") String username, @Value("${admin.password}") String password, @Value("${chatbot.baseUrl}") String baseUrl) throws Exception {
+        protected void configureGlobal(AuthenticationManagerBuilder auth, @Value("${admin.username}") String username,
+                @Value("${admin.password}") String password, @Value("${chatbot.baseUrl}") String baseUrl)
+                throws Exception {
             this.baseUrl = baseUrl;
             auth
                     .inMemoryAuthentication()
@@ -108,21 +117,18 @@ public class Application {
 
         @Autowired
         public Helper(final CloudantClient cloudantClient,
-                      WolframRepository wolframRepository,
-                      @Value("${cloudant.chatDB}") String chatDBName,
-                      @Value("${cloudant.feedbackDB}") String feedbackDBName,
-                      @Value("${cloudant.explorerDB}") String explorerDBName,
-                      @Value("${tmdb.apiKey}") String tmdbApiKey) {
+                WolframRepository wolframRepository,
+                @Value("${cloudant.chatDB}") String chatDBName,
+                @Value("${cloudant.feedbackDB}") String feedbackDBName,
+                @Value("${cloudant.explorerDB}") String explorerDBName,
+                @Value("${tmdb.apiKey}") String tmdbApiKey) {
             try {
                 chatDB = cloudantClient.database(chatDBName, true);
                 feedbackDB = cloudantClient.database(feedbackDBName, true);
                 explorerDB = cloudantClient.database(explorerDBName, true);
-            }
-            catch(Exception e) {
-                logger.info("ERROR HERE");
-                e.printStackTrace();
-            }
-            finally {
+            } catch (Exception e) {
+                logger.error("CouchDB / Cloudant is unavailable. Explorer properties will not be loaded.", e);
+            } finally {
                 this.tmdbApiKey = tmdbApiKey;
                 this.wolframRepository = wolframRepository;
 
@@ -130,11 +136,11 @@ public class Application {
                 eliza = new ElizaMain();
                 eliza.readScript(true, "src/main/resources/eliza/script");
 
-                sparql = new SPARQL(explorerDB);
+                sparql = (explorerDB != null) ? new SPARQL(explorerDB) : null;
                 languageTool = new JLanguageTool(new AmericanEnglish());
                 for (Rule rule : languageTool.getAllActiveRules()) {
                     if (rule instanceof SpellingCheckRule) {
-                        List<String> wordsToIgnore = Arrays.asList(new String[] {"nlp", "merkel"});
+                        List<String> wordsToIgnore = Arrays.asList(new String[] { "nlp", "merkel" });
                         ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore);
                     }
                 }
@@ -167,6 +173,10 @@ public class Application {
 
         public Database getExplorerDB() {
             return explorerDB;
+        }
+
+        public boolean isExplorerDBAvailable() {
+            return explorerDB != null;
         }
 
         public SPARQL getSparql() {
