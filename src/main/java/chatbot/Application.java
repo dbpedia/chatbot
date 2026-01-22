@@ -136,7 +136,10 @@ public class Application {
                 eliza = new ElizaMain();
                 eliza.readScript(true, "src/main/resources/eliza/script");
 
-                sparql = (explorerDB != null) ? new SPARQL(explorerDB) : null;
+                sparql = (explorerDB != null)
+                        ? new SPARQL(explorerDB)
+                        : SPARQL.disabled();
+
                 languageTool = new JLanguageTool(new AmericanEnglish());
                 for (Rule rule : languageTool.getAllActiveRules()) {
                     if (rule instanceof SpellingCheckRule) {
