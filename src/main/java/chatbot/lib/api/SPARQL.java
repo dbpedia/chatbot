@@ -68,6 +68,12 @@ public class SPARQL {
             public int isDisambiguationPage(String uri) {
                 return 0;
             }
+
+            @Override
+            public ArrayList<ResponseData> getEntitiesByURIs(String uris) {
+                // CouchDB down → return safe empty result
+                return new ArrayList<>();
+            }
         };
     }
 
