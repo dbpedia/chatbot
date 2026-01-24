@@ -98,6 +98,119 @@ Add the following snippet to the `<head>` section of the webpage where you want 
 </script>
 ```
 
+## API Usage
+The chatbot exposes a REST API that allows developers to integrate chatbot functionality into their applications.
+
+### Endpoint
+```
+POST /webhook
+Content-Type: application/json
+```
+
+**Note:** This endpoint is publicly accessible and does not require authentication.
+
+### Request Format
+```json
+{
+  "userId": "unique-user-id",
+  "messageType": "text",
+  "messageData": [
+    {
+      "text": "Your question here"
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| userId | string | Unique identifier for the user/session |
+| messageType | string | `text` for queries, `parameter` for button responses |
+| messageData | array | Array containing message objects with `text` field |
+
+### Response Format
+The API returns an array of response objects:
+```json
+[
+  {
+    "messageType": "text",
+    "messageData": [
+      {
+        "title": "Entity Title",
+        "text": "Response content",
+        "image": "https://example.com/image.jpg",
+        "buttons": []
+      }
+    ]
+  }
+]
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| messageType | string | Type of response (typically `text`) |
+| messageData | array | Array of response objects |
+| title | string | Title/subject of the response |
+| text | string | Main response content |
+| image | string | URL to related image (optional, may be empty) |
+| buttons | array | Interactive buttons for follow-up actions (optional) |
+
+### Example
+
+**Request:**
+```sh
+curl -X POST https://chat.dbpedia.org/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "test-user-123",
+    "messageType": "text",
+    "messageData": [{"text": "Who is Albert Einstein?"}]
+  }'
+```
+
+**Response:**
+```json
+[
+  {
+    "messageType": "text",
+    "messageData": [
+      {
+        "title": "Albert Einstein",
+        "text": "Albert Einstein was a German-born theoretical physicist...",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Einstein_1921.jpg",
+        "buttons": []
+      }
+    ]
+  }
+]
+```
+
+### Sample Queries
+- "Who is Albert Einstein?"
+- "What is the capital of France?"
+- "Tell me about DBpedia"
+- "Where is Paris?"
+
+### Limitations & Notes
+
+- **Supported messageType values:** Only `text` and `parameter` are currently supported
+- **Query length:** For optimal results, keep queries concise (under 200 characters recommended)
+- **Character encoding:** UTF-8 is fully supported, including special characters (², €, etc.)
+- **Error responses:** Invalid messageType or malformed requests may return HTTP 500 errors
+
+### Testing Locally
+
+If running the chatbot locally:
+```sh
+curl -X POST http://localhost:8080/webhook \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "test-user",
+    "messageType": "text",
+    "messageData": [{"text": "Hello"}]
+  }'
+```
+
 ## Citation
 ```
 @inproceedings{ramngongausbeck2018,
