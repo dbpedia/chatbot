@@ -107,7 +107,7 @@ POST /webhook
 Content-Type: application/json
 ```
 
-**Note:** This endpoint is publicly accessible and does not require authentication.
+**Note:** This is a public webhook endpoint that does not require authentication. Currently, no application-level rate limiting is configured. For production deployments, consider implementing rate limiting via an API gateway or reverse proxy (e.g., nginx, AWS API Gateway) to prevent abuse.
 
 ### Request Format
 ```json
