@@ -102,7 +102,7 @@ Add the following snippet to the `<head>` section of the webpage where you want 
 The chatbot exposes a REST API that allows developers to integrate chatbot functionality into their applications.
 
 ### Endpoint
-```
+```http
 POST /webhook
 Content-Type: application/json
 ```
