@@ -1,21 +1,27 @@
 .smart-reply-container {
     clear: both;
-    padding-top: 15px;
-    height: 50px;
-    overflow: auto;
-    white-space: nowrap;
+    padding-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .smart-reply {
-    border: 3px solid @brand-primary;
-    padding: 10px 15px;
-    margin-right: 10px;
-    border-radius: 20px;
+    border: 2px solid @brand-primary;
+    padding: 9px 14px;
+    border-radius: 16px;
     background: @white;
     text-decoration: none !important;
+    color: @brand-primary;
+    box-shadow: 0 2px 6px fade(@brand-primary, 25%);
+    transition: all 120ms ease-in-out;
 }
 
-.smart-reply:active {
+.smart-reply:hover,
+.smart-reply:active,
+.smart-reply:focus {
     background: @brand-primary;
     color: @white;
+    box-shadow: 0 4px 10px fade(@brand-primary, 35%);
+    text-decoration: none;
 }

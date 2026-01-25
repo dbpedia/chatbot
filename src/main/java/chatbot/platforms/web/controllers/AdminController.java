@@ -62,11 +62,13 @@ public class AdminController {
     @RequestMapping(method=RequestMethod.POST, path="/admin/chat-list", produces = "application/json")
     public @ResponseBody List<ChatList> actionChatList(@RequestParam String userId, @RequestParam String page) {
         try {
+            // Sort conversations by timestamp descending for easier analysis
             return helper.getChatDB().getViewRequestBuilder("chats", "getChatList")
                     .newRequest(Key.Type.COMPLEX, ChatList.class)
-                    .startKey(Key.complex(userId))
-                    .endKey(Key.complex(userId, "\ufff0"))
+                    .startKey(Key.complex(userId, "\ufff0"))
+                    .endKey(Key.complex(userId))
                     .inclusiveEnd(true)
+                    .descending(true)
                     .limit(MAX_SIZE)
                     .skip((Integer.parseInt(page) - 1) * MAX_SIZE)
                     .build().getResponse().getValues();
