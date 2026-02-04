@@ -38,8 +38,44 @@ public class SPARQL {
     );
 
     Database explorerDB;
+
     public SPARQL(Database explorerDB) {
         this.explorerDB = explorerDB;
+    }
+
+    /**
+     * Safe disabled SPARQL instance used when CouchDB is unavailable.
+     * Prevents NullPointerExceptions across the application.
+     */
+    public static SPARQL disabled() {
+        return new SPARQL(null) {
+
+            @Override
+            public ResponseData getEntityInformation(String uri) {
+                ResponseData response = new ResponseData();
+                response.setTitle("Explorer database unavailable");
+                response.setText(
+                        "The DBpedia explorer database is currently unavailable. " +
+                                "Please try again later.");
+                return response;
+            }
+
+            @Override
+            public String getLabel(String uri) {
+                return "Explorer database unavailable";
+            }
+
+            @Override
+            public int isDisambiguationPage(String uri) {
+                return 0;
+            }
+
+            @Override
+            public ArrayList<ResponseData> getEntitiesByURIs(String uris) {
+                // CouchDB down → return safe empty result
+                return new ArrayList<>();
+            }
+        };
     }
 
     private static final String ENTITY_SELECT_PARAMETERS = " ?label ?abstract ?primaryTopic ?thumbnail ?description ";
