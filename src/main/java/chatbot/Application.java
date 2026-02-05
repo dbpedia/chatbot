@@ -122,30 +122,43 @@ public class Application {
                 @Value("${cloudant.feedbackDB}") String feedbackDBName,
                 @Value("${cloudant.explorerDB}") String explorerDBName,
                 @Value("${tmdb.apiKey}") String tmdbApiKey) {
+            // Initialize each database independently so partial successes are possible
             try {
                 chatDB = cloudantClient.database(chatDBName, true);
+            } catch (Exception e) {
+                logger.error("Failed to open chatDB: {}", chatDBName, e);
+            }
+
+            try {
                 feedbackDB = cloudantClient.database(feedbackDBName, true);
+            } catch (Exception e) {
+                logger.error("Failed to open feedbackDB: {}", feedbackDBName, e);
+            }
+
+            try {
                 explorerDB = cloudantClient.database(explorerDBName, true);
             } catch (Exception e) {
-                logger.error("CouchDB / Cloudant is unavailable. Explorer properties will not be loaded.", e);
-            } finally {
-                this.tmdbApiKey = tmdbApiKey;
-                this.wolframRepository = wolframRepository;
+                logger.error("Failed to open explorerDB: {}", explorerDBName, e);
+            }
 
-                riveScriptBot = new RiveScriptBot();
-                eliza = new ElizaMain();
-                eliza.readScript(true, "src/main/resources/eliza/script");
+            // Initialize remaining components
+            this.tmdbApiKey = tmdbApiKey;
+            this.wolframRepository = wolframRepository;
 
-                sparql = (explorerDB != null)
-                        ? new SPARQL(explorerDB)
-                        : SPARQL.disabled();
+            riveScriptBot = new RiveScriptBot();
+            eliza = new ElizaMain();
+            eliza.readScript(true, "src/main/resources/eliza/script");
 
-                languageTool = new JLanguageTool(new AmericanEnglish());
-                for (Rule rule : languageTool.getAllActiveRules()) {
-                    if (rule instanceof SpellingCheckRule) {
-                        List<String> wordsToIgnore = Arrays.asList(new String[] { "nlp", "merkel" });
-                        ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore);
-                    }
+            // Use disabled SPARQL instance if explorerDB is unavailable to prevent NPE
+            sparql = (explorerDB != null)
+                    ? new SPARQL(explorerDB)
+                    : SPARQL.disabled();
+
+            languageTool = new JLanguageTool(new AmericanEnglish());
+            for (Rule rule : languageTool.getAllActiveRules()) {
+                if (rule instanceof SpellingCheckRule) {
+                    List<String> wordsToIgnore = Arrays.asList(new String[] { "nlp", "merkel" });
+                    ((SpellingCheckRule) rule).addIgnoreTokens(wordsToIgnore);
                 }
             }
         }

@@ -29,13 +29,12 @@ public class SPARQL {
     private static final String ENDPOINT = "https://dbpedia.org/sparql";
     private static final String PREFIXES = new String(
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
-            "PREFIX dbp: <http://dbpedia.org/property/>\n" +
-            "PREFIX dbr: <http://dbpedia.org/resource/>\n" +
-            "PREFIX dct: <http://purl.org/dc/terms/>\n"
-    );
+                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                    "PREFIX dbo: <http://dbpedia.org/ontology/>\n" +
+                    "PREFIX dbp: <http://dbpedia.org/property/>\n" +
+                    "PREFIX dbr: <http://dbpedia.org/resource/>\n" +
+                    "PREFIX dct: <http://purl.org/dc/terms/>\n");
 
     Database explorerDB;
 
@@ -75,6 +74,12 @@ public class SPARQL {
                 // CouchDB down → return safe empty result
                 return new ArrayList<>();
             }
+
+            @Override
+            public ArrayList<ResponseData> getDisambiguatedEntities(String uri, int offset, int limit) {
+                // CouchDB down → return safe empty result to prevent NPE
+                return new ArrayList<>();
+            }
         };
     }
 
@@ -84,20 +89,21 @@ public class SPARQL {
         return PREFIXES + query;
     }
 
-    // Remove the pronounciation information that appears at the beginning of the article enclosed by ()
-    // Additionally can be checked to contain unnecessary characters instead of blindly stripping based on brackets
+    // Remove the pronounciation information that appears at the beginning of the
+    // article enclosed by ()
+    // Additionally can be checked to contain unnecessary characters instead of
+    // blindly stripping based on brackets
     private String stripWikiepdiaContent(String text) {
         int indexStart = text.indexOf("("), indexEnd;
-        if(indexStart > 0) {
+        if (indexStart > 0) {
             indexEnd = text.indexOf(")", indexStart) + 2;
-            if(indexEnd != -1) {
+            if (indexEnd != -1) {
                 return text.replace(text.substring(indexStart, indexEnd), "");
             }
-        }
-        else if(indexStart == 0) {
+        } else if (indexStart == 0) {
             // When abstract starts with info on Disambiguation
             indexEnd = text.lastIndexOf("(disambiguation).)");
-            if(indexEnd != -1) {
+            if (indexEnd != -1) {
                 return text.replace(text.substring(indexStart, indexEnd + 18), "");
             }
         }
@@ -105,7 +111,7 @@ public class SPARQL {
     }
 
     private String processWikipediaAbstract(String abs) {
-        while(abs.indexOf("(") != -1) {
+        while (abs.indexOf("(") != -1) {
             abs = stripWikiepdiaContent(abs);
         }
         return abs;
@@ -120,31 +126,16 @@ public class SPARQL {
             return className;
         }
 
-        public ExplorerProperties setClassName(String className) {
-            this.className = className;
-            return this;
-        }
-
         public String getProperty() {
             return property;
-        }
-
-        public ExplorerProperties setProperty(String property) {
-            this.property = property;
-            return this;
         }
 
         public String getScore() {
             return score;
         }
-
-        public ExplorerProperties setScore(String score) {
-            this.score = score;
-            return this;
-        }
     }
 
-    private List<ResponseData.Field> getRelevantProperties(String uri, List types, String[] properties) {
+    private List<ResponseData.Field> getRelevantProperties(String uri, List<String> types, String[] properties) {
         List<ResponseData.Field> fields = new ArrayList<>();
         try {
             TreeMap<Float, String> propertyMap = new TreeMap<>();
@@ -154,15 +145,15 @@ public class SPARQL {
                     .inclusiveEnd(true)
                     .build().getResponse().getValues();
 
-
-            for(ExplorerProperties property : explorerProperties) {
-                // Check if the property matches one of the list of classes(types) found for the entity
-                if(types.contains(property.getClassName())) {
+            for (ExplorerProperties property : explorerProperties) {
+                // Check if the property matches one of the list of classes(types) found for the
+                // entity
+                if (types.contains(property.getClassName())) {
                     propertyMap.put(Float.parseFloat(property.getScore()), property.getProperty());
                 }
             }
 
-            if(propertyMap.size() > 0) {
+            if (propertyMap.size() > 0) {
                 int count = 0;
                 Iterator<Float> iterator = propertyMap.descendingKeySet().iterator();
                 String property_uris = "";
@@ -171,30 +162,33 @@ public class SPARQL {
                     count++;
                 }
 
-                String query = buildQuery("SELECT ?property_label (group_concat(distinct ?value;separator='__') as ?values) (group_concat(distinct ?value_label;separator='__') as ?value_labels) where {\n" +
-                        "VALUES ?property {" + property_uris + "}\n" +
-                        "<" + uri + "> ?property ?value . \n" +
-                        "?property rdfs:label ?property_label . FILTER(lang(?property_label)='en'). \n" +
-                        "OPTIONAL {?value rdfs:label ?value_label . FILTER(lang(?value_label) = 'en') }\n" +
-                        "} GROUP BY ?property_label");
+                String query = buildQuery(
+                        "SELECT ?property_label (group_concat(distinct ?value;separator='__') as ?values) (group_concat(distinct ?value_label;separator='__') as ?value_labels) where {\n"
+                                +
+                                "VALUES ?property {" + property_uris + "}\n" +
+                                "<" + uri + "> ?property ?value . \n" +
+                                "?property rdfs:label ?property_label . FILTER(lang(?property_label)='en'). \n" +
+                                "OPTIONAL {?value rdfs:label ?value_label . FILTER(lang(?value_label) = 'en') }\n" +
+                                "} GROUP BY ?property_label");
                 QueryExecution queryExecution = executeQuery(query);
                 try {
                     Iterator<QuerySolution> results = queryExecution.execSelect();
-                    while(results.hasNext()) {
+                    while (results.hasNext()) {
                         QuerySolution result = results.next();
                         ResponseData.Field field = new ResponseData.Field();
                         field.setName(Utility.capitalizeAll(result.get("property_label").asLiteral().getString()));
 
-                        // If Value Label String is empty then we use Value String instead which means the value is a literal. So we are only taking the first element before space
-                        if(result.get("value_labels").asLiteral().getString().equals("")) {
-                            field.setValue(Utility.capitalizeAll(result.get("values").asLiteral().getString().split("__")[0]));
-                        }
-                        else {
+                        // If Value Label String is empty then we use Value String instead which means
+                        // the value is a literal. So we are only taking the first element before space
+                        if (result.get("value_labels").asLiteral().getString().equals("")) {
+                            field.setValue(
+                                    Utility.capitalizeAll(result.get("values").asLiteral().getString().split("__")[0]));
+                        } else {
                             LinkedHashMap<String, String> map = new LinkedHashMap<>();
                             String[] keyArray = result.get("values").asLiteral().getString().split("__");
                             String[] valueArray = result.get("value_labels").asLiteral().getString().split("__");
 
-                            for(int index = 0; index < keyArray.length; index++) {
+                            for (int index = 0; index < keyArray.length; index++) {
                                 map.put(Utility.convertDBpediaToWikipediaURL(keyArray[index]), valueArray[index]);
                             }
                             field.setValues(map);
@@ -202,17 +196,13 @@ public class SPARQL {
                         fields.add(field);
                     }
                     return fields;
-                }
-                finally {
+                } finally {
                     queryExecution.close();
-                    return fields;
                 }
-            }
-            else {
+            } else {
                 return fields;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return fields;
@@ -223,23 +213,24 @@ public class SPARQL {
         ResponseData responseData = new ResponseData();
         String label = result.get("label").asLiteral().getString(), text = "";
         responseData.setTitle(label);
-        responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK, result.get("primaryTopic").toString()));
+        responseData.addButton(new ResponseData.Button("View in Wikipedia", ResponseType.BUTTON_LINK,
+                result.get("primaryTopic").toString()));
 
         node = result.get("thumbnail");
-        if(node != null) {
+        if (node != null) {
             responseData.setImage(node.toString());
         }
 
-//        String summary = new GenesisService().getSummary(uri);
-//        if(summary == null || summary.isEmpty()) {
-//            node = result.get(VAR_ABSTRACT);
-//            if(node != null) {
-//                summary = processWikipediaAbstract(node.asLiteral().getString());
-//            }
-//        }
+        // String summary = new GenesisService().getSummary(uri);
+        // if(summary == null || summary.isEmpty()) {
+        // node = result.get(VAR_ABSTRACT);
+        // if(node != null) {
+        // summary = processWikipediaAbstract(node.asLiteral().getString());
+        // }
+        // }
 
         node = result.get("description");
-        if(node != null) {
+        if (node != null) {
             text += node.asLiteral().getString() + "\n\n";
         }
 
@@ -254,35 +245,39 @@ public class SPARQL {
         }
 
         String query = buildQuery(
-                "SELECT (GROUP_CONCAT(distinct ?type;separator=' ') as ?types) (GROUP_CONCAT(distinct ?property;separator=' ') as ?properties) WHERE {\n" +
-                "<" + uri + "> rdf:type ?type . FILTER(STRSTARTS(STR(?type), 'http://dbpedia.org/ontology')) . \n" +
-                "<" + uri + "> ?property ?value . FILTER(STRSTARTS(STR(?property), 'http://dbpedia.org/ontology')) . \n" +
-        "}");
+                "SELECT (GROUP_CONCAT(distinct ?type;separator=' ') as ?types) (GROUP_CONCAT(distinct ?property;separator=' ') as ?properties) WHERE {\n"
+                        +
+                        "<" + uri
+                        + "> rdf:type ?type . FILTER(STRSTARTS(STR(?type), 'http://dbpedia.org/ontology')) . \n" +
+                        "<" + uri
+                        + "> ?property ?value . FILTER(STRSTARTS(STR(?property), 'http://dbpedia.org/ontology')) . \n" +
+                        "}");
         QueryExecution queryExecution = executeQuery(query);
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while(results.hasNext()) {
+            while (results.hasNext()) {
                 QuerySolution solution = results.next();
-                if(solution.get("types") != null && solution.get("properties") != null) {
+                if (solution.get("types") != null && solution.get("properties") != null) {
                     List<String> types = Arrays.asList(solution.get("types").asLiteral().getString().split(" "));
                     String[] properties = solution.get("properties").asLiteral().getString().split(" ");
                     responseData.setFields(getRelevantProperties(uri, types, properties));
                 }
             }
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
 
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM, TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
+        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM,
+                TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
     }
 
     private String getEntityWhereCondition(String uri) {
         // URI could either be the actual URI or a variable reference
-        // In case of actual URI it needs to be enclosed with <uri> which is not required for variable reference
-        if(!uri.startsWith("?")) {
+        // In case of actual URI it needs to be enclosed with <uri> which is not
+        // required for variable reference
+        if (!uri.startsWith("?")) {
             uri = "<" + uri + ">";
         }
         return uri + " rdfs:label ?label .\n" +
@@ -296,18 +291,17 @@ public class SPARQL {
     public ResponseData getEntityInformation(String uri) {
         String query = buildQuery("SELECT " + ENTITY_SELECT_PARAMETERS + " WHERE {" +
                 getEntityWhereCondition(uri) +
-        "}");
+                "}");
         QueryExecution queryExecution = executeQuery(query);
         ResponseData responseData = null;
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while(results.hasNext()) {
+            while (results.hasNext()) {
                 QuerySolution result = results.next();
                 responseData = processEntityInformation(uri, result);
             }
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
         return responseData;
@@ -316,23 +310,23 @@ public class SPARQL {
     /**
      * Returns 0 if it is not a disambiguation page. Returns count otherwise
      * We can only show 10 at a time so its limited by that
+     * 
      * @return 0 or count
      */
     public int isDisambiguationPage(String uri) {
-         String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
-                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
-                 "}");
+        String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
+                "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
+                "}");
         QueryExecution queryExecution = executeQuery(query);
         int count = 0;
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while(results.hasNext()) {
+            while (results.hasNext()) {
                 QuerySolution result = results.next();
                 count = result.get("count").asLiteral().getInt();
             }
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
         return count;
@@ -346,13 +340,12 @@ public class SPARQL {
             Iterator<QuerySolution> results = queryExecution.execSelect();
             if (results != null) {
                 responseDatas = new ArrayList<>();
-                while(results.hasNext()) {
+                while (results.hasNext()) {
                     QuerySolution result = results.next();
                     responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
                 }
             }
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
         return responseDatas;
@@ -362,7 +355,7 @@ public class SPARQL {
         String query = buildQuery("SELECT ?uri " + ENTITY_SELECT_PARAMETERS + " WHERE {\n" +
                 "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?uri .\n" +
                 getEntityWhereCondition("?uri") +
-        "} ORDER BY ?uri OFFSET " + offset + " LIMIT " + limit);
+                "} ORDER BY ?uri OFFSET " + offset + " LIMIT " + limit);
         return getEntities(query);
     }
 
@@ -385,8 +378,7 @@ public class SPARQL {
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
             label = results.next().get("label").asLiteral().getString();
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
         return label;
@@ -396,19 +388,18 @@ public class SPARQL {
         String types = null;
         String query = buildQuery("SELECT (group_concat(?type;separator=' ') as ?types) WHERE {" +
                 "<" + uri + "> rdf:type ?type ." +
-        "}");
+                "}");
         QueryExecution queryExecution = executeQuery(query);
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
             if (results != null) {
-                while(results.hasNext()) {
+                while (results.hasNext()) {
                     QuerySolution result = results.next();
                     types = result.get("types").toString();
                 }
             }
-        }
-        finally {
+        } finally {
             queryExecution.close();
         }
         return types;
