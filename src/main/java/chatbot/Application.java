@@ -48,7 +48,7 @@ public class Application {
     @Bean
     public MessengerSendClient initializeFBMessengerSendClient(
             @Value("${chatbot.fb.pageAccessToken}") String pageAccessToken) {
-        logger.info("Initializing MessengerSendClient - pageAccessToken: {}", pageAccessToken);
+        logger.info("Initializing MessengerSendClient");
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
     }
 

@@ -94,25 +94,38 @@ public class SPARQL {
     // Additionally can be checked to contain unnecessary characters instead of
     // blindly stripping based on brackets
     private String stripWikiepdiaContent(String text) {
-        int indexStart = text.indexOf("("), indexEnd;
+        int indexStart = text.indexOf("(");
         if (indexStart > 0) {
-            indexEnd = text.indexOf(")", indexStart) + 2;
-            if (indexEnd != -1) {
-                return text.replace(text.substring(indexStart, indexEnd), "");
+            int indexEnd = text.indexOf(")", indexStart);
+            if (indexEnd == -1) {
+                // No closing paren found, return unchanged
+                return text;
             }
+            // Include the closing paren in the removal, ensure we don't exceed text length
+            indexEnd = Math.min(indexEnd + 1, text.length());
+            return text.substring(0, indexStart) + text.substring(indexEnd);
         } else if (indexStart == 0) {
             // When abstract starts with info on Disambiguation
-            indexEnd = text.lastIndexOf("(disambiguation).)");
-            if (indexEnd != -1) {
-                return text.replace(text.substring(indexStart, indexEnd + 18), "");
+            int disIndex = text.lastIndexOf("(disambiguation).)");
+            if (disIndex == -1) {
+                // Pattern not found, return unchanged
+                return text;
             }
+            // Calculate end index safely, ensuring we don't exceed text length
+            int endIndex = Math.min(disIndex + 18, text.length());
+            return text.substring(endIndex);
         }
         return text;
     }
 
     private String processWikipediaAbstract(String abs) {
         while (abs.indexOf("(") != -1) {
+            String before = abs;
             abs = stripWikiepdiaContent(abs);
+            // Break if no change was made to prevent infinite loop on malformed input
+            if (abs.equals(before)) {
+                break;
+            }
         }
         return abs;
     }
