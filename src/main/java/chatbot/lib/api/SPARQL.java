@@ -201,7 +201,14 @@ public class SPARQL {
                             String[] keyArray = result.get("values").asLiteral().getString().split("__");
                             String[] valueArray = result.get("value_labels").asLiteral().getString().split("__");
 
-                            for (int index = 0; index < keyArray.length; index++) {
+                            // Use Math.min to prevent ArrayIndexOutOfBoundsException
+                            int safeLength = Math.min(keyArray.length, valueArray.length);
+                            if (keyArray.length != valueArray.length) {
+                                logger.warn("Mismatched array lengths in SPARQL results: values={}, value_labels={}",
+                                        keyArray.length, valueArray.length);
+                            }
+
+                            for (int index = 0; index < safeLength; index++) {
                                 map.put(Utility.convertDBpediaToWikipediaURL(keyArray[index]), valueArray[index]);
                             }
                             field.setValues(map);
@@ -390,7 +397,10 @@ public class SPARQL {
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            label = results.next().get("label").asLiteral().getString();
+            if (results.hasNext()) {
+                label = results.next().get("label").asLiteral().getString();
+            }
+            // If no results, label remains null (sensible default for "not found")
         } finally {
             queryExecution.close();
         }
