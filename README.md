@@ -1,7 +1,6 @@
 # DBpedia Chatbot
 
 [![Project Stats](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif)](https://www.openhub.net/p/dbpedia-chatbot)
-[![BCH compliance](https://bettercodehub.com/edge/badge/dbpedia/chatbot?branch=master)](https://bettercodehub.com/)
 [![pipeline status](https://gitlab.com/ram-g-athreya/chatbot/badges/master/pipeline.svg)](https://gitlab.com/ram-g-athreya/chatbot/commits/master)
 
 **[Final Application](https://chat.dbpedia.org)**
