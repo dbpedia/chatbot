@@ -41,7 +41,8 @@
 - I'm sorry, DBpedia seems to be {uppercase}(@statusdown){/uppercase} right now. So I will be unable to answer factoid questions temporarily.
 
 + fallbacktext
-- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.
+
+ - I couldn't understand that yet. Try one of these suggestions or rephrase with who/what/where.
 
 + noresultstext
-- I'm sorry, I couldn’t find any results at this time. Please try again later.
+ - I'm sorry, I couldn't find any results at this time. Please try again later.
