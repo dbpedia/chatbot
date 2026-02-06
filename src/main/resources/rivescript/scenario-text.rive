@@ -41,7 +41,7 @@
 - I'm sorry, DBpedia seems to be {uppercase}(@statusdown){/uppercase} right now. So I will be unable to answer factoid questions temporarily.
 
 + fallbacktext
-- I'm sorry, but I couldn’t understand your question. I'm still learning, and will get better.
+- Sorry about that! I'm still learning and didn't catch what you meant. Could you try:__- "What is [topic]?"__- "Tell me about [person/place]"__- "Who was [name]?"
 
 + noresultstext
-- I'm sorry, I couldn’t find any results at this time. Please try again later.
+- Sorry about that! I'm still learning and didn't catch what you meant. Could you try:__- "What is [topic]?"__- "Tell me about [person/place]"__- "Who was [name]?"
