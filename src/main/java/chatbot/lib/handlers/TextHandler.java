@@ -121,8 +121,13 @@ public class TextHandler {
                     + "'. Try one of these suggestions:";
         } else {
             // Use default RiveScript fallback when no keyword could be extracted
-            fallbackPrompt = helper.getRiveScriptBot().answer(request.getUserId(),
-                    RiveScriptReplyType.FALLBACK_TEXT)[0];
+            String[] fallbackResult = helper.getRiveScriptBot().answer(request.getUserId(),
+                    RiveScriptReplyType.FALLBACK_TEXT);
+            if (fallbackResult != null && fallbackResult.length > 0) {
+                fallbackPrompt = fallbackResult[0];
+            } else {
+                fallbackPrompt = "Sorry, I don't understand.";
+            }
         }
         responseGenerator.addTextResponse(new ResponseData(fallbackPrompt));
 
