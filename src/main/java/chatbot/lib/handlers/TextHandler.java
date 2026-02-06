@@ -79,14 +79,18 @@ public class TextHandler {
                                 .getLocation();
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
-                        fallbackTriggered = true;
                         // Eliza
                         if (textMessage.endsWith("!") || textMessage.endsWith(".")) {
+                            fallbackTriggered = true;
                             responseGenerator
                                     .addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
                         } else {
                             textMessage = rootNode.get("query").getTextValue(); // Use processed text message
                             responseGenerator = new NLHandler(request, textMessage, helper).answer();
+                            // Only trigger fallback if NLHandler returned no valid response
+                            if (responseGenerator.getResponse().size() == 0) {
+                                fallbackTriggered = true;
+                            }
                         }
                         break;
                 }
