@@ -1,3 +1,5 @@
+** NOTE: THIS PROJECT IS DEPRECATED AND WILL NOT BE MAINTAINED **
+
 # DBpedia Chatbot
 
 [![Project Stats](https://www.openhub.net/p/dbpedia-chatbot/widgets/project_thin_badge.gif)](https://www.openhub.net/p/dbpedia-chatbot)
@@ -12,9 +14,9 @@ For more information about this project and **GSoC Progress** please refer to **
 
 ## Environment Configurations
 
-When running locally or in development include the following configuration as a properties file in the `src/main/resources` folder.
+When running locally or in development, include the following configuration as a properties file in the `src/main/resources` folder.
 
-In case you do not have a proper CouchDB instance or API keys please use the following **[dummy configuration file](https://github.com/dbpedia/chatbot/wiki/Chatbot-Dummy-Configuration)**.
+In case you do not have a proper CouchDB instance or API key,s please use the following **[dummy configuration file](https://github.com/dbpedia/chatbot/wiki/Chatbot-Dummy-Configuration)**.
 
 _Please note that using the dummy configuration file can result in some features being unavailable since they may require the requisite API services._
 
