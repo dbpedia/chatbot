@@ -101,7 +101,7 @@ public class TextHandler {
 
         // Add guided fallback suggestions when we could not understand
         if (fallbackTriggered || responseGenerator.getResponse().size() == 0) {
-            responseGenerator = appendFallbackSuggestions(responseGenerator, textMessage);
+            responseGenerator = appendFallbackSuggestions(responseGenerator, textMessage, fallbackTriggered);
         }
 
         // Fallback when everything else fails Eliza will answer
@@ -111,25 +111,31 @@ public class TextHandler {
         return responseGenerator;
     }
 
-    private ResponseGenerator appendFallbackSuggestions(ResponseGenerator responseGenerator, String originalText) {
-        // Extract keyword for contextual fallback message
-        String keyword = extractKeyword(originalText);
-
-        String fallbackPrompt;
-        if (keyword != null && !keyword.isEmpty()) {
-            fallbackPrompt = "I didn't quite understand, but you might be asking about '" + keyword
-                    + "'. Try one of these suggestions:";
+    private ResponseGenerator appendFallbackSuggestions(ResponseGenerator responseGenerator, String originalText,
+            boolean elizaResponded) {
+        // If Eliza already provided a meaningful reply, use a non-contradictory message
+        if (elizaResponded) {
+            responseGenerator.addTextResponse(new ResponseData("Here are some things I can help with:"));
         } else {
-            // Use default RiveScript fallback when no keyword could be extracted
-            String[] fallbackResult = helper.getRiveScriptBot().answer(request.getUserId(),
-                    RiveScriptReplyType.FALLBACK_TEXT);
-            if (fallbackResult != null && fallbackResult.length > 0) {
-                fallbackPrompt = fallbackResult[0];
+            // Extract keyword for contextual fallback message
+            String keyword = extractKeyword(originalText);
+
+            String fallbackPrompt;
+            if (keyword != null && !keyword.isEmpty()) {
+                fallbackPrompt = "I didn't quite understand, but you might be asking about '" + keyword
+                        + "'. Try one of these suggestions:";
             } else {
-                fallbackPrompt = "Sorry, I don't understand.";
+                // Use default RiveScript fallback when no keyword could be extracted
+                String[] fallbackResult = helper.getRiveScriptBot().answer(request.getUserId(),
+                        RiveScriptReplyType.FALLBACK_TEXT);
+                if (fallbackResult != null && fallbackResult.length > 0) {
+                    fallbackPrompt = fallbackResult[0];
+                } else {
+                    fallbackPrompt = "Sorry, I don't understand.";
+                }
             }
+            responseGenerator.addTextResponse(new ResponseData(fallbackPrompt));
         }
-        responseGenerator.addTextResponse(new ResponseData(fallbackPrompt));
 
         ResponseData smartReplies = new ResponseData();
 
