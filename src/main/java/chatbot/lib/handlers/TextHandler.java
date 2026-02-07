@@ -28,6 +28,7 @@ public class TextHandler {
     private String textMessage;
     private Application.Helper helper;
     private boolean fallbackTriggered = false;
+    private boolean elizaResponded = false;
 
     private String sanitizeText(String message) {
         String result = message;
@@ -82,6 +83,7 @@ public class TextHandler {
                         // Eliza
                         if (textMessage.endsWith("!") || textMessage.endsWith(".")) {
                             fallbackTriggered = true;
+                            elizaResponded = true;
                             responseGenerator
                                     .addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
                         } else {
@@ -101,7 +103,7 @@ public class TextHandler {
 
         // Add guided fallback suggestions when we could not understand
         if (fallbackTriggered || responseGenerator.getResponse().size() == 0) {
-            responseGenerator = appendFallbackSuggestions(responseGenerator, textMessage, fallbackTriggered);
+            responseGenerator = appendFallbackSuggestions(responseGenerator, textMessage, elizaResponded);
         }
 
         // Fallback when everything else fails Eliza will answer
