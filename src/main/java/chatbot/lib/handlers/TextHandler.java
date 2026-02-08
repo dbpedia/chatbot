@@ -37,11 +37,12 @@ public class TextHandler {
             for (RuleMatch match : matches) {
                 String error = message.substring(match.getFromPos(), match.getToPos());
                 List<String> replacements = match.getSuggestedReplacements();
-                if (replacements.size() > 0) {
+                if(replacements.size() > 0) {
                     result = result.replace(error, match.getSuggestedReplacements().get(0));
                 }
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             logger.error("Error sanitizing text: {}", message, e);
         }
         return result;
@@ -57,8 +58,8 @@ public class TextHandler {
         ResponseGenerator responseGenerator = new ResponseGenerator();
         String[] rivescriptReply = helper.getRiveScriptBot().answer(request.getUserId(), textMessage);
 
-        for (String reply : rivescriptReply) {
-            if (Utility.isJSONObject(reply) == true) {
+        for(String reply : rivescriptReply) {
+            if(Utility.isJSONObject(reply) == true) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode rootNode = mapper.readTree(reply);
                 switch (rootNode.get("type").getTextValue()) {
@@ -72,8 +73,10 @@ public class TextHandler {
                                 .handleLanguageAbout();
                         break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
-                        responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper)
-                                .handleStatusCheck();
+
+                        responseGenerator = new 
+                    StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper) .handleStatusCheck();
+                               
                         break;
                     case RiveScriptReplyType.LOCATION_SCENARIO:
                         responseGenerator = new LocationHandler(request, rootNode.get("query").getTextValue(), helper)
@@ -102,7 +105,7 @@ public class TextHandler {
         }
 
         // Add guided fallback suggestions when we could not understand
-        if (fallbackTriggered || responseGenerator.getResponse().size() == 0) {
+        if(fallbackTriggered || responseGenerator.getResponse().size() == 0) {
             responseGenerator = appendFallbackSuggestions(responseGenerator, textMessage, elizaResponded);
         }
 
