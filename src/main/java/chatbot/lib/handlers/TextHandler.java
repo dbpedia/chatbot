@@ -41,8 +41,8 @@ public class TextHandler {
                     result = result.replace(error, match.getSuggestedReplacements().get(0));
                 }
             }
-        } 
-        catch (Exception e) {
+        }
+        catch(Exception e) {
             logger.error("Error sanitizing text: {}", message, e);
         }
         return result;
@@ -64,8 +64,7 @@ public class TextHandler {
                 JsonNode rootNode = mapper.readTree(reply);
                 switch (rootNode.get("type").getTextValue()) {
                     case RiveScriptReplyType.TEMPLATE_SCENARIO:
-                        responseGenerator = new TemplateHandler(request,
-                                Utility.split(rootNode.get("name").getTextValue(), Utility.PARAMETER_SEPARATOR), helper)
+                        responseGenerator = new TemplateHandler(request, Utility.split(rootNode.get("name").getTextValue(), Utility.PARAMETER_SEPARATOR), helper)
                                 .handleTemplateMessage();
                         break;
                     case RiveScriptReplyType.LANGUAGE_SCENARIO:
@@ -74,13 +73,11 @@ public class TextHandler {
                         break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
 
-                        responseGenerator = new 
-                    StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper) .handleStatusCheck();
+                        responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper) .handleStatusCheck();
                                
                         break;
                     case RiveScriptReplyType.LOCATION_SCENARIO:
-                        responseGenerator = new LocationHandler(request, rootNode.get("query").getTextValue(), helper)
-                                .getLocation();
+                        responseGenerator = new LocationHandler(request, rootNode.get("query").getTextValue(), helper).getLocation();
                         break;
                     case RiveScriptReplyType.FALLBACK_SCENARIO:
                         // Eliza
@@ -110,7 +107,7 @@ public class TextHandler {
         }
 
         // Fallback when everything else fails Eliza will answer
-        if (responseGenerator.getResponse().size() == 0) {
+        if(responseGenerator.getResponse().size() == 0) {
             responseGenerator.addTextResponse(new ResponseData(helper.getEliza().processInput(textMessage)));
         }
         return responseGenerator;
