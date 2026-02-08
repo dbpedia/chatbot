@@ -72,7 +72,6 @@ public class TextHandler {
                                 .handleLanguageAbout();
                         break;
                     case RiveScriptReplyType.STATUS_CHECK_SCENARIO:
-
                         responseGenerator = new StatusCheckHandler(request, rootNode.get("name").getTextValue(), helper) .handleStatusCheck();
                                
                         break;
