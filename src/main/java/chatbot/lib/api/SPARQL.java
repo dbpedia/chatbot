@@ -37,7 +37,6 @@ public class SPARQL {
                     "PREFIX dct: <http://purl.org/dc/terms/>\n");
 
     Database explorerDB;
-
     public SPARQL(Database explorerDB) {
         this.explorerDB = explorerDB;
     }
@@ -95,9 +94,9 @@ public class SPARQL {
     // blindly stripping based on brackets
     private String stripWikiepdiaContent(String text) {
         int indexStart = text.indexOf("(");
-        if (indexStart > 0) {
+        if(indexStart > 0) {
             int indexEnd = text.indexOf(")", indexStart);
-            if (indexEnd == -1) {
+            if(indexEnd == -1) {
                 // No closing paren found, return unchanged
                 return text;
             }
@@ -107,7 +106,7 @@ public class SPARQL {
         } else if (indexStart == 0) {
             // When abstract starts with info on Disambiguation
             int disIndex = text.lastIndexOf("(disambiguation).)");
-            if (disIndex == -1) {
+            if(disIndex == -1) {
                 // Pattern not found, return unchanged
                 return text;
             }
@@ -119,7 +118,7 @@ public class SPARQL {
     }
 
     private String processWikipediaAbstract(String abs) {
-        while (abs.indexOf("(") != -1) {
+        while(abs.indexOf("(") != -1) {
             String before = abs;
             abs = stripWikiepdiaContent(abs);
             // Break if no change was made to prevent infinite loop on malformed input
@@ -158,15 +157,15 @@ public class SPARQL {
                     .inclusiveEnd(true)
                     .build().getResponse().getValues();
 
-            for (ExplorerProperties property : explorerProperties) {
-                // Check if the property matches one of the list of classes(types) found for the
-                // entity
-                if (types.contains(property.getClassName())) {
+            for(ExplorerProperties property : explorerProperties)
+             {
+                // Check if the property matches one of the list of classes(types) found for the  entity
+                if(types.contains(property.getClassName())) {
                     propertyMap.put(Float.parseFloat(property.getScore()), property.getProperty());
                 }
             }
 
-            if (propertyMap.size() > 0) {
+            if(propertyMap.size() > 0) {
                 int count = 0;
                 Iterator<Float> iterator = propertyMap.descendingKeySet().iterator();
                 String property_uris = "";
@@ -186,7 +185,7 @@ public class SPARQL {
                 QueryExecution queryExecution = executeQuery(query);
                 try {
                     Iterator<QuerySolution> results = queryExecution.execSelect();
-                    while (results.hasNext()) {
+                    while(results.hasNext()) {
                         QuerySolution result = results.next();
                         ResponseData.Field field = new ResponseData.Field();
                         field.setName(Utility.capitalizeAll(result.get("property_label").asLiteral().getString()));
@@ -237,7 +236,7 @@ public class SPARQL {
                 result.get("primaryTopic").toString()));
 
         node = result.get("thumbnail");
-        if (node != null) {
+        if(node != null) {
             responseData.setImage(node.toString());
         }
 
@@ -250,7 +249,7 @@ public class SPARQL {
         // }
 
         node = result.get("description");
-        if (node != null) {
+        if(node != null) {
             text += node.asLiteral().getString() + "\n\n";
         }
 
@@ -275,29 +274,28 @@ public class SPARQL {
         QueryExecution queryExecution = executeQuery(query);
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while (results.hasNext()) {
+            while(results.hasNext()) {
                 QuerySolution solution = results.next();
-                if (solution.get("types") != null && solution.get("properties") != null) {
+                if(solution.get("types") != null && solution.get("properties") != null) {
                     List<String> types = Arrays.asList(solution.get("types").asLiteral().getString().split(" "));
                     String[] properties = solution.get("properties").asLiteral().getString().split(" ");
                     responseData.setFields(getRelevantProperties(uri, types, properties));
                 }
             }
-        } finally {
+        }
+        finally {
             queryExecution.close();
         }
 
         responseData.addButton(new ResponseData.Button("View in DBpedia", ResponseType.BUTTON_LINK, uri));
-        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM,
-                TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
+        responseData.addButton(new ResponseData.Button("Learn More", ResponseType.BUTTON_PARAM,TemplateType.LEARN_MORE + Utility.STRING_SEPARATOR + uri + Utility.STRING_SEPARATOR + label));
         return responseData;
     }
 
     private String getEntityWhereCondition(String uri) {
-        // URI could either be the actual URI or a variable reference
-        // In case of actual URI it needs to be enclosed with <uri> which is not
-        // required for variable reference
-        if (!uri.startsWith("?")) {
+        // URI could either be the actual URI or a variable reference 
+        //In case of actual URI it needs to be enclosed with <uri> which is not  required for variable reference
+        if(!uri.startsWith("?")) {
             uri = "<" + uri + ">";
         }
         return uri + " rdfs:label ?label .\n" +
@@ -311,17 +309,18 @@ public class SPARQL {
     public ResponseData getEntityInformation(String uri) {
         String query = buildQuery("SELECT " + ENTITY_SELECT_PARAMETERS + " WHERE {" +
                 getEntityWhereCondition(uri) +
-                "}");
+        "}");
         QueryExecution queryExecution = executeQuery(query);
         ResponseData responseData = null;
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while (results.hasNext()) {
+            while(results.hasNext()) {
                 QuerySolution result = results.next();
                 responseData = processEntityInformation(uri, result);
             }
-        } finally {
+        } 
+        finally {
             queryExecution.close();
         }
         return responseData;
@@ -330,23 +329,23 @@ public class SPARQL {
     /**
      * Returns 0 if it is not a disambiguation page. Returns count otherwise
      * We can only show 10 at a time so its limited by that
-     * 
      * @return 0 or count
      */
     public int isDisambiguationPage(String uri) {
-        String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
-                "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
-                "}");
+    String query = buildQuery("SELECT (count(*) as ?count) WHERE {" +
+            "<" + uri + "> <http://dbpedia.org/ontology/wikiPageDisambiguates> ?o." +
+            "}");
         QueryExecution queryExecution = executeQuery(query);
         int count = 0;
 
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
-            while (results.hasNext()) {
+            while(results.hasNext()) {
                 QuerySolution result = results.next();
                 count = result.get("count").asLiteral().getInt();
             }
-        } finally {
+        } 
+        finally {
             queryExecution.close();
         }
         return count;
@@ -360,12 +359,13 @@ public class SPARQL {
             Iterator<QuerySolution> results = queryExecution.execSelect();
             if (results != null) {
                 responseDatas = new ArrayList<>();
-                while (results.hasNext()) {
+                while(results.hasNext()) {
                     QuerySolution result = results.next();
                     responseDatas.add(processEntityInformation(result.get("uri").toString(), result));
                 }
             }
-        } finally {
+        } 
+        finally {
             queryExecution.close();
         }
         return responseDatas;
@@ -417,12 +417,13 @@ public class SPARQL {
         try {
             Iterator<QuerySolution> results = queryExecution.execSelect();
             if (results != null) {
-                while (results.hasNext()) {
+                while(results.hasNext()) {
                     QuerySolution result = results.next();
                     types = result.get("types").toString();
                 }
             }
-        } finally {
+        } 
+        finally {
             queryExecution.close();
         }
         return types;
