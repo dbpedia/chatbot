@@ -16,6 +16,7 @@ public interface TemplateType {
     String DBPEDIA_DATASET = "dbpedia-dataset";
     String DBPEDIA_DATASET_NLP = "dbpedia-dataset-nlp";
     String DBPEDIA_DATASET_ONTOLOGY = "dbpedia-dataset-ontology";
+    String DBPEDIA_DATABUS_RECOMMENDATION = "dbpedia-databus-recommendation";
 
     String DBPEDIA_LOOKUP = "dbpedia-lookup";
     String DBPEDIA_LOOKUP_PREFIX_SEARCH = "dbpedia-lookup-prefix-search";
