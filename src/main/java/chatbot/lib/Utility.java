@@ -106,11 +106,11 @@ public class Utility {
     }
 
     public static boolean isWikidataURI(String uri) {
-        return uri != null && uri.startsWith("http://www.wikidata.org/entity/");
+        return uri != null && (uri.startsWith("http://www.wikidata.org/entity/") || uri.startsWith("https://www.wikidata.org/entity/"));
     }
 
     public static boolean isDBpediaURI(String uri) {
-        return uri != null && uri.startsWith("http://dbpedia.org/resource/");
+        return uri != null && (uri.startsWith("http://dbpedia.org/resource/") || uri.startsWith("https://dbpedia.org/resource/"));
     }
 
     /**
