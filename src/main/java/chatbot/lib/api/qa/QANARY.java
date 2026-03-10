@@ -108,6 +108,12 @@ public class QANARY {
             logger.error("DBpedia QANARY query failed: " + e.getMessage());
         }
 
+        // If DBpedia yielded an answer, return early so we don't pay 
+        // the extra latency waiting for Wikidata.
+        if (!data.getUris().isEmpty() || !data.getLiterals().isEmpty()) {
+            return data;
+        }
+
         // Query Wikidata KB
         try {
             QAService.Data wikidataData = parseResponse(makeRequest(question, "wikidata"));
