@@ -119,13 +119,16 @@ public class TemplateHandler {
 
             // Get Information for specific Entity
             case TemplateType.ENTITY_INFORMATION:
-                responseGenerator.addCarouselResponse(new ArrayList<ResponseData>(){{
-                    if(Utility.isWikidataURI(payload[1])) {
-                        add(helper.getWikidataSparql().getEntityInformation(payload[1]));
-                    } else {
-                        add(helper.getSparql().getEntityInformation(payload[1]));
-                    }
-                }});
+                ResponseData entityInfo = Utility.isWikidataURI(payload[1])
+                ? helper.getWikidataSparql().getEntityInformation(payload[1])
+                : helper.getSparql().getEntityInformation(payload[1]);
+                if (entityInfo != null) {
+                    responseGenerator.addCarouselResponse(new ArrayList<ResponseData>() {{
+                        add(entityInfo);
+                    }});
+                }else{
+                    responseGenerator.setNoResultsResponse(request, helper.getRiveScriptBot());
+                }
                 break;
 
             case TemplateType.GET_LOCATION:

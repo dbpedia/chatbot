@@ -22,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by ramgathreya on 7/1/17.
- */
 public class QANARY {
     private static final Logger logger = LoggerFactory.getLogger(QANARY.class);
     private static final String URL = "http://qanswer-core1.univ-st-etienne.fr/api/gerbil";
@@ -67,8 +64,15 @@ public class QANARY {
         if (response != null) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(response);
-            JsonNode answers = mapper
-                    .readTree(rootNode.findValue("questions").get(0).get("question").get("answers").getTextValue());
+            JsonNode questions = rootNode.findValue("questions");
+            if (questions == null || !questions.isArray() || questions.size() == 0) {
+                return data;
+            }
+            JsonNode questionNode = questions.get(0).get("question");
+            if (questionNode == null || questionNode.get("answers") == null) {
+                return data;
+            }
+            JsonNode answers = mapper.readTree(questionNode.get("answers").getTextValue());
 
             if (answers != null) {
                 JsonNode bindings = answers.get("results").get("bindings");
@@ -92,13 +96,19 @@ public class QANARY {
         return data;
     }
 
-    // Calls QANARY Service for both DBpedia and Wikidata knowledge bases
-    // and merges the results into a single Data object
     public QAService.Data search(String question) throws Exception {
-        // Query DBpedia KB
-        QAService.Data data = parseResponse(makeRequest(question, "dbpedia"));
 
-        // Query Wikidata KB and merge results
+        QAService.Data data = new QAService.Data();
+
+        // Query DBpedia KB
+        try {
+            QAService.Data dbpediaData = parseResponse(makeRequest(question, "dbpedia"));
+            data.addData(dbpediaData, false);
+        } catch (Exception e) {
+            logger.error("DBpedia QANARY query failed: " + e.getMessage());
+        }
+
+        // Query Wikidata KB
         try {
             QAService.Data wikidataData = parseResponse(makeRequest(question, "wikidata"));
             data.addData(wikidataData, false);

@@ -13,15 +13,15 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Service for querying the Wikidata SPARQL endpoint to retrieve entity information.
+ * Service for querying the Wikidata SPARQL endpoint to retrieve entity
+ * information.
  * Mirrors the interface of the DBpedia SPARQL class but targets Wikidata.
  */
 public class WikidataSPARQL {
     private static final Logger logger = LoggerFactory.getLogger(WikidataSPARQL.class);
 
     private static final String ENDPOINT = "https://query.wikidata.org/sparql";
-    private static final String PREFIXES =
-            "PREFIX wd: <http://www.wikidata.org/entity/>\n" +
+    private static final String PREFIXES = "PREFIX wd: <http://www.wikidata.org/entity/>\n" +
             "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" +
             "PREFIX wikibase: <http://wikiba.se/ontology#>\n" +
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
@@ -36,7 +36,8 @@ public class WikidataSPARQL {
 
     /**
      * Retrieves entity information from Wikidata for the given URI.
-     * Returns a ResponseData card with label, description, image, Wikipedia link, and Wikidata link.
+     * Returns a ResponseData card with label, description, image, Wikipedia link,
+     * and Wikidata link.
      */
     public ResponseData getEntityInformation(String uri) {
         String entityId = Utility.extractWikidataEntityId(uri);
@@ -46,20 +47,21 @@ public class WikidataSPARQL {
 
         String query = buildQuery(
                 "SELECT ?label ?description ?image ?articleEN WHERE {\n" +
-                "  wd:" + entityId + " rdfs:label ?label . FILTER(lang(?label) = 'en') .\n" +
-                "  OPTIONAL { wd:" + entityId + " schema:description ?description . FILTER(lang(?description) = 'en') }\n" +
-                "  OPTIONAL { wd:" + entityId + " wdt:P18 ?image }\n" +
-                "  OPTIONAL {\n" +
-                "    ?articleEN schema:about wd:" + entityId + " ;\n" +
-                "              schema:isPartOf <https://en.wikipedia.org/> .\n" +
-                "  }\n" +
-                "} LIMIT 1"
-        );
+                        "  wd:" + entityId + " rdfs:label ?label . FILTER(lang(?label) = 'en') .\n" +
+                        "  OPTIONAL { wd:" + entityId
+                        + " schema:description ?description . FILTER(lang(?description) = 'en') }\n" +
+                        "  OPTIONAL { wd:" + entityId + " wdt:P18 ?image }\n" +
+                        "  OPTIONAL {\n" +
+                        "    ?articleEN schema:about wd:" + entityId + " ;\n" +
+                        "              schema:isPartOf <https://en.wikipedia.org/> .\n" +
+                        "  }\n" +
+                        "} LIMIT 1");
 
-        QueryExecution queryExecution = executeQuery(query);
+        QueryExecution queryExecution = null;
         ResponseData responseData = null;
 
         try {
+            queryExecution = executeQuery(query);
             Iterator<QuerySolution> results = queryExecution.execSelect();
             if (results.hasNext()) {
                 QuerySolution result = results.next();
@@ -71,7 +73,7 @@ public class WikidataSPARQL {
 
                 // Description
                 if (result.get("description") != null) {
-                    responseData.setText(Utility.capitalizeAll(result.get("description").asLiteral().getString()));
+                    responseData.setText(result.get("description").asLiteral().getString());
                 }
 
                 // Thumbnail / Image
@@ -95,7 +97,9 @@ public class WikidataSPARQL {
         } catch (Exception e) {
             logger.error("Error querying Wikidata for entity: " + uri, e);
         } finally {
-            queryExecution.close();
+            if (queryExecution != null) {
+                queryExecution.close();
+            }
         }
         return responseData;
     }
@@ -105,13 +109,13 @@ public class WikidataSPARQL {
      */
     public String getLabel(String uri) {
         String entityId = Utility.extractWikidataEntityId(uri);
-        if (entityId == null) return null;
+        if (entityId == null)
+            return null;
 
         String query = buildQuery(
                 "SELECT ?label WHERE {\n" +
-                "  wd:" + entityId + " rdfs:label ?label . FILTER(lang(?label) = 'en') .\n" +
-                "} LIMIT 1"
-        );
+                        "  wd:" + entityId + " rdfs:label ?label . FILTER(lang(?label) = 'en') .\n" +
+                        "} LIMIT 1");
 
         QueryExecution queryExecution = executeQuery(query);
         String label = null;
@@ -121,8 +125,14 @@ public class WikidataSPARQL {
             if (results.hasNext()) {
                 label = results.next().get("label").asLiteral().getString();
             }
-        } finally {
-            queryExecution.close();
+        }
+        catch (Exception e) {
+            logger.error("Error querying Wikidata for label: " + uri, e);
+        }
+        finally {
+            if (queryExecution != null) {
+                queryExecution.close();
+            }
         }
         return label;
     }

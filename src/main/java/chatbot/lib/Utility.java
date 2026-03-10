@@ -119,6 +119,10 @@ public class Utility {
     public static String extractWikidataEntityId(String uri) {
         if (uri == null) return null;
         String[] parts = uri.split("/");
-        return parts[parts.length - 1];
+        String id = parts[parts.length - 1];
+        if (id.matches("^[QPL]\\d+$")) {
+            return id;
+        }
+        return null;
     }
 }
