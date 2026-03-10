@@ -84,6 +84,13 @@ public class OptionsTemplateHandler extends TemplateHandler {
 
     private ResponseGenerator getLearnMoreOptions(String uri, String label) {
         ResponseGenerator responseGenerator = new ResponseGenerator();
+
+        // Wikidata URIs cannot be looked up via DBpedia SPARQL for RDF types,
+        // so skip the TV/Movie-specific options and show defaults directly
+        if(Utility.isWikidataURI(uri)) {
+            return responseGenerator.addSmartReplyResponse(getDefaultOptions(uri, label));
+        }
+
         try {
             String types = helper.getSparql().getRDFTypes(uri);
 

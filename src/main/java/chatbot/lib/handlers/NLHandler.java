@@ -2,6 +2,7 @@ package chatbot.lib.handlers;
 
 import chatbot.Application;
 import chatbot.lib.Utility;
+import chatbot.lib.api.WikidataSPARQL;
 import chatbot.lib.api.StatusCheckService;
 import chatbot.lib.api.qa.QAService;
 import chatbot.lib.api.SPARQL;
@@ -111,21 +112,33 @@ public class NLHandler {
                         break;
                     }
 
-                    count = helper.getSparql().isDisambiguationPage(uri);
-                    processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
-
-                    // Not a disambiguation page
-                    if(count == 0) {
-                        ResponseData responseData = helper.getSparql().getEntityInformation(uri);
+                    // Route Wikidata URIs to WikidataSPARQL
+                    if(Utility.isWikidataURI(uri)) {
+                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
+                        WikidataSPARQL wikidataSparql = helper.getWikidataSparql();
+                        ResponseData responseData = wikidataSparql.getEntityInformation(uri);
                         if (responseData != null) {
                             processedResponse.addResponseData(responseData);
                         }
                     }
-                    // Disambiguation page
+                    // Route DBpedia URIs to DBpedia SPARQL (existing behavior)
                     else {
-                        processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
-                        processedResponse.setResponseData(helper.getSparql().getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
-                        return processedResponse;
+                        count = helper.getSparql().isDisambiguationPage(uri);
+                        processedResponse.setResponseType(SPARQL.ProcessedResponse.RESPONSE_CAROUSEL);
+
+                        // Not a disambiguation page
+                        if(count == 0) {
+                            ResponseData responseData = helper.getSparql().getEntityInformation(uri);
+                            if (responseData != null) {
+                                processedResponse.addResponseData(responseData);
+                            }
+                        }
+                        // Disambiguation page
+                        else {
+                            processedResponse.getResponseInfo().setUri(uri).setCount(count).setQueryResultType(SPARQL.ResponseInfo.DISAMBIGUATION_PAGE).setOffset(0).setLimit(ResponseData.MAX_DATA_SIZE);
+                            processedResponse.setResponseData(helper.getSparql().getDisambiguatedEntities(uri, 0, ResponseData.MAX_DATA_SIZE));
+                            return processedResponse;
+                        }
                     }
                 }
             }

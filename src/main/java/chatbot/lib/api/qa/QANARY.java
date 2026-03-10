@@ -22,9 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by ramgathreya on 7/1/17.
- */
 public class QANARY {
     private static final Logger logger = LoggerFactory.getLogger(QANARY.class);
     private static final String URL = "http://qanswer-core1.univ-st-etienne.fr/api/gerbil";
@@ -36,13 +33,12 @@ public class QANARY {
         this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
-    private String makeRequest(String question) {
+    private String makeRequest(String question, String knowledgeBase) {
         try {
             HttpPost httpPost = new HttpPost(URL);
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("query", question));
-//            params.add(new BasicNameValuePair("lang", "it"));
-            params.add(new BasicNameValuePair("kb", "dbpedia"));
+            params.add(new BasicNameValuePair("kb", knowledgeBase));
 
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
             httpPost.setEntity(entity);
@@ -50,36 +46,42 @@ public class QANARY {
             HttpResponse response = client.execute(httpPost);
 
             // Error Scenario
-            if(response.getStatusLine().getStatusCode() >= 400) {
-                logger.error("QANARY Server could not answer due to: " + response.getStatusLine());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                logger.error("QANARY Server could not answer for kb=" + knowledgeBase + " due to: "
+                        + response.getStatusLine());
                 return null;
             }
 
             return EntityUtils.toString(response.getEntity());
-        }
-        catch(Exception e) {
-            logger.error(e.getMessage());
+        } catch (Exception e) {
+            logger.error("QANARY request failed for kb=" + knowledgeBase + ": " + e.getMessage());
         }
         return null;
     }
 
-    // Calls QANARY Service then returns resulting data as a list of Data Objects
-    public QAService.Data search(String question) throws Exception {
+    private QAService.Data parseResponse(String response) throws Exception {
         QAService.Data data = new QAService.Data();
-        String response = makeRequest(question);
-        if(response != null) {
+        if (response != null) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(response);
-            JsonNode answers = mapper.readTree(rootNode.findValue("questions").get(0).get("question").get("answers").getTextValue());
+            JsonNode questions = rootNode.findValue("questions");
+            if (questions == null || !questions.isArray() || questions.size() == 0) {
+                return data;
+            }
+            JsonNode questionNode = questions.get(0).get("question");
+            if (questionNode == null || questionNode.get("answers") == null) {
+                return data;
+            }
+            JsonNode answers = mapper.readTree(questionNode.get("answers").getTextValue());
 
             if (answers != null) {
                 JsonNode bindings = answers.get("results").get("bindings");
-                for(JsonNode binding : bindings) {
+                for (JsonNode binding : bindings) {
                     Iterator<Map.Entry<String, JsonNode>> nodes = binding.getFields();
                     while (nodes.hasNext()) {
                         Map.Entry<String, JsonNode> entry = nodes.next();
                         JsonNode value = entry.getValue();
-                        switch(value.get("type").getTextValue()) {
+                        switch (value.get("type").getTextValue()) {
                             case "uri":
                                 data.addURI(value.get("value").getTextValue());
                                 break;
@@ -91,6 +93,35 @@ public class QANARY {
                 }
             }
         }
+        return data;
+    }
+
+    public QAService.Data search(String question) throws Exception {
+
+        QAService.Data data = new QAService.Data();
+
+        // Query DBpedia KB
+        try {
+            QAService.Data dbpediaData = parseResponse(makeRequest(question, "dbpedia"));
+            data.addData(dbpediaData, false);
+        } catch (Exception e) {
+            logger.error("DBpedia QANARY query failed: " + e.getMessage());
+        }
+
+        // If DBpedia yielded an answer, return early so we don't pay 
+        // the extra latency waiting for Wikidata.
+        if (!data.getUris().isEmpty() || !data.getLiterals().isEmpty()) {
+            return data;
+        }
+
+        // Query Wikidata KB
+        try {
+            QAService.Data wikidataData = parseResponse(makeRequest(question, "wikidata"));
+            data.addData(wikidataData, false);
+        } catch (Exception e) {
+            logger.error("Wikidata QANARY query failed, continuing with DBpedia results only: " + e.getMessage());
+        }
+
         return data;
     }
 
