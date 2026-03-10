@@ -2,6 +2,7 @@ package chatbot;
 
 import chatbot.cache.WolframRepository;
 import chatbot.lib.api.SPARQL;
+import chatbot.lib.api.WikidataSPARQL;
 import chatbot.rivescript.RiveScriptBot;
 import codeanticode.eliza.ElizaMain;
 import com.cloudant.client.api.CloudantClient;
@@ -113,6 +114,7 @@ public class Application {
         private WolframRepository wolframRepository;
         private String tmdbApiKey;
         private SPARQL sparql;
+        private WikidataSPARQL wikidataSparql;
         private JLanguageTool languageTool;
 
         @Autowired
@@ -153,6 +155,8 @@ public class Application {
             sparql = (explorerDB != null)
                     ? new SPARQL(explorerDB)
                     : SPARQL.disabled();
+
+            wikidataSparql = new WikidataSPARQL();
 
             languageTool = new JLanguageTool(new AmericanEnglish());
             for (Rule rule : languageTool.getAllActiveRules()) {
@@ -197,6 +201,10 @@ public class Application {
 
         public SPARQL getSparql() {
             return sparql;
+        }
+
+        public WikidataSPARQL getWikidataSparql() {
+            return wikidataSparql;
         }
 
         public JLanguageTool getLanguageTool() {

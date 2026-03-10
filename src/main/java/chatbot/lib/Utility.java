@@ -104,4 +104,21 @@ public class Utility {
         String[] urlsParts = url.split("/");
         return "https://en.wikipedia.org/wiki/" + urlsParts[urlsParts.length - 1];
     }
+
+    public static boolean isWikidataURI(String uri) {
+        return uri != null && uri.startsWith("http://www.wikidata.org/entity/");
+    }
+
+    public static boolean isDBpediaURI(String uri) {
+        return uri != null && uri.startsWith("http://dbpedia.org/resource/");
+    }
+
+    /**
+     * Extracts the Wikidata entity ID (e.g. "Q42") from a Wikidata URI.
+     */
+    public static String extractWikidataEntityId(String uri) {
+        if (uri == null) return null;
+        String[] parts = uri.split("/");
+        return parts[parts.length - 1];
+    }
 }

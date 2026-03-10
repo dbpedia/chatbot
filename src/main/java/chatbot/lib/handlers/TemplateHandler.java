@@ -3,6 +3,7 @@ package chatbot.lib.handlers;
 import chatbot.Application;
 import chatbot.lib.Constants;
 import chatbot.lib.Utility;
+import chatbot.lib.api.WikidataSPARQL;
 import chatbot.lib.handlers.dbpedia.StatusCheckHandler;
 import chatbot.lib.handlers.templates.dbpedia.*;
 import chatbot.lib.handlers.templates.OptionsTemplateHandler;
@@ -119,7 +120,11 @@ public class TemplateHandler {
             // Get Information for specific Entity
             case TemplateType.ENTITY_INFORMATION:
                 responseGenerator.addCarouselResponse(new ArrayList<ResponseData>(){{
-                    add(helper.getSparql().getEntityInformation(payload[1]));
+                    if(Utility.isWikidataURI(payload[1])) {
+                        add(helper.getWikidataSparql().getEntityInformation(payload[1]));
+                    } else {
+                        add(helper.getSparql().getEntityInformation(payload[1]));
+                    }
                 }});
                 break;
 
